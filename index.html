@@ -185,7 +185,7 @@ $('v3FlipMode').addEventListener('click',()=>{mode='flip';$('v3FlipMode').classL
 stats();makeDeck();
 })();
 </script><style>
-#royalLaunch{position:fixed;right:14px;bottom:18px;z-index:10000;background:#7734ac;color:white;border:2px solid #f5c95a;border-radius:30px;padding:13px 17px;font-weight:800;box-shadow:0 5px 20px #321a4770;cursor:pointer}#royalNotebook{position:fixed;z-index:10001;top:15%;left:5%;width:min(420px,90vw);height:490px;background:#fffaf0;border:3px solid #a65fcb;border-radius:17px;box-shadow:0 15px 45px #28163b88;display:none;overflow:hidden;flex-direction:column;touch-action:auto}#royalNotebook.expanded{inset:2vh 2vw;width:96vw;height:95vh}#royalHead{background:#7734ac;color:white;padding:11px;display:flex;align-items:center;gap:8px;touch-action:none;cursor:move}#royalHead strong{flex:1;font-size:15px}#royalHead button,#royalTools button{border:1px solid #caa7e0;border-radius:8px;padding:7px 9px;background:white;color:#54216e;font-weight:700}#royalTools{padding:8px;display:flex;flex-wrap:wrap;gap:6px;background:#f2e4fc}#royalTools button.active{background:#7436aa;color:white}#royalPaper{position:relative;flex:1;min-height:0;background-color:#fffdf8;background-image:repeating-linear-gradient(to bottom,transparent 0px,transparent 29px,#a7c9ed 30px);overflow:hidden}#royalPaper.graph{background-image:linear-gradient(#c4d7ed 1px,transparent 1px),linear-gradient(90deg,#c4d7ed 1px,transparent 1px);background-size:25px 25px}#royalCanvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}#royalNote{font-size:11px;padding:5px 10px;color:#58346d;background:#f7e9fa}body:has(#home:not([style*="display: none"])) #royalLaunch{display:none}@media(max-width:600px){#royalNotebook{top:11%;left:3%;width:94vw;height:65vh}#royalHead button{padding:6px}}
+#royalLaunch{position:fixed;right:14px;bottom:18px;z-index:10000;background:#7734ac;color:white;border:2px solid #f5c95a;border-radius:30px;padding:13px 17px;font-weight:800;box-shadow:0 5px 20px #321a4770;cursor:pointer}#royalNotebook{position:fixed;z-index:10001;top:15%;left:5%;width:min(420px,90vw);height:490px;background:#fffaf0;border:3px solid #a65fcb;border-radius:17px;box-shadow:0 15px 45px #28163b88;display:none;overflow:hidden;flex-direction:column;touch-action:auto}#royalNotebook.expanded{inset:2vh 2vw;width:96vw;height:95vh}#royalHead{background:#7734ac;color:white;padding:11px;display:flex;align-items:center;gap:8px;touch-action:none;cursor:move}#royalHead strong{flex:1;font-size:15px}#royalHead button,#royalTools button{border:1px solid #caa7e0;border-radius:8px;padding:7px 9px;background:white;color:#54216e;font-weight:700}#royalTools{padding:8px;display:flex;flex-wrap:wrap;gap:6px;background:#f2e4fc}#royalTools button.active{background:#7436aa;color:white}#royalPaper{position:relative;flex:1;min-height:0;background-color:#fffdf8;background-image:repeating-linear-gradient(to bottom,transparent 0px,transparent 29px,#a7c9ed 30px);overflow:hidden}#royalPaper.graph{background-image:linear-gradient(#c4d7ed 1px,transparent 1px),linear-gradient(90deg,#c4d7ed 1px,transparent 1px);background-size:25px 25px}#royalCanvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}#royalNote{font-size:11px;padding:5px 10px;color:#58346d;background:#f7e9fa}@media(max-width:600px){#royalNotebook{top:11%;left:3%;width:94vw;height:65vh}#royalHead button{padding:6px}}
 </style>
 <button id="royalLaunch" type="button" aria-label="Open Royal Math Notebook">✏️ Math Notebook</button>
 <section id="royalNotebook" role="dialog" aria-label="Izzy's Royal Math Notebook">
@@ -214,8 +214,33 @@ $('royalLines').onclick=()=>{paper.classList.remove('graph');$('royalLines').cla
 let sx,sy;const head=$('royalHead');head.addEventListener('pointerdown',e=>{if(e.target.tagName==='BUTTON'||expanded)return;const r=panel.getBoundingClientRect();drag={x:e.clientX-r.left,y:e.clientY-r.top};head.setPointerCapture(e.pointerId)});head.addEventListener('pointermove',e=>{if(!drag)return;const x=Math.max(0,Math.min(innerWidth-panel.offsetWidth,e.clientX-drag.x)),y=Math.max(0,Math.min(innerHeight-panel.offsetHeight,e.clientY-drag.y));panel.style.left=x+'px';panel.style.top=y+'px'});head.addEventListener('pointerup',()=>drag=null);head.addEventListener('pointercancel',()=>drag=null);
 window.addEventListener('resize',()=>{if(panel.style.display==='flex')paint()});
 // Keep notebook available in Math Adventures and Multiplication Mastery Center.
-const observer=new MutationObserver(()=>{const home=$('home');const mathActive=!!(document.querySelector('#v3Center')?.getBoundingClientRect().height)||!!(document.querySelector('#game')?.textContent?.includes('Math Adventures'));$('royalLaunch').style.display=(home&&getComputedStyle(home).display!=='none'&&!mathActive)?'none':'block'});
-observer.observe(document.body,{attributes:true,subtree:false});
+
+function syncNotebookAccess(){
+ const area=document.getElementById('area');
+ const title=document.getElementById('areaTitle')?.textContent||'';
+ const active=area&&!area.classList.contains('hidden')&&/Math Adventures|Decimal Dash|Multiplication|Fraction/i.test(title);
+ const center=document.getElementById('v3Center');
+ const centerActive=center&&center.getClientRects().length>0&&getComputedStyle(center).display!=='none';
+ $('royalLaunch').style.setProperty('display',(active||centerActive)?'block':'none','important');
+ const content=document.getElementById('areaContent');
+ if(active&&content&&!content.querySelector('.royalInline')&&content.querySelector('h2')){
+  const btn=document.createElement('button');btn.type='button';btn.className='btn royalInline';btn.textContent='✏️ Open Math Notebook';
+  btn.style.cssText='display:block;margin:14px 0;background:linear-gradient(90deg,#ff9bd7,#ffdc88);color:#442053;font-weight:800';
+  btn.onclick=open;content.querySelector('h2').insertAdjacentElement('afterend',btn);
+ }
+ if(center&&!center.querySelector('.royalInline')){
+  const btn=document.createElement('button');btn.type='button';btn.className='royalInline';btn.textContent='✏️ Open Math Notebook';
+  btn.style.cssText='display:block;margin:14px 0;padding:14px;border:2px solid #ffdc88;border-radius:16px;background:linear-gradient(90deg,#ff9bd7,#ffdc88);color:#442053;font-weight:800;font-size:1rem';
+  btn.onclick=open;const bar=center.querySelector('.v3bar');if(bar)bar.before(btn);else center.prepend(btn);
+ }
+}
+const observer=new MutationObserver(syncNotebookAccess);
+const area=document.getElementById('area'),content=document.getElementById('areaContent'),home=document.getElementById('home');
+if(area)observer.observe(area,{attributes:true,attributeFilter:['class']});
+if(content)observer.observe(content,{childList:true});
+if(home)observer.observe(home,{attributes:true,attributeFilter:['class','style']});
+syncNotebookAccess();
+
 })();
 </script><style>
 .cg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:16px 0}.cg-card{background:#fff8ff;color:#402653;border:2px solid #e8c9ed;border-radius:18px;padding:14px}.cg-card h3{margin:0 0 8px}.cg-stage{background:#fffafc;color:#392449;border-radius:16px;padding:16px;margin:14px 0;border:2px solid #e7d4ed}.cg-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}.cg-row button,.cg-card button{border-radius:12px;padding:10px 14px;cursor:pointer}.cg-board{display:grid;grid-template-columns:repeat(3,minmax(65px,90px));gap:8px;justify-content:center;margin:16px auto}.cg-cell{aspect-ratio:1;font-size:2.4rem;border:2px solid #d6b3e6;border-radius:14px;background:white;color:#6b3592}.cg-memory{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:420px;margin:16px auto}.cg-memory button{aspect-ratio:1;font-size:1.8rem;border:2px solid #d9bce5;border-radius:12px;background:#fff;color:#5e3975}.cg-memory button:disabled{opacity:.8}.cg-canvas{display:block;width:100%;height:310px;background:white;border:2px solid #e4c8ed;border-radius:14px;touch-action:none}.cg-breathe{margin:20px auto;width:135px;height:135px;border-radius:50%;display:grid;place-items:center;background:#edcff5;color:#653a78;animation:cgBreath 8s ease-in-out infinite alternate;text-align:center;font-weight:bold}@keyframes cgBreath{from{transform:scale(.8)}to{transform:scale(1.16)}}.cg-status{font-weight:700;min-height:25px}.cg-palette{display:flex;gap:8px;flex-wrap:wrap}.cg-swatch{width:38px;height:38px;border:3px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #aaa;cursor:pointer}.cg-swatch[aria-pressed=true]{box-shadow:0 0 0 3px #713b91}
@@ -227,10 +252,32 @@ let cgGame='',cgBoard=Array(9).fill(''),cgTurn='X',cgOver=false,cgMemory=[],cgOp
 const $=id=>document.getElementById(id);
 const shell=(content,title)=>{show('<p>🌷 This is your peaceful space. There are no scores, streaks, or timers here.</p><div class="cg-row"><button class="btn secondary" onclick="v2Calm()">← Garden activities</button><button class="btn secondary" onclick="goHome()">🏡 Academy home</button></div>'+content,title)};
 window.v2Calm=function(){shell('<div class="lesson"><h3>🌸 Flower Breathing</h3><p>Breathe in gently for 3 counts, then breathe out slowly for 4. Take a break whenever you like.</p></div><div class="cg-grid"><div class="cg-card"><h3>🧩 Matching Puzzle</h3><p>Find matching pairs of friendly pictures.</p><button class="btn" onclick="cgMemoryStart()">Play matching</button></div><div class="cg-card"><h3>⭕ Tic-Tac-Toe</h3><p>Play a friendly game against the garden.</p><button class="btn" onclick="cgTicStart()">Play tic-tac-toe</button></div><div class="cg-card"><h3>🎨 Doodle Garden</h3><p>Draw freely with a finger or Apple Pencil.</p><button class="btn" onclick="cgDoodleStart()">Open doodle pad</button></div><div class="cg-card"><h3>🫧 Breathing Bubble</h3><p>Watch a bubble grow and shrink as you breathe.</p><button class="btn" onclick="cgBreathing()">Relax</button></div><div class="cg-card"><h3>🌼 Make a Garden</h3><p>Plant flowers one at a time, just for fun.</p><button class="btn" onclick="cgPlant()">Plant flowers</button></div><div class="cg-card"><h3>💗 Kind Words</h3><p>Pick a gentle message for today.</p><button class="btn" onclick="cgKind()">Find a message</button></div></div><p class="affirm">“Rest is part of learning, too.” 💜</p>','🌸 Izzy’s Calm Garden')};
-window.cgTicStart=function(){cgBoard=Array(9).fill('');cgTurn='X';cgOver=false;cgTicRender()};
+let cgDifficulty='hard';window.cgTicStart=function(level){if(level)cgDifficulty=level;cgBoard=Array(9).fill('');cgTurn='X';cgOver=false;cgTicRender()};
 function cgWinner(b){for(const [a,c,d] of [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]])if(b[a]&&b[a]===b[c]&&b[a]===b[d])return b[a];return b.every(Boolean)?'tie':null}
-function cgTicRender(msg='Your turn! You are 💜 X.'){shell('<div class="cg-stage"><h3>⭕ Tic-Tac-Toe</h3><p id="cgMessage" class="cg-status" aria-live="polite">'+msg+'</p><div class="cg-board">'+cgBoard.map((v,i)=>'<button class="cg-cell" aria-label="Row '+(Math.floor(i/3)+1)+', column '+(i%3+1)+(v?', '+v:'')+'" '+(v||cgOver?'disabled':'')+' onclick="cgTicMove('+i+')">'+v+'</button>').join('')+'</div><button class="btn" onclick="cgTicStart()">Play again</button></div>','⭕ Garden Tic-Tac-Toe')}
-window.cgTicMove=function(i){if(cgOver||cgBoard[i])return;cgBoard[i]='X';let w=cgWinner(cgBoard);if(w){cgOver=true;cgTicRender(w==='X'?'🌟 You won!':"It's a tie! 💗");return}const free=cgBoard.map((v,j)=>v?-1:j).filter(j=>j>=0);let pick=free[Math.floor(Math.random()*free.length)];cgBoard[pick]='O';w=cgWinner(cgBoard);cgOver=!!w;cgTicRender(w==='O'?'The garden won this round. Try again? 🌸':w==='tie'?"It's a tie! 💗":'Your turn! You are 💜 X.')};
+function cgTicRender(msg='Your turn! You are 💜 X.'){shell('<div class="cg-stage"><h3>⭕ Tic-Tac-Toe</h3><label>Challenge level: <select onchange="cgDifficulty=this.value;cgTicStart()"><option value="easy" '+(cgDifficulty==='easy'?'selected':'')+'>Easy</option><option value="medium" '+(cgDifficulty==='medium'?'selected':'')+'>Medium</option><option value="hard" '+(cgDifficulty==='hard'?'selected':'')+'>Hard</option></select></label><p id="cgMessage"  class="cg-status" aria-live="polite">'+msg+'</p><div class="cg-board">'+cgBoard.map((v,i)=>'<button class="cg-cell" aria-label="Row '+(Math.floor(i/3)+1)+', column '+(i%3+1)+(v?', '+v:'')+'" '+(v||cgOver?'disabled':'')+' onclick="cgTicMove('+i+')">'+v+'</button>').join('')+'</div><button class="btn" onclick="cgTicStart()">Play again</button></div>','⭕ Garden Tic-Tac-Toe')}
+window.cgTicMove=function(i){if(cgOver||cgBoard[i])return;cgBoard[i]='X';let w=cgWinner(cgBoard);if(w){cgOver=true;cgTicRender(w==='X'?'🌟 You won!':"It's a tie! 💗");return}const free=cgBoard.map((v,j)=>v?-1:j).filter(j=>j>=0);let pick;
+function score(b,depth,maximizing){
+ const result=cgWinner(b);
+ if(result==='O')return 10-depth;
+ if(result==='X')return depth-10;
+ if(result==='tie')return 0;
+ let best=maximizing?-Infinity:Infinity;
+ for(let k=0;k<9;k++)if(!b[k]){
+  b[k]=maximizing?'O':'X';const val=score(b,depth+1,!maximizing);b[k]='';
+  best=maximizing?Math.max(best,val):Math.min(best,val);
+ }
+ return best;
+}
+function bestMove(){
+ let best=-Infinity,choices=[];
+ for(const k of free){
+  cgBoard[k]='O';const val=score(cgBoard,0,false);cgBoard[k]='';
+  if(val>best){best=val;choices=[k]}else if(val===best)choices.push(k);
+ }
+ return choices[Math.floor(Math.random()*choices.length)];
+}
+pick=cgDifficulty==='easy'||(cgDifficulty==='medium'&&Math.random()<0.4)?free[Math.floor(Math.random()*free.length)]:bestMove();
+cgBoard[pick]='O';w=cgWinner(cgBoard);cgOver=!!w;cgTicRender(w==='O'?'The garden won this round. Try again? 🌸':w==='tie'?"It's a tie! 💗":'Your turn! You are 💜 X.')};
 window.cgMemoryStart=function(){const a=['🌸','🦋','🌈','🌷','🐝','⭐'];cgMemory=[...a,...a].map(v=>({v,sort:Math.random()})).sort((x,y)=>x.sort-y.sort).map(x=>x.v);cgOpen=[];cgMatched=0;cgMoves=0;cgLocked=false;cgMemoryRender()};
 function cgMemoryRender(msg='Tap two cards to find a pair.'){shell('<div class="cg-stage"><h3>🧩 Picture Matching</h3><p id="cgMemoryMsg" class="cg-status" aria-live="polite">'+msg+'</p><div class="cg-memory">'+cgMemory.map((v,i)=>'<button aria-label="Card '+(i+1)+'" '+(cgOpen.includes(i)||cgMemory[i]===null?'disabled':'')+' onclick="cgFlip('+i+')">'+(v===null?'💜':cgOpen.includes(i)?v:'❔')+'</button>').join('')+'</div><button class="btn" onclick="cgMemoryStart()">Shuffle and play again</button></div>','🧩 Matching Puzzle')}
 window.cgFlip=function(i){if(cgLocked||cgOpen.includes(i)||cgMemory[i]===null)return;cgOpen.push(i);cgMemoryRender();if(cgOpen.length===2){cgMoves++;cgLocked=true;const [a,b]=cgOpen;if(cgMemory[a]===cgMemory[b]){cgMemory[a]=null;cgMemory[b]=null;cgMatched+=2;cgOpen=[];cgLocked=false;cgMemoryRender(cgMatched===12?'🌟 All pairs found! Beautiful work!':'A match! 🌷 Keep exploring.')}else{const oldGame=cgGame='memory';setTimeout(()=>{if(cgGame!==oldGame)return;cgOpen=[];cgLocked=false;cgMemoryRender('Try another pair. No rush! 💗')},850)}}};
