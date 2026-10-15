@@ -177,10 +177,10 @@ flipped=false;answered=false;const q=deck[idx];$('v3Question').textContent=q.a+'
 function reveal(){if(mode!=='flip'||idx>=deck.length)return;const q=deck[idx];flipped=!flipped;$('v3Question').textContent=flipped?q.a*q.b:q.a+' × '+q.b;$('v3CardHint').textContent=flipped?'⭐ The answer is...':'Tap to reveal the answer ✨';$('v3CardBottom').textContent=flipped?q.a+' groups of '+q.b+' = '+q.a*q.b:'What is the product?'}
 function visual(){if(idx>=deck.length)return;const {a,b}=deck[idx];let html='<div class="v3note"><strong>💡 Let’s break it down:</strong><p>'+a+' groups of '+b+' means '+a+' × '+b+'.</p>';if(a<=8&&b<=12){html+='<div class="v3array" style="--cols:'+Math.max(1,b)+'" aria-label="'+a+' rows of '+b+' dots">';for(let i=0;i<a*b;i++)html+='<span class="v3dot"></span>';html+='</div>'}html+='<p>'+ (a===0?'Zero groups make zero.':Array(a).fill(b).join(' + ')+' = '+(a*b))+'</p><strong>Answer: '+(a*b)+'</strong></div>';$('v3Visual').innerHTML=html}
 $('v3Card').addEventListener('click',reveal);$('v3Help').addEventListener('click',visual);$('v3TypeHelp').addEventListener('click',visual);
-$('v3Again').addEventListener('click',()=>{if(idx>=deck.length)return;if(!flipped)reveal();if(!answered){record(false);answered=true}$('v3Feedback').textContent='💗 That is okay! We will practice this fact again.';visual()});
-$('v3GotIt').addEventListener('click',()=>{if(idx>=deck.length)return;if(!flipped){$('v3Feedback').textContent='Flip the card to check your answer first 💜';return}if(!answered){record(true);answered=true}$('v3Feedback').textContent='🌟 Brilliant effort! Ready for the next card?'});
+$('v3Again').addEventListener('click',()=>{if(idx>=deck.length)return;if(!flipped)reveal();if(!answered){answered=true}$('v3Feedback').textContent='💗 That is okay! We will practice this fact again.';visual()});
+$('v3GotIt').addEventListener('click',()=>{if(idx>=deck.length)return;if(!flipped){$('v3Feedback').textContent='Flip the card to check your answer first 💜';return}if(!answered){answered=true}$('v3Feedback').textContent='🌟 Great practice! For a scored streak, try Type Answers mode.'});
 $('v3AnswerForm').addEventListener('submit',e=>{e.preventDefault();if(idx>=deck.length||answered)return;const q=deck[idx],value=Number($('v3Answer').value);if($('v3Answer').value.trim()==='')return;if(value===q.a*q.b){record(true);answered=true;$('v3Answer').disabled=true;$('v3Feedback').textContent='🎉 Yes! '+q.a+' × '+q.b+' = '+value+'. You did it!'}else{record(false);$('v3Feedback').textContent='💗 Good try! Look at the hint and try again.';visual();$('v3Answer').select()}});
-$('v3Next').addEventListener('click',()=>{if(idx>=deck.length){makeDeck();return}if(!answered){record(false)}idx++;render()});$('v3New').addEventListener('click',makeDeck);$('v3Level').addEventListener('change',makeDeck);
+$('v3Next').addEventListener('click',()=>{if(idx>=deck.length){makeDeck();return}if(!answered&&mode==='type'){record(false)}idx++;render()});$('v3New').addEventListener('click',makeDeck);$('v3Level').addEventListener('change',makeDeck);
 $('v3FlipMode').addEventListener('click',()=>{mode='flip';$('v3FlipMode').classList.remove('secondary');$('v3TypeMode').classList.add('secondary');makeDeck()});$('v3TypeMode').addEventListener('click',()=>{mode='type';$('v3TypeMode').classList.remove('secondary');$('v3FlipMode').classList.add('secondary');makeDeck()});
 stats();makeDeck();
 })();
@@ -191,6 +191,12 @@ stats();makeDeck();
 <section id="royalNotebook" role="dialog" aria-label="Izzy's Royal Math Notebook">
  <div id="royalHead"><strong>👑 Izzy's Royal Math Notebook</strong><button type="button" id="royalExpand">⛶ Expand</button><button type="button" id="royalClose">✕</button></div>
  <div id="royalTools"><button id="royalPen" class="active" type="button">✏️ Pencil</button><button id="royalErase" type="button">🧽 Eraser</button><button id="royalUndo" type="button">↶ Undo</button><button id="royalLines" class="active" type="button">☰ Lined</button><button id="royalGraph" type="button">▦ Graph</button><button id="royalClear" type="button">🗑 Clear</button></div>
+ <div id="royalReadTools" style="padding:9px;background:#fff1fc;color:#46245d;display:flex;flex-wrap:wrap;align-items:center;gap:7px">
+ <button type="button" id="royalRead" style="padding:9px;border-radius:9px;background:#7636aa;color:white;font-weight:700">🔍 Read My Answer</button>
+ <label for="royalRecognized" style="font-size:12px">Confirm answer:</label><input id="royalRecognized" type="number" inputmode="numeric" aria-label="Confirm recognized handwritten answer" style="width:85px;padding:8px;border:2px solid #ad7fca;border-radius:8px">
+ <button type="button" id="royalUse" style="padding:9px;border-radius:9px;background:#ffd477;color:#422054;font-weight:800">✨ Use My Answer</button>
+ <span id="royalReadStatus" role="status" style="font-size:12px;width:100%">Write your final answer clearly, then tap Read My Answer.</span>
+ </div>
  <div id="royalPaper"><canvas id="royalCanvas" aria-label="Handwriting canvas for finger or Apple Pencil"></canvas></div>
  <div id="royalNote">Write with your finger or Apple Pencil. Your work saves on this device. 💜</div>
 </section>
@@ -213,6 +219,52 @@ $('royalUndo').onclick=()=>{strokes.pop();save();paint()};$('royalClear').onclic
 $('royalLines').onclick=()=>{paper.classList.remove('graph');$('royalLines').classList.add('active');$('royalGraph').classList.remove('active')};$('royalGraph').onclick=()=>{paper.classList.add('graph');$('royalGraph').classList.add('active');$('royalLines').classList.remove('active')};
 let sx,sy;const head=$('royalHead');head.addEventListener('pointerdown',e=>{if(e.target.tagName==='BUTTON'||expanded)return;const r=panel.getBoundingClientRect();drag={x:e.clientX-r.left,y:e.clientY-r.top};head.setPointerCapture(e.pointerId)});head.addEventListener('pointermove',e=>{if(!drag)return;const x=Math.max(0,Math.min(innerWidth-panel.offsetWidth,e.clientX-drag.x)),y=Math.max(0,Math.min(innerHeight-panel.offsetHeight,e.clientY-drag.y));panel.style.left=x+'px';panel.style.top=y+'px'});head.addEventListener('pointerup',()=>drag=null);head.addEventListener('pointercancel',()=>drag=null);
 window.addEventListener('resize',()=>{if(panel.style.display==='flex')paint()});
+
+// Local, opt-in handwriting reading. Browser TextDetector is used when supported.
+// If unavailable or unsure, Izzy confirms the number herself before transfer.
+let lastTarget=null;
+function validTarget(el){return el&&el.isConnected&&!el.disabled&&el.matches('input[type="number"],input[inputmode="numeric"],input[type="text"]')&&!panel.contains(el)}
+document.addEventListener('focusin',e=>{if(validTarget(e.target))lastTarget=e.target});
+function findTarget(){
+ if(validTarget(lastTarget))return lastTarget;
+ const preferred=['v6Answer','v3Answer'];
+ for(const id of preferred){let el=$(id);if(validTarget(el)&&el.getClientRects().length)return el}
+ const candidates=[...document.querySelectorAll('#areaContent input, #v3Center input, #v6Lab input')].filter(el=>validTarget(el)&&el.getClientRects().length);
+ return candidates.length===1?candidates[0]:null;
+}
+$('royalRead').onclick=async()=>{
+ const status=$('royalReadStatus'),field=$('royalRecognized');
+ status.textContent='Checking the handwriting on your notebook…';
+ const ink=strokes.filter(line=>line.color!=='#fffdf8'&&line.pts?.length);
+ if(!ink.length){status.textContent='Write your answer on the notebook first. 💜';return}
+ // Crop the actual ink to avoid recognizing lined notebook background.
+ const r=canvas.getBoundingClientRect(),xs=ink.flatMap(l=>l.pts.map(p=>p[0]*r.width)),ys=ink.flatMap(l=>l.pts.map(p=>p[1]*r.height));
+ const minx=Math.max(0,Math.min(...xs)-12),maxx=Math.min(r.width,Math.max(...xs)+12),miny=Math.max(0,Math.min(...ys)-12),maxy=Math.min(r.height,Math.max(...ys)+12);
+ const tmp=document.createElement('canvas');tmp.width=Math.max(1,Math.ceil(maxx-minx));tmp.height=Math.max(1,Math.ceil(maxy-miny));
+ const t=tmp.getContext('2d');t.fillStyle='#fff';t.fillRect(0,0,tmp.width,tmp.height);t.lineCap='round';t.lineJoin='round';
+ ink.forEach(line=>{t.strokeStyle='#000';t.lineWidth=line.width||3;t.beginPath();line.pts.forEach((pt,i)=>{let x=pt[0]*r.width-minx,y=pt[1]*r.height-miny;i?t.lineTo(x,y):t.moveTo(x,y)});t.stroke()});
+ let guess='';
+ try{
+  if(typeof window.TextDetector==='function'){
+   const detector=new window.TextDetector();const result=await detector.detect(tmp);
+   const raw=result.map(x=>x.rawValue||'').join(' ').trim();
+   const numbers=raw.match(/-?\d+(?:\.\d+)?/g);
+   if(numbers?.length===1)guess=numbers[0];
+  }
+ }catch(e){}
+ if(guess){field.value=guess;status.textContent='I read '+guess+'. Check it carefully, then tap Use My Answer.'}
+ else{field.value='';status.textContent='I cannot reliably read this handwriting on this device. Type the answer you wrote into Confirm answer, then tap Use My Answer. Your work stays saved.';field.focus()}
+};
+$('royalUse').onclick=()=>{
+ const field=$('royalRecognized'),value=field.value.trim(),status=$('royalReadStatus');
+ if(!/^-?\d+(\.\d+)?$/.test(value)){status.textContent='Confirm your number first, then try again.';field.focus();return}
+ const target=findTarget();
+ if(!target){status.textContent='Open a math question and tap its answer field once, then return here and tap Use My Answer.';return}
+ target.value=value;target.dispatchEvent(new Event('input',{bubbles:true}));target.dispatchEvent(new Event('change',{bubbles:true}));
+ status.textContent='✨ Your answer '+value+' is in the question. Tap Check Answer to see if it is correct!';
+ panel.style.display='none';target.focus();
+};
+
 // Keep notebook available in Math Adventures and Multiplication Mastery Center.
 
 function syncNotebookAccess(){
@@ -292,6 +344,118 @@ window.cgBreathing=function(){shell('<div class="cg-stage" style="text-align:cen
 window.cgPlant=function(){shell('<div class="cg-stage"><h3>🌼 My Little Garden</h3><p>Tap Plant to grow a happy garden.</p><div id="cgFlowers" style="min-height:120px;font-size:2.5rem;line-height:1.8"></div><button class="btn" onclick="cgAddFlower()">🌱 Plant a flower</button><button class="btn secondary" onclick="cgPlant()">Start fresh</button></div>','🌼 Make a Garden')};
 window.cgAddFlower=function(){const e=$('cgFlowers');if(e)e.textContent+=['🌷','🌼','🌻','🌸','🪻'][Math.floor(Math.random()*5)]+' '};
 window.cgKind=function(){const words=['I am allowed to take breaks.','My ideas are worth sharing.','I can try again whenever I am ready.','I deserve kindness, including from myself.','I am growing at my own pace.','I can be proud of small steps.'];shell('<div class="cg-stage"><h3>💗 A Kind Thought</h3><p class="affirm">“'+words[Math.floor(Math.random()*words.length)]+'”</p><button class="btn" onclick="cgKind()">Another kind thought</button></div>','💗 Kind Words')};
+})();
+</script>
+
+<style>
+#v6Lab{margin:18px 0;border:2px solid #ffd475;border-radius:22px;background:linear-gradient(140deg,#542076,#36145c);padding:18px}
+#v6Lab h2{color:#ffe19b;margin:0 0 8px}
+.v6tabs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.v6tabs button,.v6action{border:1px solid #f4d27a;background:#ffe0a1;color:#2b1040;border-radius:12px;padding:11px;font-weight:800;cursor:pointer}
+.v6tabs button[aria-selected="true"]{background:#ff9bd0}
+.v6panel{background:#211039;border-radius:15px;padding:14px}
+.v6grid{display:grid;grid-template-columns:repeat(13,minmax(34px,1fr));overflow:auto;max-width:100%}
+.v6grid>span,.v6grid>input{border:1px solid #a576ba;text-align:center;padding:7px 2px;min-width:34px;font-size:14px;color:#fff;background:#43235d}
+.v6grid>span.head{background:#9b438e;font-weight:bold}
+.v6grid>input{background:#fff;color:#321543;width:100%;border-radius:0}
+.v6grid>input.good{background:#c9f5d9}.v6grid>input.bad{background:#ffe2ec}
+.v6challenge{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0}
+.v6challenge input{max-width:120px;font-size:22px;padding:9px;border-radius:9px}
+.v6clock{font-size:30px;font-weight:900;color:#ffe1a0}
+.v6words{display:grid;grid-template-columns:repeat(8,1fr);max-width:410px;gap:3px}
+.v6words button{aspect-ratio:1;border:1px solid #b887cf;border-radius:6px;background:#5b3077;color:white;font-weight:800;font-size:18px}
+.v6words button.found{background:#197f68}
+@media(max-width:600px){#v6Lab{padding:10px}.v6grid>span,.v6grid>input{font-size:12px;padding:6px 0;min-width:27px}.v6grid{grid-template-columns:repeat(13,minmax(27px,1fr))}}
+</style>
+<section id="v6Lab" aria-label="Learning and Discovery version 6">
+<h2>✨ Learning & Discovery — Version 6.0</h2>
+<p>New ways to practice, explore and grow. Your existing Academy lessons and saved progress stay right where they are. 💜</p>
+<div class="v6tabs" role="tablist">
+<button type="button" aria-selected="true" onclick="v6Tab('tables',this)">✖️ Times Tables</button>
+<button type="button" aria-selected="false" onclick="v6Tab('challenge',this)">⏱️ Timed Challenge</button>
+<button type="button" aria-selected="false" onclick="v6Tab('words',this)">🔎 Word Search</button>
+<button type="button" aria-selected="false" onclick="v6Tab('guess',this)">🌷 Word Guess</button>
+</div>
+<div id="v6Content" class="v6panel" aria-live="polite"></div>
+</section>
+<script>
+(function(){
+'use strict';
+const root=document.getElementById('v6Lab'), out=document.getElementById('v6Content');
+if(!root||!out)return;
+let tab='tables',tableBlank=false, seconds=180,timer=null,running=false,ready=false,score=0,attempts=0,question=[2,3],gameId=0;
+let wordGrid=[],wordsFound=new Set(),selected=[],targetWords=['READ','MATH','STAR','GROW','BOOK','KIND'];
+let guessWord='LEARN',guessed=new Set(),mistakes=0;
+function safeSave(key,val){try{localStorage.setItem(key,JSON.stringify(val))}catch(e){}}
+function safeRead(key,defaultValue){try{return JSON.parse(localStorage.getItem(key))??defaultValue}catch(e){return defaultValue}}
+function stop(){if(timer)clearInterval(timer);timer=null;running=false;gameId++}
+function randomQuestion(){question=[Math.ceil(Math.random()*12),Math.ceil(Math.random()*12)]}
+window.v6Tab=function(next,button){stop();tab=next;root.querySelectorAll('.v6tabs button').forEach(b=>b.setAttribute('aria-selected',String(b===button)));render()};
+function render(){
+if(tab==='tables')tables();
+if(tab==='challenge')challenge();
+if(tab==='words')wordSearch();
+if(tab==='guess')wordGuess();
+}
+function tables(){
+let html='<h3>👑 Multiplication Table · 1 to 12</h3><p>Explore the answers, or switch to practice and fill them in yourself.</p><button class="v6action" onclick="v6ToggleTable()">'+(tableBlank?'Show completed table':'Try blank practice table')+'</button><div class="v6grid" role="group" aria-label="Multiplication table">';
+for(let r=0;r<=12;r++)for(let c=0;c<=12;c++){
+if(r===0||c===0)html+='<span class="head">'+(r===0&&c===0?'×':r===0?c:c===0?r:'')+'</span>';
+else if(!tableBlank)html+='<span>'+r*c+'</span>';
+else html+='<input aria-label="'+r+' times '+c+'" type="number" inputmode="numeric" data-answer="'+r*c+'" min="0" max="144">';
+}
+html+='</div>';
+if(tableBlank)html+='<button class="v6action" onclick="v6CheckTable()">Check my answers</button> <span id="v6TableFeedback" role="status"></span>';
+out.innerHTML=html;
+}
+window.v6ToggleTable=()=>{tableBlank=!tableBlank;tables()};
+window.v6CheckTable=()=>{
+let correct=0,filled=0;out.querySelectorAll('input[data-answer]').forEach(x=>{if(x.value.trim()){filled++;let ok=Number(x.value)===Number(x.dataset.answer);x.classList.toggle('good',ok);x.classList.toggle('bad',!ok);if(ok)correct++}});
+document.getElementById('v6TableFeedback').textContent='⭐ '+correct+' correct out of '+filled+' filled. Keep going!';
+};
+function challenge(){
+seconds=duration;score=0;attempts=0;ready=false;randomQuestion();
+out.innerHTML='<h3>⏱️ Multiplication Sprint</h3><p>Choose 3 or 5 minutes. Only correct typed answers count. Take an untimed break anytime.</p><div class="v6challenge"><button class="v6action" onclick="v6SetDuration(180)">3 minutes</button><button class="v6action" onclick="v6SetDuration(300)">5 minutes</button><button class="v6action" onclick="v6SetDuration(0)">Untimed</button></div><div class="v6clock" id="v6Clock">03:00</div><p id="v6Go" aria-live="polite">Choose your time, then press Start.</p><button class="v6action" id="v6Start" onclick="v6Start()">Start</button> <button class="v6action" onclick="v6Pause()">Pause / Resume</button> <button class="v6action" onclick="v6Restart()">Restart</button><form id="v6Form" class="v6challenge"><strong id="v6Question"></strong><input id="v6Answer" type="number" inputmode="numeric" aria-label="Your multiplication answer" required disabled><button class="v6action" type="submit">Check</button></form><p id="v6Result" role="status"></p><p id="v6Best"></p>';
+out.querySelector('#v6Form').addEventListener('submit',e=>{e.preventDefault();if(!running)return;let x=document.getElementById('v6Answer'),n=Number(x.value);if(!x.value.trim())return;attempts++;if(n===question[0]*question[1]){score++;document.getElementById('v6Result').textContent='🌟 Correct! Keep shining!';randomQuestion()}else document.getElementById('v6Result').textContent='💗 Not quite. Try the next one!';x.value='';document.getElementById('v6Question').textContent=question.join(' × ')+' = ?';x.focus()});
+document.getElementById('v6Question').textContent=question.join(' × ')+' = ?';
+document.getElementById('v6Clock').textContent=duration===0?'Untimed':format(duration);
+document.getElementById('v6Best').textContent='Best correct answers: '+safeRead('izzy_v6_sprint_best',0);
+}
+let duration=180;
+window.v6SetDuration=n=>{stop();duration=n;seconds=n;ready=false;document.getElementById('v6Clock').textContent=n===0?'Untimed':format(n);document.getElementById('v6Go').textContent='Ready when you are!';document.getElementById('v6Answer').disabled=true};
+function format(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+window.v6Start=()=>{if(running||ready)return;ready=true;let count=3,id=++gameId;document.getElementById('v6Go').textContent='Get ready: '+count;let countdown=setInterval(()=>{if(id!==gameId){clearInterval(countdown);return}count--;if(count>0){document.getElementById('v6Go').textContent='Get ready: '+count}else{clearInterval(countdown);document.getElementById('v6Go').textContent='GO! 🌟';running=true;document.getElementById('v6Answer').disabled=false;document.getElementById('v6Answer').focus();if(duration>0)timer=setInterval(()=>{if(!running)return;seconds--;document.getElementById('v6Clock').textContent=format(seconds);if(seconds<=0)finish()},1000)}},1000)};
+function finish(){stop();document.getElementById('v6Answer').disabled=true;let best=Math.max(score,safeRead('izzy_v6_sprint_best',0));safeSave('izzy_v6_sprint_best',best);document.getElementById('v6Go').textContent='Challenge complete! 🏆';document.getElementById('v6Result').textContent=score+' correct out of '+attempts+' attempts. Accuracy: '+(attempts?Math.round(score/attempts*100):0)+'%. Best: '+best};
+window.v6Pause=()=>{if(!ready)return;if(running){running=false;document.getElementById('v6Answer').disabled=true;document.getElementById('v6Go').textContent='Paused 🌸'}else if(seconds>0||duration===0){running=true;document.getElementById('v6Answer').disabled=false;document.getElementById('v6Go').textContent='Keep going!'}};
+window.v6Restart=()=>{stop();challenge()};
+function wordSearch(){
+wordGrid=Array.from({length:8},()=>Array.from({length:8},()=>String.fromCharCode(65+Math.floor(Math.random()*26))));
+const placements=[{w:'READ',r:0,c:0,dr:0,dc:1},{w:'MATH',r:1,c:1,dr:1,dc:0},{w:'STAR',r:2,c:3,dr:1,dc:0},{w:'GROW',r:6,c:0,dr:0,dc:1},{w:'BOOK',r:7,c:4,dr:0,dc:1},{w:'KIND',r:3,c:7,dr:1,dc:0}];
+placements.forEach(({w,r,c,dr,dc})=>[...w].forEach((ch,i)=>wordGrid[r+i*dr][c+i*dc]=ch));
+wordsFound=new Set();selected=[];
+out.innerHTML='<h3>🔎 Garden Word Search</h3><p>Tap the letters in order to spell a hidden word. Find all six words!</p><p>Find: '+targetWords.join(' · ')+'</p><div class="v6words" id="v6Words"></div><p id="v6WordFeedback" role="status">Words found: 0 of 6</p><button class="v6action" onclick="v6WordReset()">Clear selection</button> <button class="v6action" onclick="v6WordNew()">New puzzle</button>';
+const el=document.getElementById('v6Words');wordGrid.forEach((row,r)=>row.forEach((letter,c)=>{const b=document.createElement('button');b.textContent=letter;b.type='button';b.dataset.r=r;b.dataset.c=c;b.onclick=()=>chooseLetter(r,c,b);el.appendChild(b)}));
+}
+function chooseLetter(r,c,button){
+if(selected.some(x=>x.r===r&&x.c===c))return;
+if(selected.length){const a=selected[0],b=selected[selected.length-1],dr=Math.sign(r-a.r),dc=Math.sign(c-a.c);if(Math.max(Math.abs(r-a.r),Math.abs(c-a.c))!==selected.length||!(dr===0||dc===0||Math.abs(r-a.r)===Math.abs(c-a.c))){selected=[];out.querySelectorAll('.v6words button').forEach(x=>x.style.outline='')}}
+selected.push({r,c});button.style.outline='3px solid #ffe07d';
+let word=selected.map(x=>wordGrid[x.r][x.c]).join('');
+if(targetWords.includes(word)&&!wordsFound.has(word)){wordsFound.add(word);selected.forEach(x=>{const cell=out.querySelector('.v6words button[data-r="'+x.r+'"][data-c="'+x.c+'"]');cell.classList.add('found');cell.style.outline=''});selected=[];document.getElementById('v6WordFeedback').textContent='🌟 '+word+' found! '+wordsFound.size+' of 6'+(wordsFound.size===6?' — You did it! 👑':'')}
+else if(!targetWords.some(w=>w.startsWith(word))){selected=[];out.querySelectorAll('.v6words button').forEach(x=>x.style.outline='')}
+}
+window.v6WordReset=()=>{selected=[];out.querySelectorAll('.v6words button').forEach(x=>x.style.outline='')};
+window.v6WordNew=wordSearch;
+const dictionary=[['LEARN','To gain knowledge or a new skill'],['BRAVE','Showing courage even when something is difficult'],['DREAM','Something you hope to achieve'],['GROWTH','The process of improving or developing'],['CREATE','To make something new'],['KINDNESS','Being caring and thoughtful']];
+function wordGuess(){
+let item=dictionary[Math.floor(Math.random()*dictionary.length)];guessWord=item[0];guessed=new Set();mistakes=0;
+out.innerHTML='<h3>🌷 Guess the Word</h3><p>Guess one letter at a time. Your flower grows with each correct guess!</p><p><strong>Hint:</strong> '+item[1]+'</p><p id="v6Blanks" style="font-size:28px;letter-spacing:5px"></p><p id="v6Flower" style="font-size:30px"></p><div id="v6Letters" class="v6tabs"></div><p id="v6GuessStatus" role="status"></p><button class="v6action" onclick="v6WordGuessNew()">Another word</button>';
+for(const ch of 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'){const b=document.createElement('button');b.textContent=ch;b.type='button';b.onclick=()=>{guessed.add(ch);b.disabled=true;if(!guessWord.includes(ch))mistakes++;updateGuess()};document.getElementById('v6Letters').appendChild(b)}
+updateGuess();
+}
+function updateGuess(){const correct=[...guessWord].filter(ch=>guessed.has(ch)).length,win=correct===guessWord.length,loss=mistakes>=7;document.getElementById('v6Blanks').textContent=[...guessWord].map(ch=>guessed.has(ch)?ch:'_').join(' ');document.getElementById('v6Flower').textContent='🌱'+'🌸'.repeat(Math.min(5,correct));document.getElementById('v6GuessStatus').textContent=win?'👑 You found the word!':loss?'💜 The word was '+guessWord+'. Try another!':(7-mistakes)+' guesses remaining';if(win||loss){if(loss)document.getElementById('v6Blanks').textContent=[...guessWord].join(' ');document.querySelectorAll('#v6Letters button').forEach(b=>b.disabled=true)}}
+window.v6WordGuessNew=wordGuess;
+render();
 })();
 </script>
 </body></html>
