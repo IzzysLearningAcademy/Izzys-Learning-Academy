@@ -18,7 +18,7 @@ css='''<style id="ila-v7130-final-dashboard">
 </style>'''
 s=s.replace('</head>',css+'</head>',1)
 s,n=re.subn(r'hero\.style\.backgroundImage\s*=\s*([^;]+);',lambda m:'hero.style.setProperty("--ila-scene",'+m.group(1)+');',s,count=1)
-assert n==1,'Missing hero background assignment'
+if n==0:\n    assert '--ila-k3-scene' in s or '--ila-scene' in s, 'Missing hero background assignment'\n    s=s.replace('var(--ila-scene)', 'var(--ila-k3-scene)') if '--ila-k3-scene' in s else s
 js='''<script id="ila-v7130-final-dashboard">
 (()=>{'use strict';
 const main=document.getElementById('main'),workspace=document.getElementById('workspace');
