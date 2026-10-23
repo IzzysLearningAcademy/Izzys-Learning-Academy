@@ -24,6 +24,23 @@ a{color:inherit;text-decoration:none}a:focus-visible{outline:4px solid var(--foc
 @media(max-width:760px){.hero{grid-template-columns:1fr}.hero picture{order:-1}.hero img{min-height:0;aspect-ratio:3/2;height:auto;object-position:50% 30%}.grades{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}}
 @media(max-width:430px){.shell{width:min(100% - 24px,1180px)}.hero{border-radius:18px}.hero-copy{padding:16px 16px 18px;gap:8px}.hero h1{font-size:27px}.hero p{font-size:15px}.gradecard{border-radius:14px}.gradecard .label{padding:6px 8px 8px}.gradecard .name{font-size:14px}.gradecard small{display:none}}
 @media(prefers-reduced-motion:reduce){.gradecard{transition:none}.gradecard:hover{transform:none}}
+</style><style id="ila-grade-selection-2026">
+.choose .gradecard{position:relative;min-height:150px;display:flex;align-items:flex-end;overflow:hidden;background:radial-gradient(circle at 80% 20%,#ffffff48,transparent 45%),linear-gradient(145deg,var(--top),var(--bottom));border:2px solid #f5d99b;box-shadow:0 8px 20px #10062499}
+.choose .gradecard>img{display:none!important}
+.choose .gradecard:before{content:"✦";position:absolute;top:10px;right:12px;color:#fff2ba;font-size:clamp(40px,6vw,75px);line-height:1;text-shadow:0 5px 15px #1a073f55}
+.choose .gradecard:nth-child(1):before{content:"ABC"}
+.choose .gradecard:nth-child(2):before{content:"1 2 3"}
+.choose .gradecard:nth-child(3):before{content:"✦ ✧"}
+.choose .gradecard:nth-child(4):before{content:"⚙"}
+.choose .gradecard:nth-child(5):before{content:"∑"}
+.choose .gradecard:nth-child(6):before{content:"★"}
+.choose .gradecard:nth-child(7):before{content:"⚛"}
+.choose .gradecard:nth-child(8):before{content:"∞"}
+.choose .gradecard:nth-child(9):before{content:"✧"}
+.choose .gradecard .label{position:relative;z-index:1;width:100%;background:linear-gradient(0deg,#210d41e8,#210d4188)!important;padding:12px 10px!important;min-height:62px}
+.choose .gradecard .label .name{display:block;font-weight:900}
+.choose .gradecard .label small{display:block}
+@media(max-width:550px){.choose .gradecard{min-height:135px}.choose .gradecard:before{font-size:36px}.choose .gradecard .label{padding:8px!important}}
 </style></head><body>
 <header class="header"><div class="shell identity"><img src="assets/academy-logo.png" alt="Izzy's Learning Academy logo" width="48" height="48"><div><b>Izzy's Learning Academy</b><small>Learn Boldly · Dream Big · Shine Bright</small></div></div></header>
 <main class="shell">
