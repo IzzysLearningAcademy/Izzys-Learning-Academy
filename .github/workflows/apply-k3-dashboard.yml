@@ -22,7 +22,7 @@ jobs:
           import re, subprocess, pathlib
           s=pathlib.Path('courses/little-learners.html').read_text()
           for i,m in enumerate(re.finditer(r'<script\b[^>]*>(.*?)</script>',s,re.S|re.I)):
-              if 'src=' in m.group(0).split('>')[0]: continue
+              if 'src=' in m.group(0).split('>')[0] or 'type="application/json"' in m.group(0).split('>')[0]: continue
               p=pathlib.Path('/tmp/ila-script.js')
               p.write_text(m.group(1))
               r=subprocess.run(['node','--check',str(p)],capture_output=True,text=True)
