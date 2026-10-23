@@ -1,0 +1,22 @@
+name: Validate K3 dashboard pull request
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'courses/little-learners.html'
+      - 'assets/k3/**'
+      - 'scripts/validate_k3_dashboard.py'
+      - '.github/workflows/validate-k3-dashboard.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate-k3:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate illustrated dashboard and JavaScript
+        run: python3 scripts/validate_k3_dashboard.py
