@@ -1,0 +1,31 @@
+name: Validate grade dashboard parity
+on:
+  pull_request:
+    paths: ['academy.html', 'courses/little-learners.html', 'assets/grade5-parity.css', '.github/workflows/validate-grade-parity.yml']
+  workflow_dispatch:
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check shared layout and existing learning features
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          a=Path('academy.html').read_text()
+          k=Path('courses/little-learners.html').read_text()
+          css=Path('assets/grade5-parity.css').read_text()
+          assert a.count('assets/grade5-parity.css?v=7133')==1
+          assert k.count('../assets/grade5-parity.css?v=7133')==1
+          assert 'izd-banner' in a and 'izd-tile' in a
+          assert 'ilaGradeExplorerView' in a and 'gradeView(g' in a
+          assert 'royalBlank' in a and 'royalErase' in a
+          assert 'ILA_K3_DASHBOARD_BRIDGE' in k and 'ila-k3-grid' in k
+          assert k.count('id="ila-grade-home"')==1
+          assert 'aspect-ratio:2400/633' in css and 'grid-template-columns:repeat(4,minmax(0,1fr))' in css
+          for g in ['4','5','6','7','8']:
+              assert Path('assets/dash/g'+g+'-banner.jpg').is_file()
+          for g in ['k','g1','g2','g3']:
+              assert Path('assets/k3/'+g+'-banner.webp').is_file()
+          print('PASS: grade artwork, shared layout, navigation, curriculum and scratch paper')
+          PY
