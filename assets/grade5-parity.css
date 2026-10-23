@@ -1,0 +1,39 @@
+/* V7.13 grade-five parity: visual layer only, no learning-state writes. */
+html,body{max-width:100%;overflow-x:clip}
+#ilaGradeExplorerView,.ila-k3-hero,.ila-k3-adventures,.ila-k3-grid{min-width:0;max-width:100%;box-sizing:border-box}
+#ilaGradeExplorerView .ila-gx-frame{padding:clamp(12px,2vw,20px)!important;min-height:0!important}
+#ilaGradeExplorerView .ila-gx-top,#ilaGradeExplorerView .ila-gx-grade-switch{display:flex!important;flex-wrap:wrap!important;gap:8px!important;align-items:center!important}
+#ilaGradeExplorerView .izd-gx-home .izd-grid,#ilaGradeExplorerView .izd-gx-home .dash-grid,#ilaGradeExplorerView .izd-gx-home .grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important}
+#ilaGradeExplorerView .izd-gx-home .izd-tile{width:100%!important;min-width:0!important;max-width:none!important;min-height:210px!important;aspect-ratio:auto!important;box-sizing:border-box!important}
+#ilaGradeExplorerView .izd-gx-home .izd-tile img{max-width:100%!important;height:auto!important;object-fit:contain!important}
+#ilaGradeExplorerView .ila-gx-g4-hero{display:flex!important;flex-direction:column!important;gap:12px!important}
+#ilaGradeExplorerView .ila-gx-g4-hero::before{content:"";display:block;width:100%;aspect-ratio:2400/703;background:url('dash/g4-banner.jpg') center/contain no-repeat}
+#ilaGradeExplorerView .ila-gx-g4-hero-copy{min-height:0!important}
+#ilaGradeExplorerView .ila-gx-g4-passport{display:none!important}
+#ilaGradeExplorerView .ila-gx-6 .ila-gx-g6-hero,#ilaGradeExplorerView .ila-gx-7 .ila-gx-g7-hero,#ilaGradeExplorerView .ila-gx-8 .ila-gx-g8-hero{min-width:0;max-width:100%}
+#ilaGradeExplorerView .ila-gx-6 .ila-gx-g6-hero::before,#ilaGradeExplorerView .ila-gx-7 .ila-gx-g7-hero::before,#ilaGradeExplorerView .ila-gx-8 .ila-gx-g8-hero::before{content:"";display:block;width:100%;aspect-ratio:2400/703;background-size:contain;background-position:center;background-repeat:no-repeat}
+#ilaGradeExplorerView .ila-gx-6 .ila-gx-g6-hero::before{background-image:url('dash/g6-banner.jpg')}
+#ilaGradeExplorerView .ila-gx-7 .ila-gx-g7-hero::before{background-image:url('dash/g7-banner.jpg')}
+#ilaGradeExplorerView .ila-gx-8 .ila-gx-g8-hero::before{background-image:url('dash/g8-banner.jpg')}
+#ilaGradeExplorerView .ila-gx-list{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+#ilaGradeExplorerView .ila-gx-card{min-width:0!important;min-height:180px!important;overflow-wrap:anywhere}
+@media(max-width:1020px){#ilaGradeExplorerView .izd-gx-home .izd-grid,#ilaGradeExplorerView .izd-gx-home .dash-grid,#ilaGradeExplorerView .izd-gx-home .grid,#ilaGradeExplorerView .ila-gx-list{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:620px){#ilaGradeExplorerView .izd-gx-home .izd-tile{min-height:160px!important}#ilaGradeExplorerView .ila-gx-card{min-height:135px!important;padding:12px!important}#ilaGradeExplorerView .ila-gx-buttons{gap:6px!important}#ilaGradeExplorerView .ila-gx-btn{min-height:40px!important}}
+/* K–3: remove the obsolete oversized sidebar grid; preserve lessons and reward data. */
+body:has(.ila-k3-hero) .layout{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:12px!important;max-width:100%!important}
+body:has(.ila-k3-hero) .layout>.main,body:has(.ila-k3-hero) .layout>.sidebar{width:100%!important;min-width:0!important;max-width:100%!important;flex:none!important;grid-column:auto!important}
+body:has(.ila-k3-hero) .layout>.sidebar{display:none!important}
+body:has(.ila-k3-hero) .back-academy{display:none!important}
+.ila-k3-hero{height:auto!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+.ila-k3-hero::before{content:""!important;display:block!important;position:static!important;inset:auto!important;order:-1!important;flex:0 0 auto!important;width:100%!important;height:auto!important;aspect-ratio:2400/633!important;background-image:var(--ila-k3-scene)!important;background-size:contain!important;background-repeat:no-repeat!important;background-position:center!important}
+.ila-k3-copy{width:100%!important;max-width:100%!important;min-width:0!important}
+.ila-grade-nav{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:8px!important;margin:10px 0!important;padding:8px 12px!important;min-height:0!important;height:auto!important;box-sizing:border-box!important}
+.ila-grade-nav .ila-grade-label{flex:1 1 130px!important;min-width:0!important}
+.ila-grade-nav .ila-grade-score{flex:0 1 auto!important;font-size:clamp(13px,1.6vw,17px)!important}
+.ila-grade-nav a,.ila-grade-nav button{min-height:40px!important;padding:8px 12px!important}
+.ila-k3-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:14px!important;width:100%!important}
+.ila-k3-tile{width:100%!important;min-width:0!important;height:clamp(185px,20vw,235px)!important;min-height:0!important;box-sizing:border-box!important;overflow-wrap:anywhere!important}
+.ila-k3-tile img{max-width:100%!important;object-fit:contain!important}
+#workspace[hidden]{display:none!important}
+@media(max-width:1000px){.ila-k3-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.ila-k3-tile{height:clamp(180px,26vw,230px)!important}}
+@media(max-width:480px){.ila-grade-nav{padding:8px!important;gap:6px!important}.ila-grade-nav .ila-grade-score{flex:1 1 100%!important;text-align:center!important}.ila-k3-grid{gap:10px!important}.ila-k3-tile{height:180px!important;padding:10px!important}.ila-k3-tile strong{font-size:clamp(13px,3.5vw,16px)!important}}
