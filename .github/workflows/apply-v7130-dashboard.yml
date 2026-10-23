@@ -1,0 +1,30 @@
+name: Apply grade dashboard corrections
+on:
+  push:
+    branches: [fix/grade-dashboards-navigation-and-mobile-hero]
+    paths: [scripts/apply_v7130_dashboard.py, .github/workflows/apply-v7130-dashboard.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply dashboard patch
+        run: python3 scripts/apply_v7130_dashboard.py
+      - name: Verify modified HTML contains expected elements
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('courses/little-learners.html').read_text()
+          assert 'id="ila-k3-grade-dashboard-v7130"' in s
+          assert 'id="ila-k3-grade-nav-v7130"' in s
+          assert 'id="ila-k3-dashboard-integration"' in s
+          PY
+      - name: Commit dashboard changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add courses/little-learners.html
+          git diff --cached --quiet || (git commit -m "Apply grade dashboard navigation and remove duplicate banners" && git push)
