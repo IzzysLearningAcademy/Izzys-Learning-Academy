@@ -15,7 +15,7 @@ jobs:
           import re
           s=Path('courses/little-learners.html').read_text()
           assert s.count('id="ila-grade-home"')==1, 'Duplicate Home navigation'
-          assert s.count('id="ila-v7130-final-dashboard"')==1
+          assert s.count('<script id="ila-v7130-final-dashboard"')==1
           assert 'id="ila-k3-grade-nav-v7130"' not in s
           assert 'id="ila-k3-scene-viewer"' not in s
           assert 'id="ila-v7131-k3-layout-correction"' in s
