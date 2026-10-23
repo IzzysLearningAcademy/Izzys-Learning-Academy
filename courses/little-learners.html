@@ -135,6 +135,31 @@ body{background:radial-gradient(ellipse at 12% 0%,#5b2380 0%,transparent 35%),ra
 .ila-scene-modal::backdrop{background:#120725d9}
 .ila-scene-modal img{width:100%;height:auto;max-height:80vh;object-fit:contain}
 .ila-scene-modal button{float:right;padding:8px 14px;margin-bottom:8px;background:#522582;color:#fff;border:1px solid #f2d58c;border-radius:9px}
+</style><style id="ila-k3-grade-dashboard-v7130">
+/* Grade is chosen on the Academy homepage; do not show a second grade chooser. */
+.grade-list{display:none!important}
+.ila-scene-open,.ila-scene-modal{display:none!important}
+/* Remove duplicate Academy brand banner above the illustrated grade scene. */
+body>.shell>.header,.shell>.header{display:none!important}
+.ila-k3-hero{margin-top:10px!important}
+.ila-k3-hero::before{background-size:contain!important;background-position:center!important}
+.ila-k3-adventures{margin-top:14px}
+.ila-k3-grid{scroll-margin-top:12px}
+.ila-grade-nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#361451;color:#fff;border:1px solid #e4bc6d;border-radius:16px;padding:10px 14px;margin:10px 0}
+.ila-grade-nav a,.ila-grade-nav button{background:#5a247b;color:#fff;border:1px solid #f0d48d;border-radius:11px;padding:9px 13px;font-weight:800;text-decoration:none;min-height:42px}
+.ila-grade-nav .ila-grade-name{font-weight:900;flex:1;min-width:95px}
+@media(max-width:590px){.ila-grade-nav{gap:6px;padding:8px}.ila-grade-nav a,.ila-grade-nav button{font-size:12px;padding:7px 9px}.ila-k3-hero::before{aspect-ratio:2400/633!important}}
+</style><style id="ila-v7130-final-dashboard">
+.grade-list,.shell>.header,.ila-scene-open,.ila-scene-modal{display:none!important}
+#workspace[hidden]{display:none!important}
+.ila-k3-hero{height:auto!important;min-height:0!important;background:#2b124e!important;display:flex!important;flex-direction:column!important;overflow:hidden}
+.ila-k3-hero::before{content:""!important;display:block!important;position:static!important;order:-1!important;width:100%!important;aspect-ratio:2400/633!important;background-image:var(--ila-k3-scene)!important;background-position:center!important;background-size:contain!important;background-repeat:no-repeat!important}
+.ila-k3-copy{width:100%!important;max-width:none!important;position:relative!important;background:linear-gradient(110deg,#361356,#66247b)!important;padding:16px 22px!important}
+.ila-grade-nav{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:10px 0 16px;padding:10px 13px;background:linear-gradient(100deg,#3a175f,#61268a);border:1px solid #e6c77b;border-radius:16px;color:white}
+.ila-grade-nav a,.ila-grade-nav button{background:#55257a;color:#fff;text-decoration:none;border:1px solid #e8ce8b;border-radius:11px;min-height:44px;padding:9px 12px;font-weight:800}
+.ila-grade-nav .ila-grade-label{font-weight:900;flex:1;min-width:105px}
+.ila-grade-nav .ila-grade-score{font-weight:850;white-space:nowrap}
+@media(max-width:590px){.ila-grade-nav{padding:8px;gap:6px}.ila-grade-nav a,.ila-grade-nav button{padding:8px;font-size:12px}.ila-k3-copy{padding:12px 14px!important}}
 </style></head>
 <body>
 <div class="shell"><nav aria-label="Return to Academy" class="back-academy"><a href="../index.html">← Back to the Academy</a></nav>
@@ -1114,6 +1139,66 @@ const img=document.createElement('img');img.alt='Complete illustrated adventure 
 hero.append(btn);document.body.append(dlg);
 btn.onclick=()=>{const g=window.ILA_K3_DASHBOARD_BRIDGE?.getGrade()||'K';const code=({K:'k',1:'g1',2:'g2',3:'g3'})[g]||'k';img.src='../assets/k3/'+code+'-banner.webp';dlg.showModal();};
 dlg.onclick=e=>{if(e.target===dlg)dlg.close();};
+})();
+</script>
+<script id="ila-k3-grade-nav-v7130">
+(()=>{
+'use strict';
+const main=document.querySelector('#main');
+if(!main)return;
+const nav=document.createElement('nav');
+nav.className='ila-grade-nav';
+nav.setAttribute('aria-label','Grade dashboard navigation');
+nav.innerHTML='<button type="button" id="ila-grade-home">⌂ Home</button><span class="ila-grade-name" id="ila-grade-name"></span><span id="ila-grade-rewards" aria-label="Learner stars and level"></span><a href="../index.html">← Back to Academy</a>';
+main.parentElement.insertBefore(nav,main);
+const home=nav.querySelector('#ila-grade-home');
+function update(){
+ const bridge=window.ILA_K3_DASHBOARD_BRIDGE;
+ const g=bridge?.getGrade()||new URLSearchParams(location.search).get('grade')||'K';
+ nav.querySelector('#ila-grade-name').textContent=g==='K'?'Kindergarten':'Grade '+g;
+ // No invented stars: rewards are shown only when the existing Academy exposes them.
+ const reward=nav.querySelector('#ila-grade-rewards');
+ const existing=document.querySelector('[data-academy-stars],[data-stars-total]');
+ if(existing&&existing!==reward)reward.textContent=existing.textContent;
+}
+home.onclick=()=>{
+ const bridge=window.ILA_K3_DASHBOARD_BRIDGE;
+ if(bridge?.gradeSelect){bridge.gradeSelect(bridge.getGrade());}
+ else location.href='little-learners.html?grade='+encodeURIComponent(new URLSearchParams(location.search).get('grade')||'K');
+ document.querySelector('.ila-k3-hero')?.scrollIntoView({behavior:'smooth',block:'start'});
+};
+document.addEventListener('ila-k3-grade-ready',update);
+update();
+})();
+</script>
+<script id="ila-v7130-final-dashboard">
+(()=>{'use strict';
+const main=document.getElementById('main'),workspace=document.getElementById('workspace');
+if(!main||!workspace)return;
+const nav=document.createElement('nav');nav.className='ila-grade-nav';nav.setAttribute('aria-label','Grade dashboard navigation');
+nav.innerHTML='<button type="button" id="ila-grade-home">⌂ Home</button><span class="ila-grade-label" id="ila-grade-name"></span><span class="ila-grade-score" id="ila-grade-score"></span><a href="../index.html">← Back to Academy</a>';
+main.parentNode.insertBefore(nav,main);
+function grade(){return window.ILA_K3_DASHBOARD_BRIDGE?.getGrade()||new URLSearchParams(location.search).get('grade')||'K'}
+function refresh(){
+const g=grade();nav.querySelector('#ila-grade-name').textContent=g==='K'?'Kindergarten':'Grade '+g;
+let points=0;try{const saved=JSON.parse(localStorage.getItem('izzy-academy-v1')||'{}');points=Math.max(0,Math.floor(Number(saved.points)||0))}catch(e){}
+nav.querySelector('#ila-grade-score').textContent='⭐ '+points+' · Level '+(1+Math.floor(points/100));
+}
+function gate(){workspace.hidden=!!workspace.querySelector('.subject-grid');}
+new MutationObserver(()=>{gate();refresh()}).observe(workspace,{childList:true,subtree:false});
+nav.querySelector('#ila-grade-home').addEventListener('click',()=>{
+const b=window.ILA_K3_DASHBOARD_BRIDGE;
+if(b?.selectGrade)b.selectGrade(grade());
+else location.href='little-learners.html?grade='+encodeURIComponent(grade());
+document.querySelector('.ila-k3-hero')?.scrollIntoView({block:'start'});
+});
+document.getElementById('ila-k3-grid')?.addEventListener('click',e=>{
+if(e.target.closest('button:not(:disabled)'))queueMicrotask(gate);
+});
+document.addEventListener('ila-k3-grade-ready',()=>{refresh();gate()});
+window.addEventListener('pageshow',refresh);
+window.addEventListener('storage',refresh);
+refresh();gate();
 })();
 </script>
 <script id="ila-k3-dashboard-integration">
