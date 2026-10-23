@@ -41,7 +41,19 @@ a{color:inherit;text-decoration:none}a:focus-visible{outline:4px solid var(--foc
 .choose .gradecard .label .name{display:block;font-weight:900}
 .choose .gradecard .label small{display:block}
 @media(max-width:550px){.choose .gradecard{min-height:135px}.choose .gradecard:before{font-size:36px}.choose .gradecard .label{padding:8px!important}}
-</style><style id="ila-welcome-image-uncropped">\n/* Preserve full illustrated welcome scene on phone and tablet. */\n.hero picture{min-width:0;align-self:stretch}\n.hero picture img{width:100%;height:100%;object-fit:contain;object-position:center;background:#2b1047}\n@media(max-width:760px){.hero picture{height:auto!important;order:-1}.hero picture img{height:auto!important;min-height:0!important;aspect-ratio:auto!important;object-fit:contain!important;object-position:center!important}}\n</style></head><body>
+</style><style id="ila-welcome-image-uncropped">\n/* Preserve full illustrated welcome scene on phone and tablet. */\n.hero picture{min-width:0;align-self:stretch}\n.hero picture img{width:100%;height:100%;object-fit:contain;object-position:center;background:#2b1047}\n@media(max-width:760px){.hero picture{height:auto!important;order:-1}.hero picture img{height:auto!important;min-height:0!important;aspect-ratio:auto!important;object-fit:contain!important;object-position:center!important}}\n</style><style id="ila-v713-responsive-home">
+/* Preserve the complete artwork on every device without forced enlargement or cropping. */
+.hero{grid-template-columns:minmax(0,1fr);overflow:hidden}
+.hero picture{display:block;width:100%;height:auto;order:-1;min-width:0;background:#2b1047}
+.hero picture img,.hero img{display:block;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;object-fit:contain!important;object-position:center!important;aspect-ratio:auto!important}
+.hero-copy{padding:clamp(18px,3vw,32px)}
+.grades{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr))!important;gap:clamp(10px,2vw,18px)!important;align-items:stretch}
+.gradecard{min-width:0!important;min-height:0!important;height:auto!important;aspect-ratio:auto!important;display:flex!important;flex-direction:column!important;overflow:hidden}
+.gradecard>img{display:block!important;position:static!important;width:100%!important;height:auto!important;aspect-ratio:1/1!important;object-fit:contain!important;object-position:center!important;opacity:1!important}
+.gradecard .label{position:static!important;display:block!important;min-height:72px;padding:12px!important;background:linear-gradient(125deg,var(--top),var(--bottom))}
+.gradecard .name,.gradecard small{display:block;overflow-wrap:anywhere}
+@media(max-width:600px){.shell{width:min(100% - 24px,1180px)}.grades{grid-template-columns:repeat(2,minmax(0,1fr))!important}.hero{border-radius:18px}.hero-copy{padding:18px}.gradecard .label{min-height:76px}}
+</style></head><body>
 <header class="header"><div class="shell identity"><img src="assets/academy-logo.png" alt="Izzy's Learning Academy logo" width="48" height="48"><div><b>Izzy's Learning Academy</b><small>Learn Boldly · Dream Big · Shine Bright</small></div></div></header>
 <main class="shell">
 <section class="hero" aria-label="Welcome"><div class="hero-copy"><h1>Welcome to <span>Izzy’s Learning Academy</span></h1><p>Learning that’s clear, encouraging and fun: build confidence through practice, creativity and discovery.</p><p class="fine">An independent supplemental learning platform, not an accredited school. Grade-level content varies in development and review status.</p></div>
@@ -57,4 +69,4 @@ a{color:inherit;text-decoration:none}a:focus-visible{outline:4px solid var(--foc
 <a class="gradecard" style="--top:#8960f4;--bottom:#5931b3" href="academy.html?grade=7" aria-label="Open the Grade 7 dashboard"><img src="assets/welcome/grade-7.webp" alt="" width="360" height="360"><span class="label"><span class="name">Grade 7</span><small>Think boldly</small></span></a>
 <a class="gradecard" style="--top:#eba342;--bottom:#ad4f66" href="academy.html?grade=8" aria-label="Open the Grade 8 dashboard"><img src="assets/welcome/grade-8.webp" alt="" width="360" height="360"><span class="label"><span class="name">Grade 8</span><small>Own your journey</small></span></a>
 </div></section></main>
-<footer class="footer">Izzy’s Learning Academy · Supplemental educational platform · Academy Version 7.12.29</footer></body></html>
+<footer class="footer">Izzy’s Learning Academy · Supplemental educational platform · Academy Version 7.13.0</footer></body></html>
