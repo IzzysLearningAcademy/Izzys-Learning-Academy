@@ -1,0 +1,49 @@
+name: Apply grade-five dashboard parity
+on:
+  push:
+    branches: [fix/v713-grade5-layout-parity]
+    paths:
+      - 'assets/grade5-parity.css'
+      - '.github/workflows/apply-grade5-parity.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Add shared responsive styling to existing dashboard pages
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          targets = {
+            'academy.html': '<link rel="stylesheet" href="assets/grade5-parity.css?v=7133">',
+            'courses/little-learners.html': '<link rel="stylesheet" href="../assets/grade5-parity.css?v=7133">',
+          }
+          for filename, tag in targets.items():
+              p = Path(filename)
+              s = p.read_text(encoding='utf-8')
+              assert '</head>' in s, f'Missing document head in {filename}'
+              if tag not in s:
+                  s = s.replace('</head>', tag + '</head>', 1)
+                  p.write_text(s, encoding='utf-8')
+              assert s.count(tag) == 1
+          a=Path('academy.html').read_text()
+          k=Path('courses/little-learners.html').read_text()
+          assert 'royalBlank' in a and 'royalErase' in a, 'Scratch-paper controls must remain'
+          assert 'ilaGradeExplorerView' in a and 'izd-banner' in a, 'Grade 5 or 4–8 dashboard missing'
+          assert 'ila-k3-grid' in k and 'ILA_K3_DASHBOARD_BRIDGE' in k, 'K–3 curriculum bridge missing'
+          print('PASS: both dashboards linked; Grade 5 untouched; blank paper, eraser and lesson engines preserved')
+          PY
+      - name: Commit integrated dashboard HTML
+        run: |
+          if ! git diff --quiet -- academy.html courses/little-learners.html; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add academy.html courses/little-learners.html
+            git commit -m "Integrate grade-five dashboard layout styling in K–3 and Grades 4–8"
+            git push
+          fi
