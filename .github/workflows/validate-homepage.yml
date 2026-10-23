@@ -1,0 +1,56 @@
+name: Validate homepage V7.13
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'assets/welcome/**'
+      - '.github/workflows/validate-homepage.yml'
+  push:
+    branches:
+      - 'fix/v713-home-responsive-and-version'
+    paths:
+      - 'index.html'
+      - 'assets/welcome/**'
+      - '.github/workflows/validate-homepage.yml'
+  workflow_dispatch:
+jobs:
+  homepage:
+    name: Homepage structure and image integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate homepage and full illustration
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import re
+          html=Path("index.html").read_text(encoding="utf-8")
+          class Tags(HTMLParser):
+              def __init__(self):
+                  super().__init__(); self.images=[]; self.links=[]; self.sources=[]
+              def handle_starttag(self, tag, attrs):
+                  d=dict(attrs)
+                  if tag=="img": self.images.append(d)
+                  if tag=="a": self.links.append(d)
+                  if tag=="source": self.sources.append(d)
+          p=Tags();p.feed(html)
+          assert "Academy Version 7.13.0" in html, "Homepage version stale"
+          hero=[i for i in p.images if "hero-wide.jpg" in i.get("src","")]
+          assert len(hero)==1, "Full campus hero image must appear exactly once"
+          assert not any("hero-phone" in s.get("srcset","") for s in p.sources), "Mobile must not substitute a cropped hero"
+          assert "object-fit:contain!important" in html, "Hero must use contain"
+          assert "aspect-ratio:auto!important" in html, "Hero aspect ratio must be natural"
+          assert "overflow-x:clip" in html, "Horizontal overflow guard missing"
+          assert len([a for a in p.links if "gradecard" in a.get("class","").split()])==9, "Expected nine grade destinations"
+          for img in p.images:
+              src=img.get("src","")
+              if src and not re.match(r"^(https?:|data:)",src):
+                  assert Path(src).is_file(),f"Missing image: {src}"
+          for a in p.links:
+              href=a.get("href","").split("?")[0].split("#")[0]
+              if href and not re.match(r"^(https?:|mailto:)",href):
+                  assert Path(href).is_file(),f"Missing grade destination: {href}"
+          print("PASS: full campus hero, nine grades, image assets, routes, responsive CSS and V7.13.0")
+          PY
