@@ -160,6 +160,15 @@ body>.shell>.header,.shell>.header{display:none!important}
 .ila-grade-nav .ila-grade-label{font-weight:900;flex:1;min-width:105px}
 .ila-grade-nav .ila-grade-score{font-weight:850;white-space:nowrap}
 @media(max-width:590px){.ila-grade-nav{padding:8px;gap:6px}.ila-grade-nav a,.ila-grade-nav button{padding:8px;font-size:12px}.ila-k3-copy{padding:12px 14px!important}}
+</style><style id="ila-v7131-k3-layout-correction">
+/* One navigation bar, proportional source artwork and responsive controls. */
+.ila-grade-nav{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:10px;max-width:100%;box-sizing:border-box}
+.ila-grade-nav .ila-grade-label{min-width:0!important;overflow-wrap:break-word}
+.ila-grade-nav .ila-grade-score{font-variant-numeric:tabular-nums}
+.ila-k3-hero::before{height:auto!important;min-height:0!important;flex:none!important;aspect-ratio:2400 / 633!important;background-size:100% 100%!important}
+.ila-k3-hero{width:100%;max-width:100%;box-sizing:border-box}
+@media(max-width:620px){.ila-grade-nav{grid-template-columns:auto minmax(0,1fr) auto!important;gap:8px!important}.ila-grade-nav>a{grid-column:1 / -1;text-align:center}.ila-grade-nav .ila-grade-score{font-size:clamp(12px,3.4vw,16px)}}
+@media(max-width:360px){.ila-grade-nav{grid-template-columns:auto 1fr!important}.ila-grade-nav .ila-grade-score{grid-column:1/-1;text-align:center}}
 </style></head>
 <body>
 <div class="shell"><nav aria-label="Return to Academy" class="back-academy"><a href="../index.html">← Back to the Academy</a></nav>
@@ -1128,49 +1137,8 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
  loadSelected();
 })();
 </script>
-<script id="ila-k3-scene-viewer">
-(()=>{'use strict';
-const hero=document.querySelector('.ila-k3-hero');
-if(!hero||!window.HTMLDialogElement)return;
-const btn=document.createElement('button');btn.type='button';btn.className='ila-scene-open';btn.textContent='View full scene';
-const dlg=document.createElement('dialog');dlg.className='ila-scene-modal';
-const close=document.createElement('button');close.type='button';close.textContent='Close';close.onclick=()=>dlg.close();
-const img=document.createElement('img');img.alt='Complete illustrated adventure scene';dlg.append(close,img);
-hero.append(btn);document.body.append(dlg);
-btn.onclick=()=>{const g=window.ILA_K3_DASHBOARD_BRIDGE?.getGrade()||'K';const code=({K:'k',1:'g1',2:'g2',3:'g3'})[g]||'k';img.src='../assets/k3/'+code+'-banner.webp';dlg.showModal();};
-dlg.onclick=e=>{if(e.target===dlg)dlg.close();};
-})();
-</script>
-<script id="ila-k3-grade-nav-v7130">
-(()=>{
-'use strict';
-const main=document.querySelector('#main');
-if(!main)return;
-const nav=document.createElement('nav');
-nav.className='ila-grade-nav';
-nav.setAttribute('aria-label','Grade dashboard navigation');
-nav.innerHTML='<button type="button" id="ila-grade-home">⌂ Home</button><span class="ila-grade-name" id="ila-grade-name"></span><span id="ila-grade-rewards" aria-label="Learner stars and level"></span><a href="../index.html">← Back to Academy</a>';
-main.parentElement.insertBefore(nav,main);
-const home=nav.querySelector('#ila-grade-home');
-function update(){
- const bridge=window.ILA_K3_DASHBOARD_BRIDGE;
- const g=bridge?.getGrade()||new URLSearchParams(location.search).get('grade')||'K';
- nav.querySelector('#ila-grade-name').textContent=g==='K'?'Kindergarten':'Grade '+g;
- // No invented stars: rewards are shown only when the existing Academy exposes them.
- const reward=nav.querySelector('#ila-grade-rewards');
- const existing=document.querySelector('[data-academy-stars],[data-stars-total]');
- if(existing&&existing!==reward)reward.textContent=existing.textContent;
-}
-home.onclick=()=>{
- const bridge=window.ILA_K3_DASHBOARD_BRIDGE;
- if(bridge?.gradeSelect){bridge.gradeSelect(bridge.getGrade());}
- else location.href='little-learners.html?grade='+encodeURIComponent(new URLSearchParams(location.search).get('grade')||'K');
- document.querySelector('.ila-k3-hero')?.scrollIntoView({behavior:'smooth',block:'start'});
-};
-document.addEventListener('ila-k3-grade-ready',update);
-update();
-})();
-</script>
+
+
 <script id="ila-v7130-final-dashboard">
 (()=>{'use strict';
 const main=document.getElementById('main'),workspace=document.getElementById('workspace');

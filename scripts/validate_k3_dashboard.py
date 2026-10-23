@@ -11,7 +11,7 @@ s=page.read_text(encoding="utf-8")
 assert 'id="ila-k3-final-scenes"' in s, "Full-scene CSS missing"
 assert '--ila-k3-scene' in s, "Scene image variable missing"
 assert 'aspect-ratio:2400/633' in s, "Scene proportions not preserved"
-assert 'id="ila-k3-scene-viewer"' in s, "Full scene viewer missing"
+assert 'id="ila-k3-scene-viewer"' not in s, "Obsolete scene viewer must be removed"
 assert 'els.workspace.hidden=!activityOpen' in s, "Dashboard coursework gating missing"
 assert 'ila-k3-dashboard-integration' in s, "Grade subject cards missing"
 for name in ("k-banner.webp","g1-banner.webp","g2-banner.webp","g3-banner.webp"):
