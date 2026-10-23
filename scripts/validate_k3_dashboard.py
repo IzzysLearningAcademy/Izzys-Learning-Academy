@@ -17,12 +17,12 @@ assert 'ila-k3-dashboard-integration' in s, "Grade subject cards missing"
 for name in ("k-banner.webp","g1-banner.webp","g2-banner.webp","g3-banner.webp"):
     p=Path("assets/k3")/name
     assert p.is_file() and p.stat().st_size>1000, f"Missing illustration: {p}"
-scripts=re.findall(r'<script\\b([^>]*)>(.*?)</script\\s*>',s,re.I|re.S)
+scripts=re.findall(r'<script\b([^>]*)>(.*?)</script\s*>',s,re.I|re.S)
 checked=0
 with tempfile.TemporaryDirectory() as d:
     for i,(attrs,body) in enumerate(scripts):
-        if re.search(r'\\bsrc\\s*=',attrs,re.I): continue
-        typ=re.search(r'\\btype\\s*=\\s*["\\\']([^"\\\']+)',attrs,re.I)
+        if re.search(r'\bsrc\s*=',attrs,re.I): continue
+        typ=re.search(r'\btype\s*=\s*["\\\']([^"\\\']+)',attrs,re.I)
         if typ and typ.group(1).lower() not in ("text/javascript","application/javascript","module"): continue
         if not body.strip(): continue
         p=Path(d)/f"script-{i}.js"
