@@ -23,12 +23,12 @@ This is a tracking document, **not** proof of completion.
 - [ ] Preserve approved grade-selection tiles
 
 ## P3 — Sketch Paper
-- [ ] Add blank page alongside existing lined and graph pages
-- [ ] Preserve existing eraser and drawing behavior
+- [x] Add blank page alongside existing lined and graph pages (committed to PR branch)
+- [x] Preserve existing eraser and drawing behavior (eraser logic unchanged; device QA pending)
 - [ ] Switching paper styles does not silently erase work
 
 ## P4 — Release gates
-- [ ] Verify dashboard patch has been applied to actual HTML
+- [x] Verify dashboard patch has been applied to actual HTML (committed on PR branch; device QA pending)
 - [ ] Run automated syntax and static checks against final changed files
 - [ ] Test interactive navigation, stars, saved progress, and backups in browser
 - [ ] Verify visual quality on iOS and Android
