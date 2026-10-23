@@ -19,10 +19,11 @@ jobs:
           from pathlib import Path
           import re,subprocess
           s=Path('courses/little-learners.html').read_text()
-          for token in ('ila-v7130-final-dashboard','ila-grade-score','Back to Academy','--ila-scene','izzy-academy-v1'):
+          for token in ('ila-v7130-final-dashboard','ila-grade-score','Back to Academy','--ila-k3-scene','izzy-academy-v1'):
               assert token in s,token
-          for i,body in enumerate(re.findall(r'<script\b[^>]*>(.*?)</script>',s,re.S|re.I)):
-              if not body.strip() or 'application/json' in body[:100]:continue
+          for i,match in enumerate(re.finditer(r'<script\b([^>]*)>(.*?)</script>',s,re.S|re.I)):
+              attrs,body=match.groups()
+              if not body.strip() or re.search(r'type=[\"\x27]application/(?:json|ld\+json)',attrs,re.I):continue
               p=Path('/tmp/check-'+str(i)+'.js');p.write_text(body)
               result=subprocess.run(['node','--check',str(p)],capture_output=True,text=True)
               if result.returncode:raise Exception('JS '+str(i)+' '+result.stderr)
