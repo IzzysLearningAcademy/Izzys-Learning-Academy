@@ -1718,6 +1718,7 @@ body.izsp-open{overflow:hidden}
 .izsp-tool.on{background:#efe2ff;border-color:#a777d6;color:#3d1a66}
 .izsp-tool:disabled{opacity:.45}
 .izsp-paper{position:relative;flex:1 1 auto;min-height:150px;background-color:#fffdf8;background-image:repeating-linear-gradient(#fffdf8 0 31px,#d9c6ee 31px 32px);touch-action:none}
+.izsp-paper.blank{background-image:none;background-color:#fffdf8}
 .izsp-paper.graph{background-image:linear-gradient(#e2d4f2 1px,transparent 1px),linear-gradient(90deg,#e2d4f2 1px,transparent 1px);background-size:24px 24px}
 .izsp-paper canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
 .izsp-ans{padding:10px 12px 12px;background:linear-gradient(180deg,#fff3dc,#ffe9f6);border-top:2px solid #f0c977}
@@ -1933,7 +1934,7 @@ const head = el('div', {class: 'izsp-head', id: 'royalHead'}, [el('strong', null
 const tools = el('div', {class: 'izsp-tools', id: 'royalTools'}, [
   btn('royalPen', '✏️ Pencil', 'izsp-tool on', () => setEraser(false), {'aria-pressed': 'true'}), btn('royalErase', '🧽 Eraser', 'izsp-tool', () => setEraser(true), {'aria-pressed': 'false'}),
   btn('royalUndo', '↶ Undo', 'izsp-tool', () => { work.pop(); saveWork(); paintWork(); }),
-  btn('royalLines', '☰ Lined', 'izsp-tool on', () => setPaper('lined'), {'aria-pressed': 'true'}), btn('royalGraph', '▦ Graph', 'izsp-tool', () => setPaper('graph'), {'aria-pressed': 'false'}),
+  btn('royalLines', '☰ Lined', 'izsp-tool on', () => setPaper('lined'), {'aria-pressed': 'true'}), btn('royalGraph', '▦ Graph', 'izsp-tool', () => setPaper('graph'), {'aria-pressed': 'false'}), btn('royalBlank', '□ Blank', 'izsp-tool', () => setPaper('blank'), {'aria-pressed': 'false'}),
   btn('royalClear', '🗑 Clear page', 'izsp-tool', clearPage)]);
 const ansArea = el('div', {class: 'izsp-ans'}, [el('div', {class: 'izsp-anshead'}, [el('b', null, '✍️ Answer box'), el('small', null, 'Write only your final answer: like 56, 4.5 or 3/4')]), ansWrap,
   el('div', {class: 'izsp-read'}, [chips, el('div', {class: 'izsp-actions'}, [clrAns, fixBtn, useBtn])]), fixRow, msg]);
@@ -1942,7 +1943,7 @@ panel.replaceChildren(sheet); panel.classList.add('izsp');
 panel.addEventListener('click', e => { if (e.target === panel) close(); });
 
 function setEraser(on) { eraser = on; $('royalPen').classList.toggle('on', !on); $('royalErase').classList.toggle('on', on); $('royalPen').setAttribute('aria-pressed', String(!on)); $('royalErase').setAttribute('aria-pressed', String(on)); }
-function setPaper(k) { paperKind = k; paper.classList.toggle('graph', k === 'graph'); $('royalLines').classList.toggle('on', k === 'lined'); $('royalGraph').classList.toggle('on', k === 'graph'); $('royalLines').setAttribute('aria-pressed', String(k === 'lined')); $('royalGraph').setAttribute('aria-pressed', String(k === 'graph')); }
+function setPaper(k) { paperKind = k; paper.classList.toggle('graph', k === 'graph'); paper.classList.toggle('blank', k === 'blank'); for (const [id,kind] of [['royalLines','lined'],['royalGraph','graph'],['royalBlank','blank']]) { $(id).classList.toggle('on', k === kind); $(id).setAttribute('aria-pressed', String(k === kind)); } }
 let clearArmed = 0;
 function clearPage() { const b = $('royalClear'); if (!clearArmed) { clearArmed = setTimeout(() => { clearArmed = 0; b.textContent = '🗑 Clear page'; }, 3000); b.textContent = 'Tap again to clear'; return; } clearTimeout(clearArmed); clearArmed = 0; b.textContent = '🗑 Clear page'; work = []; saveWork(); paintWork(); }
 
