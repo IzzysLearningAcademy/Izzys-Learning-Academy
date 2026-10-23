@@ -41,11 +41,26 @@ a{color:inherit;text-decoration:none}a:focus-visible{outline:4px solid var(--foc
 .choose .gradecard .label .name{display:block;font-weight:900}
 .choose .gradecard .label small{display:block}
 @media(max-width:550px){.choose .gradecard{min-height:135px}.choose .gradecard:before{font-size:36px}.choose .gradecard .label{padding:8px!important}}
-</style><style id="ila-welcome-image-uncropped">\n/* Preserve full illustrated welcome scene on phone and tablet. */\n.hero picture{min-width:0;align-self:stretch}\n.hero picture img{width:100%;height:100%;object-fit:contain;object-position:center;background:#2b1047}\n@media(max-width:760px){.hero picture{height:auto!important;order:-1}.hero picture img{height:auto!important;min-height:0!important;aspect-ratio:auto!important;object-fit:contain!important;object-position:center!important}}\n</style></head><body>
+</style><style id="ila-v713-responsive">
+html,body{max-width:100%;overflow-x:clip}
+.shell{width:min(1180px,calc(100% - 32px));min-width:0}
+.hero{min-width:0;max-width:100%;grid-template-columns:minmax(0,5fr) minmax(0,7fr)}
+.hero-copy,.hero picture{min-width:0}
+.hero picture img{display:block;width:100%;height:auto!important;min-height:0!important;aspect-ratio:auto!important;object-fit:contain!important;object-position:center!important}
+.grades{grid-template-columns:repeat(9,minmax(0,1fr));min-width:0}
+.gradecard{min-width:0}.gradecard .name{overflow-wrap:anywhere}
+@media(max-width:1100px){.grades{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:760px){.hero{grid-template-columns:minmax(0,1fr)}.hero picture{order:-1}.grades{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:430px){.shell{width:calc(100% - 24px)}}
+</style><style id="ila-welcome-image-uncropped">
+.hero picture{min-width:0;align-self:stretch}
+.hero picture img{width:100%;height:auto!important;min-height:0!important;aspect-ratio:auto!important;object-fit:contain!important;object-position:center!important;background:#2b1047}
+@media(max-width:760px){.hero picture{height:auto!important;order:-1}}
+</style></head><body>
 <header class="header"><div class="shell identity"><img src="assets/academy-logo.png" alt="Izzy's Learning Academy logo" width="48" height="48"><div><b>Izzy's Learning Academy</b><small>Learn Boldly · Dream Big · Shine Bright</small></div></div></header>
 <main class="shell">
 <section class="hero" aria-label="Welcome"><div class="hero-copy"><h1>Welcome to <span>Izzy’s Learning Academy</span></h1><p>Learning that’s clear, encouraging and fun: build confidence through practice, creativity and discovery.</p><p class="fine">An independent supplemental learning platform, not an accredited school. Grade-level content varies in development and review status.</p></div>
-<picture><source media="(max-width:760px)" srcset="assets/welcome/hero-phone.jpg" width="900" height="600"><img src="assets/welcome/hero-wide.jpg" width="1400" height="561" alt="Izzy smiling with her books in front of the Academy campus at sunset"></picture></section>
+<picture><img src="assets/welcome/hero-wide.jpg" width="1400" height="561" alt="Izzy smiling with her books in front of the Academy campus at sunset"></picture></section>
 <section class="choose" id="choose" aria-labelledby="chooseLabel"><h2 id="chooseLabel">Choose your grade</h2><div class="grades">
 <a class="gradecard" style="--top:#f948b0;--bottom:#9f287c" href="courses/little-learners.html?grade=K" aria-label="Open the Kindergarten dashboard"><img src="assets/welcome/grade-k.webp" alt="" width="360" height="360"><span class="label"><span class="name">Kindergarten</span><small>Little Explorers</small></span></a>
 <a class="gradecard" style="--top:#ff9735;--bottom:#ae4262" href="courses/little-learners.html?grade=1" aria-label="Open the Grade 1 dashboard"><img src="assets/welcome/grade-1.webp" alt="" width="360" height="360"><span class="label"><span class="name">Grade 1</span><small>Adventure Island</small></span></a>
@@ -57,4 +72,4 @@ a{color:inherit;text-decoration:none}a:focus-visible{outline:4px solid var(--foc
 <a class="gradecard" style="--top:#8960f4;--bottom:#5931b3" href="academy.html?grade=7" aria-label="Open the Grade 7 dashboard"><img src="assets/welcome/grade-7.webp" alt="" width="360" height="360"><span class="label"><span class="name">Grade 7</span><small>Think boldly</small></span></a>
 <a class="gradecard" style="--top:#eba342;--bottom:#ad4f66" href="academy.html?grade=8" aria-label="Open the Grade 8 dashboard"><img src="assets/welcome/grade-8.webp" alt="" width="360" height="360"><span class="label"><span class="name">Grade 8</span><small>Own your journey</small></span></a>
 </div></section></main>
-<footer class="footer">Izzy’s Learning Academy · Supplemental educational platform · Academy Version 7.12.29</footer></body></html>
+<footer class="footer">Izzy’s Learning Academy · Supplemental educational platform · Academy Version 7.13.0</footer></body></html>
