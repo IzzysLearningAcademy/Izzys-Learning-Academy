@@ -124,7 +124,18 @@ body{background:radial-gradient(ellipse at 12% 0%,#5b2380 0%,transparent 35%),ra
 @media(max-width:370px){.ila-k3-tile{height:158px;padding:9px}.ila-k3-tile strong{font-size:.9rem}.ila-k3-copy{max-width:67%}}
 @media(prefers-reduced-motion:reduce){.ila-k3-tile{transition:none}.ila-k3-tile:hover{transform:none}}
 </style><style id="ila-k3-core-contrast-fix">/* core engineering Oct 23: text that sits directly on the dark KOBE background */.control-wrap label{color:#ffe7b0}#workspace>.headline h2{color:#ffe3a4}#workspace>.headline p{color:#f3e9ff}.footer{color:#e6d8f5}</style>
-</head>
+<style id="ila-k3-final-scenes">
+.ila-k3-hero{display:flex!important;flex-direction:column!important;position:relative!important;min-height:0!important;height:auto!important;overflow:hidden!important;background:#291048!important;border:2px solid #e7c46c!important;border-radius:18px!important}
+.ila-k3-hero::before{content:""!important;display:block!important;position:static!important;inset:auto!important;width:100%!important;height:auto!important;aspect-ratio:2400/633!important;background:var(--ila-k3-scene) center/contain no-repeat!important;order:-1!important}
+.ila-k3-copy{position:relative!important;width:100%!important;max-width:none!important;background:linear-gradient(110deg,#291048,#602480)!important;padding:15px 20px!important}
+.ila-k3-copy h2{font-size:clamp(1.5rem,4vw,2.3rem)!important}
+#workspace[hidden]{display:none!important}
+.ila-scene-open{position:absolute;top:8px;right:8px;z-index:5;background:#291048e8;color:#fff;border:1px solid #f0d18a;border-radius:24px;padding:7px 12px;font-weight:800}
+.ila-scene-modal{width:min(98vw,1200px);max-width:1200px;max-height:95vh;background:#261043;border:2px solid #e9c879;border-radius:16px;color:white;padding:12px}
+.ila-scene-modal::backdrop{background:#120725d9}
+.ila-scene-modal img{width:100%;height:auto;max-height:80vh;object-fit:contain}
+.ila-scene-modal button{float:right;padding:8px 14px;margin-bottom:8px;background:#522582;color:#fff;border:1px solid #f2d58c;border-radius:9px}
+</style></head>
 <body>
 <div class="shell"><nav aria-label="Return to Academy" class="back-academy"><a href="../index.html">← Back to the Academy</a></nav>
 <header class="header">
@@ -1063,6 +1074,7 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
   document.querySelectorAll('.grade').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.grade===state.grade)));
   updateSummary();
   document.querySelectorAll('.adult-role').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.role===state.role)));
+  const activityOpen=!!(state.gameMode||state.stemLab||state.lessonId||(state.subject&&lessonsOf(state.subject).length));els.workspace.hidden=!activityOpen;
   if(state.gameMode)renderGames();else if(state.stemLab)renderStemLab();else if(state.lessonId)renderLesson();else if(state.subject && lessonsOf(state.subject).length)renderSubject();else renderDashboard();
  }
  function gradeSelect(grade) {if(!core.GRADES.includes(grade))return;state.grade=grade;loadSelected();document.dispatchEvent(new CustomEvent("ila-k3-grade-ready",{detail:{grade:state.grade}}));}
@@ -1091,13 +1103,26 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
  loadSelected();
 })();
 </script>
+<script id="ila-k3-scene-viewer">
+(()=>{'use strict';
+const hero=document.querySelector('.ila-k3-hero');
+if(!hero||!window.HTMLDialogElement)return;
+const btn=document.createElement('button');btn.type='button';btn.className='ila-scene-open';btn.textContent='View full scene';
+const dlg=document.createElement('dialog');dlg.className='ila-scene-modal';
+const close=document.createElement('button');close.type='button';close.textContent='Close';close.onclick=()=>dlg.close();
+const img=document.createElement('img');img.alt='Complete illustrated adventure scene';dlg.append(close,img);
+hero.append(btn);document.body.append(dlg);
+btn.onclick=()=>{const g=window.ILA_K3_DASHBOARD_BRIDGE?.getGrade()||'K';const code=({K:'k',1:'g1',2:'g2',3:'g3'})[g]||'k';img.src='../assets/k3/'+code+'-banner.webp';dlg.showModal();};
+dlg.onclick=e=>{if(e.target===dlg)dlg.close();};
+})();
+</script>
 <script id="ila-k3-dashboard-integration">
 (()=>{'use strict';
 const grades={K:['k','Kindergarten','Little Explorers','Explore, learn and grow together!'],1:['g1','Grade 1','Adventure Island','New adventures begin with curious minds!'],2:['g2','Grade 2','Discovery Galaxy','Reach for the stars with your friends!'],3:['g3','Grade 3','Innovation City','Big ideas grow when we build together!']};
 const subjects=[['math','Math Adventures','MATH','#f64c9c','#ad2278'],['ela','ELA Adventures','ELA','#318ce9','#2456b7'],['languages','Languages',null,'#20b3a0','#147d8e'],['stem','STEM Discovery','STEM','#9a65e8','#5833ac'],['arcade','Little Learners Games','GAMES','#f69e38','#d46826'],['studyhall','Study Hall',null,'#8074d8','#453e96'],['history','History Quest',null,'#f26b55','#b43b46'],['achievements','My Achievements','PROGRESS','#e8b340','#b47c19']];
 const hero=document.querySelector('.ila-k3-hero'),grid=document.getElementById('ila-k3-grid');
 function draw(){const bridge=window.ILA_K3_DASHBOARD_BRIDGE;if(!bridge)return;const grade=bridge.getGrade();const g=grades[grade]||grades.K;
-hero.style.backgroundImage=`url("../assets/k3/${g[0]}-banner.webp")`;
+hero.style.setProperty("--ila-k3-scene",`url("../assets/k3/${g[0]}-banner.webp")`);
 document.getElementById('ila-k3-grade').textContent=g[1];document.getElementById('ila-k3-title').textContent=g[2];document.getElementById('ila-k3-tagline').textContent=g[3];
 grid.replaceChildren();for(const [id,label,route,c1,c2] of subjects){const btn=document.createElement('button');btn.type='button';btn.className='ila-k3-tile';btn.style.setProperty('--tile1',c1);btn.style.setProperty('--tile2',c2);btn.disabled=!route;
 const image=document.createElement('img');image.src=`../assets/dash/tile-${id}.webp`;image.alt='';image.loading='lazy';
