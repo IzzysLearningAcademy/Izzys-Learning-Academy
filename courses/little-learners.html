@@ -124,7 +124,13 @@ body{background:radial-gradient(ellipse at 12% 0%,#5b2380 0%,transparent 35%),ra
 @media(max-width:370px){.ila-k3-tile{height:158px;padding:9px}.ila-k3-tile strong{font-size:.9rem}.ila-k3-copy{max-width:67%}}
 @media(prefers-reduced-motion:reduce){.ila-k3-tile{transition:none}.ila-k3-tile:hover{transform:none}}
 </style><style id="ila-k3-core-contrast-fix">/* core engineering Oct 23: text that sits directly on the dark KOBE background */.control-wrap label{color:#ffe7b0}#workspace>.headline h2{color:#ffe3a4}#workspace>.headline p{color:#f3e9ff}.footer{color:#e6d8f5}</style>
-<style id="ila-k3-v7131-layout">
+<style id="ila-k3-v7132-embed">
+/* V7.13.2: inside the Academy, the page shows only the activity; the Academy draws the header, tabs, banner and tiles */
+body.ila-embed{background:transparent;min-height:0}
+body.ila-embed .shell{max-width:none;padding:0;margin:0}
+body.ila-embed .ila-k3-hero,body.ila-embed .ila-k3-adventures,body.ila-embed .ila-grade-nav,body.ila-embed #save-notice:not(.error),body.ila-embed .footer{display:none!important}
+body.ila-k3-activity.ila-progress-open .control-wrap{display:flex} /* the practice profile picker lives in My Achievements */
+</style><style id="ila-k3-v7131-layout">
 /* V7.13.1 core engineering: the one K-3 layout layer (replaces five stacked repair blocks and the shared parity sheet).
    The grade is chosen on the Welcome page, so the old brand header, grade buttons and Back link stay out of view; the nav bar below has Home, the grade, stars and Back to Academy. */
 .shell>.header,.back-academy,.grade-list{display:none}
@@ -1083,7 +1089,7 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
   document.querySelectorAll('.grade').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.grade===state.grade)));
   updateSummary();
   document.querySelectorAll('.adult-role').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.role===state.role)));
-  const activityOpen=!!(state.gameMode||state.stemLab||state.lessonId||(state.subject&&lessonsOf(state.subject).length));els.workspace.hidden=!activityOpen;document.body.classList.toggle('ila-k3-activity',activityOpen);document.body.classList.remove('ila-progress-open'); /* V7.13.1: tiles step aside while an activity is open */
+  const activityOpen=!!(state.gameMode||state.stemLab||state.lessonId||(state.subject&&lessonsOf(state.subject).length));els.workspace.hidden=!activityOpen;document.body.classList.toggle('ila-k3-activity',activityOpen||!!window.__ilaK3Progress);document.body.classList.toggle('ila-progress-open',!!window.__ilaK3Progress); /* V7.13.1: tiles step aside while an activity is open */if(!activityOpen&&!window.__ilaK3Progress&&window.__ilaK3Opened&&document.body.classList.contains('ila-embed')&&window.parent!==window)window.parent.izK3Home?.(); /* V7.13.2: leaving the activity returns to the Academy dashboard */
   if(state.gameMode)renderGames();else if(state.stemLab)renderStemLab();else if(state.lessonId)renderLesson();else if(state.subject && lessonsOf(state.subject).length)renderSubject();else renderDashboard();
  }
  function gradeSelect(grade) {if(!core.GRADES.includes(grade))return;state.grade=grade;loadSelected();document.dispatchEvent(new CustomEvent("ila-k3-grade-ready",{detail:{grade:state.grade}}));}
@@ -1097,10 +1103,10 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
   getGrade:()=>state.grade,
   selectGrade:(grade)=>gradeSelect(grade),
   open:(route)=>{
-   state.lessonId=null;state.feedback=null;state.gameMode=null;state.stemLab=false;state.miniMode=false;state.subject=null;state.unitId=null;
+   window.__ilaK3Progress=false;state.lessonId=null;state.feedback=null;state.gameMode=null;state.stemLab=false;state.miniMode=false;state.subject=null;state.unitId=null;
    if(['MATH','ELA','STEM'].includes(route)){state.subject=route;}
    else if(route==='GAMES'){state.gameMode='MATH';state.gameStep=0;state.gameAnswered=null;}
-   else if(route==='PROGRESS'){render();document.body.classList.add('ila-k3-activity','ila-progress-open');window.scrollTo({top:0,behavior:'auto'});return;} /* V7.13.1: My Achievements opens the practice journey */
+   else if(route==='PROGRESS'){window.__ilaK3Progress=true;render();window.scrollTo({top:0,behavior:'auto'});return;} /* V7.13.1: My Achievements opens the practice journey */
    else return;
    render();document.getElementById('workspace')?.scrollIntoView({block:'start',behavior:'auto'});
   }
@@ -1114,7 +1120,13 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
 </script>
 
 
-<script id="ila-k3-v7131-nav">
+<script id="ila-k3-v7132-embed">
+/* V7.13.2: one layout. Opened on its own, this page goes to the Academy's grade dashboard; inside the Academy (embed=1) it shows only the activity asked for. */
+(()=>{'use strict';const q=new URLSearchParams(location.search),g=q.get('grade')||'K';
+ if(q.get('embed')!=='1'){location.replace('../academy.html?grade='+encodeURIComponent(['K','1','2','3'].includes(g)?g:'K'));return}
+ document.body.classList.add('ila-embed');const b=window.ILA_K3_DASHBOARD_BRIDGE,v=q.get('view');
+ if(b&&['MATH','ELA','STEM','GAMES','PROGRESS'].includes(v)){b.open(v);window.__ilaK3Opened=true}})();
+</script><script id="ila-k3-v7131-nav">
 /* V7.13.1: Home, grade, stars and Back to Academy. Reads Academy stars, never writes them. No observers or timers. */
 (()=>{'use strict';
 const main=document.getElementById('main');if(!main)return;
