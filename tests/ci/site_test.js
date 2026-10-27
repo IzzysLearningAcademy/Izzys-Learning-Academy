@@ -1,5 +1,6 @@
 // Izzy's Learning Academy: browser checks for the Welcome page, the K-3 dashboards and the Grade 4-8 dashboards.
 // V7.13.2: K-3 dashboards are the Grade 5 page (academy.html?grade=K|1|2|3); no grade switching from a dashboard.
+// V7.13.4: royal-crest grade badges with a drawn crown (no picture box); every grade's Game Center has its own Brain Lab.
 // V7.13.3: every grade's Game Center has the Grade 5 games, set for that grade, and pays Academy stars once per grade, game and level.
 // Runs in a real Chromium against the files in this repository, served over HTTP, with throwaway saved data.
 // It checks layout, navigation and saves, and fails on the defects found on V7.13.0 (ILA-001..005, the empty My Achievements tile).
@@ -36,10 +37,10 @@ const SAVE={points:300,done:{}};
   await p.goto(U+'index.html');await p.evaluate(s=>{localStorage.clear();localStorage.setItem('izzy-academy-v1',JSON.stringify(s))},SAVE);await p.reload();await p.waitForTimeout(400);
   // Welcome
   const W=await p.evaluate(()=>{const cards=[...document.querySelectorAll('a.gradecard')];const h=document.querySelector('.hero img');const r=h.getBoundingClientRect();
-   return{n:cards.length,badges:cards.filter(c=>c.querySelector('.num')&&c.querySelector('img.crown')?.naturalWidth>0).length,faces:document.querySelectorAll('a.gradecard img:not(.crown)').length,
+   return{n:cards.length,badges:cards.filter(c=>c.querySelector('.medal .num')&&c.querySelector('svg.crest-crown use')&&c.querySelector('.name')).length,faces:document.querySelectorAll('a.gradecard img').length,
     jump:document.querySelectorAll('a[href="#choose"]').length,h2:document.querySelectorAll('h2').length,hero:+(r.width/r.height).toFixed(2),heroNat:+(h.naturalWidth/h.naturalHeight).toFixed(2),
     hrefs:cards.map(c=>c.getAttribute('href')).join(' '),wide:document.documentElement.scrollWidth>innerWidth+1,fine:/not an accredited school/.test(document.body.textContent)}});
-  ok(W.n===9&&W.badges===9&&W.faces===0,tag+'Welcome: nine gold-crown grade badges, no face pictures');
+  ok(W.n===9&&W.badges===9&&W.faces===0,tag+'Welcome: nine royal-crest grade badges with a drawn crown, medal and ribbon; no pictures inside the badges (so no picture box or file name)');
   ok(W.jump===0&&W.h2===1,tag+'Welcome: one "Choose your grade", no extra jump buttons');
   ok(Math.abs(W.hero-W.heroNat)<0.03,tag+`Welcome: the whole Izzy scene at its own shape (${W.hero} vs ${W.heroNat})`);
   ok(W.hrefs==='academy.html?grade=K academy.html?grade=1 academy.html?grade=2 academy.html?grade=3 academy.html?grade=4 academy.html academy.html?grade=6 academy.html?grade=7 academy.html?grade=8'&&!W.wide&&W.fine,tag+'Welcome: each badge goes to its grade; no sideways scroll; "not an accredited school" shown');
@@ -83,6 +84,9 @@ const SAVE={points:300,done:{}};
    for(const t of ['languages','rewards']){await p.click(`[data-academy-tab="${t}"]`);await p.waitForTimeout(600);await p.click('[data-academy-tab="home"]');await p.waitForTimeout(800);
     ok(await inGrade()&&await p.locator('#ilaGradeExplorerView .izd-gx-home').count()===1,tag+`Grade ${g}: ${t==='rewards'?'Rewards':'Languages'} then Home returns to the Grade ${g} dashboard`);}
    await p.locator('#ilaGxTile-stem').click();await p.waitForTimeout(500);ok(await p.locator('#ilaGradeExplorerView .ila-stem-card').count()===4,tag+`Grade ${g}: the STEM tile opens this grade's STEM center`);}
+  if(vp.width===390){const px=await p.evaluate(async()=>{const out={};for(const f of ['crown-logo.png','tip-bulb.png','footer-crown.png']){const i=new Image();i.src='assets/dash/'+f;await i.decode();const c=document.createElement('canvas');c.width=i.naturalWidth;c.height=i.naturalHeight;const x=c.getContext('2d');x.drawImage(i,0,0);
+    const d=x.getImageData(0,0,c.width,c.height).data;let vis=0,faint=0;for(let k=3;k<d.length;k+=4){if(d[k]>0){vis++;if(d[k]<80)faint++}}out[f]=+(faint/vis).toFixed(2)}return out}); // the old pictures were about half faint grey box (0.47-0.58)
+   ok(Object.values(px).every(v=>v<0.35),tag+'crown, bulb and footer-crown pictures have no grey box or file name around them '+JSON.stringify(px))}
   // Grade 5 still opens its own home and keeps the stars
   await p.goto(U+'academy.html');await p.waitForTimeout(1500);
   ok(await p.evaluate(()=>document.getElementById('points')?.textContent==='300'&&!!document.querySelector('#academyDashboard .izd-banner')),tag+'Grade 5: its own dashboard, with the same 300 stars');
@@ -92,8 +96,8 @@ const SAVE={points:300,done:{}};
   await ctx.close()}
 
  // ---- V7.13.3 Game Centers: every grade gets the Grade 5 games, set for its age; stars once per grade, game and level ----
- {const EXPECT={K:{n:7,cells:16,title:'Kindergarten Game Center',dash:'Counting Rocket',read:true},'1':{n:7,cells:16,title:'Grade 1 Game Center',dash:'Number Rocket',read:true},'2':{n:7,cells:16,title:'Grade 2 Game Center',dash:'Place-Value Rocket',read:true},
-   '3':{n:7,cells:16,title:'Grade 3 Game Center',dash:'Times-Table Rocket',read:false},'4':{n:8,cells:36,title:'Grade 4 Game Center',dash:'Fraction Rocket',read:false},'6':{n:8,cells:36,title:'Grade 6 Game Center',dash:'Ratio Rocket',read:false},
+ {const EXPECT={K:{n:8,cells:16,title:'Kindergarten Game Center',dash:'Counting Rocket',read:true},'1':{n:8,cells:16,title:'Grade 1 Game Center',dash:'Number Rocket',read:true},'2':{n:8,cells:16,title:'Grade 2 Game Center',dash:'Place-Value Rocket',read:true},
+   '3':{n:8,cells:16,title:'Grade 3 Game Center',dash:'Times-Table Rocket',read:false},'4':{n:8,cells:36,title:'Grade 4 Game Center',dash:'Fraction Rocket',read:false},'6':{n:8,cells:36,title:'Grade 6 Game Center',dash:'Ratio Rocket',read:false},
    '7':{n:8,cells:36,title:'Grade 7 Game Center',dash:'Integer Rocket',read:false},'8':{n:8,cells:81,title:'Grade 8 Game Center',dash:'Equation Rocket',read:false}};
   const OLD={'ila_grade_games_demo_v1':'{"keep":"old grade games save"}','ila_k3_games_v1':'{"keep":"old K-3 trails save"}','izzy_enchanted_game_center_v1':'{"best":{},"wins":{},"awards":{"sudoku:4":10}}'};
   for(const vp of [{width:390,height:844},{width:1366,height:1024}]){const tag=vp.width+'px: ';const ctx=await b.newContext({viewport:vp,hasTouch:true});const p=await ctx.newPage();const errs=[],missing=[];
@@ -109,10 +113,10 @@ const SAVE={points:300,done:{}};
     await p.click('#ilaGamePackHub [data-eg="check"]');await p.waitForTimeout(150)};
    for(const g of ['K','1','2','3','4','6','7','8']){const E=EXPECT[g];
     await p.goto(U+'academy.html?grade='+g);await p.waitForTimeout(1300);await p.click('#ilaGxTile-arcade');await p.waitForTimeout(500);let h=await hub();
-    const want=['sudoku',...(E.n===8?['brainlab']:[]),'memory','tictac','wordsearch','wordguess','dash','reading'];
-    ok(h.vis&&h.grade===g&&h.title.includes(E.title)&&h.cards.join()===want.join()&&h.names.includes(E.dash)&&h.imgs,tag+`Grade ${g}: the Game Center tile opens "${E.title}" with ${E.n} games${E.n===8?' including Royal Brain Lab':''} and its own ${E.dash}; every card picture loads`+(h.imgs&&h.vis?'':' '+JSON.stringify(h)));
+    const want=['sudoku','brainlab','memory','tictac','wordsearch','wordguess','dash','reading'];
+    ok(h.vis&&h.grade===g&&h.title.includes(E.title)&&h.cards.join()===want.join()&&h.names.includes(E.dash)&&h.imgs,tag+`Grade ${g}: the Game Center tile opens "${E.title}" with 8 games including its own Brain Lab and its own ${E.dash}; every card picture loads`+(h.imgs&&h.vis?'':' '+JSON.stringify(h)));
     ok(!h.old&&h.games==='page'&&!h.wide,tag+`Grade ${g}: the old grade games are not shown; the Games tab is lit; no sideways scroll`);
-    ok(h.arcade===(E.n===8),tag+`Grade ${g}: ${E.n===8?'the Royal Arcade button is there':'no Royal Arcade button (K-3)'}`);
+    const big=['4','6','7','8'].includes(g);ok(h.arcade===big,tag+`Grade ${g}: ${big?'the Royal Arcade button is there':'no Royal Arcade button (K-3)'}`);
     // Sudoku at the grade's first level, won through the buttons: 10 stars the first time, none the second time
     await p.click('#ilaGamePackHub [data-id="sudoku"]');await p.waitForTimeout(200);
     const cells=await p.locator('#ilaGamePackHub [data-eg="cell"]').count();ok(cells===E.cells,tag+`Grade ${g}: Sudoku starts at the grade's level (${cells} squares, want ${E.cells})`);
@@ -126,18 +130,33 @@ const SAVE={points:300,done:{}};
     // each game opens with levels for this grade and returns to the cards
     for(const id of want){await p.click(`#ilaGamePackHub [data-id="${id}"]`);await p.waitForTimeout(id==='brainlab'?400:150);
      const s=await p.evaluate(id=>{const h=document.getElementById('ilaGamePackHub');const st=h.querySelector('.eg-stage');const vis=e=>!!e&&e.getClientRects().length>0;
-      return{stage:vis(st),cardsHidden:!vis(h.querySelector('.eg-cards')),modes:[...st.querySelectorAll('[data-eg="mode"]')].map(b=>b.textContent),brain:vis(h.querySelector('#izBrainLab')),say:!!st.querySelector('[data-eg="say"],[data-eg="sayq"],[data-eg="sayread"],[data-eg="sayclue"]'),
+      return{stage:vis(st),cardsHidden:!vis(h.querySelector('.eg-cards')),modes:[...st.querySelectorAll('[data-eg="mode"]')].map(b=>b.textContent),brain:vis(h.querySelector('#ilaGradeBrainLab'))&&!h.querySelector('#izBrainLab'),say:!!st.querySelector('[data-eg="say"],[data-eg="sayq"],[data-eg="sayread"],[data-eg="sayclue"]'),
        wide:document.documentElement.scrollWidth>innerWidth+1}},id);
      const fine=id==='brainlab'?s.brain:id==='reading'?true:s.modes.length>=2;
-     ok(s.stage&&s.cardsHidden&&fine&&!s.wide,tag+`Grade ${g}: ${id} opens${id==='brainlab'?' Royal Brain Lab':' with levels: '+s.modes.join(' / ')}; no sideways scroll`);
+     ok(s.stage&&s.cardsHidden&&fine&&!s.wide,tag+`Grade ${g}: ${id} opens${id==='brainlab'?' its own Brain Lab (not the Grade 5 one)':' with levels: '+s.modes.join(' / ')}; no sideways scroll`);
      if(['dash','reading','wordguess'].includes(id))ok(s.say===E.read,tag+`Grade ${g}: ${id} ${E.read?'has':'does not need'} a read-aloud button`);
-     if(id==='brainlab'){await p.locator('#izBrainLab button').filter({hasText:/back|games|exit|leave/i}).first().click().catch(()=>{});await p.waitForTimeout(200);if(!(await p.evaluate(()=>!document.querySelector('#ilaGamePackHub .eg-stage').hidden?false:true)))await p.evaluate(()=>window.ilaGamePacks.back())}
+     if(id==='brainlab'){await p.locator('#ilaGradeBrainLab button').filter({hasText:/back|games|exit|leave/i}).first().click().catch(()=>{});await p.waitForTimeout(200);if(!(await p.evaluate(()=>!document.querySelector('#ilaGamePackHub .eg-stage').hidden?false:true)))await p.evaluate(()=>window.ilaGamePacks.back())}
      else await p.click('#ilaGamePackHub [data-eg="back"]');await p.waitForTimeout(120)}
     if(deep&&(g==='K'||g==='6')){ // Reading Detective won by choosing the right answers: 15 stars, once
      await p.click('#ilaGamePackHub [data-id="reading"]');for(let k=0;k<5;k++){const c=await p.evaluate(()=>{const m=window.ilaGamePacks._test.model();return m.deck[m.index].c});await p.click(`#ilaGamePackHub [data-eg="readingchoice"][data-i="${c}"]`);await p.click('#ilaGamePackHub [data-eg="readingcheck"]');await p.click('#ilaGamePackHub [data-eg="readingnext"]')}
      stars+=15;ok(await p.evaluate(()=>/Plus 15 Academy stars/.test(document.querySelector('#ilaGamePackHub .eg-finish')?.textContent||''))&&await p.evaluate(()=>JSON.parse(localStorage.getItem('izzy-academy-v1')).points)===stars,tag+`Grade ${g}: a full Reading Detective case file pays 15 stars`);
      await p.click('#ilaGamePackHub [data-eg="back"]')}
-    if(E.n===8&&deep){await p.click('#ilaGamePackHub [data-eg="arcade"]');await p.waitForTimeout(400);ok(await p.locator('.ila-ra-overlay').isVisible(),tag+`Grade ${g}: Open Royal Arcade opens the arcade`);await p.click('#ilaRaClose');await p.waitForTimeout(200)}
+    if(big&&deep){await p.click('#ilaGamePackHub [data-eg="arcade"]');await p.waitForTimeout(400);ok(await p.locator('.ila-ra-overlay').isVisible(),tag+`Grade ${g}: Open Royal Arcade opens the arcade`);await p.click('#ilaRaClose');await p.waitForTimeout(200)}
+    if(deep||g==='K'){ // the grade's Brain Lab: right puzzles for the grade; a world pays 3 per first-try puzzle + 5, once
+     await p.click('#ilaGamePackHub [data-id="brainlab"]');await p.waitForTimeout(200);
+     const per=['K','1','2'].includes(g)?6:9;const info=await p.evaluate(()=>{const r=document.getElementById('ilaGradeBrainLab');return{title:r.querySelector('.bl-intro h3').textContent,worlds:r.querySelectorAll('.bl-tile').length,total:r.querySelector('.bl-total').textContent}});
+     ok(info.title.includes(E.title.replace(' Game Center',' Brain Lab'))&&info.worlds===4&&info.total.includes('of '+per*4+' puzzles'),tag+`Grade ${g}: Brain Lab is "${info.title.replace('🧠 ','')}" with 4 worlds and ${per*4} puzzles`);
+     const first=await p.evaluate(()=>window.ilaGamePacks._test.bpuzzles('patterns')[0].prompt);const g5=await p.evaluate(()=>JSON.stringify(window.izBrainLab&&window.izBrainLab.puzzleCount));
+     ok(!/3, 6, 12, 24/.test(first),tag+`Grade ${g}: its first pattern is its own ("${first}"), not Grade 5's`);
+     const before=await p.evaluate(()=>JSON.parse(localStorage.getItem('izzy-academy-v1')).points),g5save=await p.evaluate(()=>localStorage.getItem('izzy_brainlab_v1'));
+     await p.click('#ilaGradeBrainLab [data-world="patterns"]');
+     for(let k=0;k<per;k++){await p.click('#ilaGradeBrainLab .bl-opt[data-correct="1"]');await p.click('#ilaGradeBrainLab .bl-next')}
+     let pts=await p.evaluate(()=>JSON.parse(localStorage.getItem('izzy-academy-v1')).points);stars=before+per*3+5;
+     ok(pts===stars&&await p.locator('#ilaGradeBrainLab .bl-done').isVisible(),tag+`Grade ${g}: finishing Pattern world on the first try pays ${per}×3 + 5 = ${per*3+5} stars`);
+     await p.click('#ilaGradeBrainLab .bl-done .bl-primary');for(let k=0;k<per;k++){await p.click('#ilaGradeBrainLab .bl-opt[data-correct="1"]');await p.click('#ilaGradeBrainLab .bl-next')}
+     pts=await p.evaluate(()=>JSON.parse(localStorage.getItem('izzy-academy-v1')).points);ok(pts===stars,tag+`Grade ${g}: playing the world again pays nothing more`);
+     ok(await p.evaluate(()=>localStorage.getItem('izzy_brainlab_v1'))===g5save,tag+`Grade ${g}: Grade 5's Royal Brain Lab save is untouched`);
+     await p.click('#ilaGradeBrainLab .bl-done .bl-ghost');await p.click('#ilaGradeBrainLab .bl-acts .bl-ghost');await p.waitForTimeout(150)}
     // back to the dashboard
     await p.click('.gp-back');await p.waitForTimeout(400);ok(await p.locator('#ilaGradeExplorerView .izd-gx-home .izd-tile').count()===8&&!(await hub()).vis,tag+`Grade ${g}: "Choose another activity" returns to the Grade ${g} dashboard`);
     if(['K','3'].includes(g)){await p.click('[data-academy-tab="games"]');await p.waitForTimeout(400);h=await hub();ok(h.vis&&h.grade===g&&!h.old,tag+`Grade ${g}: the Games tab opens the same Game Center`);
