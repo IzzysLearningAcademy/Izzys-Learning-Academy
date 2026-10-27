@@ -24,4 +24,6 @@ jobs:
         run: node tests/ci/site_test.js
       - name: Result
         if: success()
-        run: echo "Browser checks passed for Welcome, K-3 and Grades 4-8 layout, navigation and saves. Not covered: real iPhone/iPad Safari, Apple Pencil, VoiceOver."
+        run: |
+          echo "Browser checks passed for Welcome, K-3 and Grades 4-8 layout, navigation and saves."
+          echo "Not covered here, still manual: real iPhone/iPad Safari, Apple Pencil, VoiceOver."
