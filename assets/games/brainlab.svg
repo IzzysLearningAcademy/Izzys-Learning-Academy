@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320"><defs><radialGradient id="bg" cx=".3" cy=".2" r="1"><stop offset="0" stop-color="#b14fd0"/><stop offset=".6" stop-color="#4a1d82"/><stop offset="1" stop-color="#1c184b"/></radialGradient><linearGradient id="br" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffc2e6"/><stop offset="1" stop-color="#ff7ac4"/></linearGradient><linearGradient id="cr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2b0"/><stop offset="1" stop-color="#f5b82e"/></linearGradient></defs>
+<rect width="240" height="320" fill="url(#bg)"/>
+<g fill="#ffe89c"><path d="M38 52l4 10 11 3-11 3-4 10-4-10-11-3 11-3z"/><circle cx="200" cy="70" r="4"/><circle cx="186" cy="262" r="3"/><path d="M206 214l3 7 8 2-8 2-3 7-3-7-8-2 8-2z"/></g>
+<path d="M120 112c-15-22-58-16-60 14-20 4-24 32-8 44-8 22 12 40 32 34 10 18 34 18 36 2 2 16 26 16 36-2 20 6 40-12 32-34 16-12 12-40-8-44-2-30-45-36-60-14z" fill="url(#br)" stroke="#7a1f6e" stroke-width="4" stroke-linejoin="round"/>
+<path d="M120 116v86M88 132c10 4 14 14 10 24M152 132c-10 4-14 14-10 24M76 172c10-2 18 4 20 12M164 172c-10-2-18 4-20 12" fill="none" stroke="#c2357f" stroke-width="3.5" stroke-linecap="round"/>
+<circle cx="102" cy="158" r="7" fill="#2b1348"/><circle cx="138" cy="158" r="7" fill="#2b1348"/><circle cx="104" cy="155" r="2.4" fill="#fff"/><circle cx="140" cy="155" r="2.4" fill="#fff"/>
+<path d="M108 176q12 10 24 0" fill="none" stroke="#2b1348" stroke-width="3.5" stroke-linecap="round"/>
+<circle cx="90" cy="172" r="6" fill="#ff5fa8" opacity=".55"/><circle cx="150" cy="172" r="6" fill="#ff5fa8" opacity=".55"/>
+<path d="M92 104l8-26 14 16 6-22 6 22 14-16 8 26z" fill="url(#cr)" stroke="#a8730d" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="120" cy="72" r="4.5" fill="#4fd1ff" stroke="#a8730d" stroke-width="1.5"/>
+<g transform="translate(150 222) rotate(-12)"><path d="M0 0h18a8 8 0 1 1 14 0h18v18a8 8 0 1 0 0 14v18h-18a8 8 0 1 1-14 0H0z" fill="#7ff6e2" stroke="#1f6e68" stroke-width="3" stroke-linejoin="round"/></g>
+<g transform="translate(40 226) rotate(10)"><rect width="46" height="46" rx="10" fill="#ffe08f" stroke="#a8730d" stroke-width="3"/><text x="23" y="32" text-anchor="middle" font-family="system-ui,Arial" font-size="26" font-weight="900" fill="#5b2a86">?</text></g>
+</svg>
