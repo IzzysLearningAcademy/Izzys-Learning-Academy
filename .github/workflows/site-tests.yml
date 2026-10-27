@@ -1,0 +1,29 @@
+name: Site browser tests
+# Runs tests/ci/site_test.js in a real Chromium on every push to main and every pull request.
+# It reads the site files only; it never edits or commits anything. Real iPhone/iPad checks stay manual.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save playwright@1.48.2
+          npx playwright install --with-deps chromium
+      - name: Browser checks (Welcome, K-3, Grades 4-8)
+        run: node tests/ci/site_test.js
+      - name: Result
+        if: success()
+        run: |
+          echo "Browser checks passed for Welcome, K-3 and Grades 4-8 layout, navigation and saves."
+          echo "Not covered here, still manual: real iPhone/iPad Safari, Apple Pencil, VoiceOver."

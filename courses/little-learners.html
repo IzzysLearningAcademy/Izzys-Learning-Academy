@@ -124,75 +124,27 @@ body{background:radial-gradient(ellipse at 12% 0%,#5b2380 0%,transparent 35%),ra
 @media(max-width:370px){.ila-k3-tile{height:158px;padding:9px}.ila-k3-tile strong{font-size:.9rem}.ila-k3-copy{max-width:67%}}
 @media(prefers-reduced-motion:reduce){.ila-k3-tile{transition:none}.ila-k3-tile:hover{transform:none}}
 </style><style id="ila-k3-core-contrast-fix">/* core engineering Oct 23: text that sits directly on the dark KOBE background */.control-wrap label{color:#ffe7b0}#workspace>.headline h2{color:#ffe3a4}#workspace>.headline p{color:#f3e9ff}.footer{color:#e6d8f5}</style>
-<style id="ila-k3-final-scenes">
-.ila-k3-hero{display:flex!important;flex-direction:column!important;position:relative!important;min-height:0!important;height:auto!important;overflow:hidden!important;background:#291048!important;border:2px solid #e7c46c!important;border-radius:18px!important}
-.ila-k3-hero::before{content:""!important;display:block!important;position:static!important;inset:auto!important;width:100%!important;height:auto!important;aspect-ratio:2400/633!important;background:var(--ila-k3-scene) center/contain no-repeat!important;order:-1!important}
-.ila-k3-copy{position:relative!important;width:100%!important;max-width:none!important;background:linear-gradient(110deg,#291048,#602480)!important;padding:15px 20px!important}
-.ila-k3-copy h2{font-size:clamp(1.5rem,4vw,2.3rem)!important}
+<style id="ila-k3-v7131-layout">
+/* V7.13.1 core engineering: the one K-3 layout layer (replaces five stacked repair blocks and the shared parity sheet).
+   The grade is chosen on the Welcome page, so the old brand header, grade buttons and Back link stay out of view; the nav bar below has Home, the grade, stars and Back to Academy. */
+.shell>.header,.back-academy,.grade-list{display:none}
+.layout{display:block}.layout>.main{min-width:0}
+.sidebar{display:none}body.ila-progress-open .sidebar{display:block;margin-top:12px}
+body.ila-progress-open aside.sidebar :is(h2,p,hr):not(#ila-k3-none){display:block} /* My Achievements shows the whole panel, Family Backup note included */
 #workspace[hidden]{display:none!important}
-.ila-scene-open{position:absolute;top:8px;right:8px;z-index:5;background:#291048e8;color:#fff;border:1px solid #f0d18a;border-radius:24px;padding:7px 12px;font-weight:800}
-.ila-scene-modal{width:min(98vw,1200px);max-width:1200px;max-height:95vh;background:#261043;border:2px solid #e9c879;border-radius:16px;color:white;padding:12px}
-.ila-scene-modal::backdrop{background:#120725d9}
-.ila-scene-modal img{width:100%;height:auto;max-height:80vh;object-fit:contain}
-.ila-scene-modal button{float:right;padding:8px 14px;margin-bottom:8px;background:#522582;color:#fff;border:1px solid #f2d58c;border-radius:9px}
-</style><style id="ila-k3-grade-dashboard-v7130">
-/* Grade is chosen on the Academy homepage; do not show a second grade chooser. */
-.grade-list{display:none!important}
-.ila-scene-open,.ila-scene-modal{display:none!important}
-/* Remove duplicate Academy brand banner above the illustrated grade scene. */
-body>.shell>.header,.shell>.header{display:none!important}
-.ila-k3-hero{margin-top:10px!important}
-.ila-k3-hero::before{background-size:contain!important;background-position:center!important}
-.ila-k3-adventures{margin-top:14px}
-.ila-k3-grid{scroll-margin-top:12px}
-.ila-grade-nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#361451;color:#fff;border:1px solid #e4bc6d;border-radius:16px;padding:10px 14px;margin:10px 0}
-.ila-grade-nav a,.ila-grade-nav button{background:#5a247b;color:#fff;border:1px solid #f0d48d;border-radius:11px;padding:9px 13px;font-weight:800;text-decoration:none;min-height:42px}
-.ila-grade-nav .ila-grade-name{font-weight:900;flex:1;min-width:95px}
-@media(max-width:590px){.ila-grade-nav{gap:6px;padding:8px}.ila-grade-nav a,.ila-grade-nav button{font-size:12px;padding:7px 9px}.ila-k3-hero::before{aspect-ratio:2400/633!important}}
-</style><style id="ila-v7130-final-dashboard">
-.grade-list,.shell>.header,.ila-scene-open,.ila-scene-modal{display:none!important}
-#workspace[hidden]{display:none!important}
-.ila-k3-hero{height:auto!important;min-height:0!important;background:#2b124e!important;display:flex!important;flex-direction:column!important;overflow:hidden}
-.ila-k3-hero::before{content:""!important;display:block!important;position:static!important;order:-1!important;width:100%!important;aspect-ratio:2400/633!important;background-image:var(--ila-k3-scene)!important;background-position:center!important;background-size:contain!important;background-repeat:no-repeat!important}
-.ila-k3-copy{width:100%!important;max-width:none!important;position:relative!important;background:linear-gradient(110deg,#361356,#66247b)!important;padding:16px 22px!important}
-.ila-grade-nav{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:10px 0 16px;padding:10px 13px;background:linear-gradient(100deg,#3a175f,#61268a);border:1px solid #e6c77b;border-radius:16px;color:white}
-.ila-grade-nav a,.ila-grade-nav button{background:#55257a;color:#fff;text-decoration:none;border:1px solid #e8ce8b;border-radius:11px;min-height:44px;padding:9px 12px;font-weight:800}
-.ila-grade-nav .ila-grade-label{font-weight:900;flex:1;min-width:105px}
-.ila-grade-nav .ila-grade-score{font-weight:850;white-space:nowrap}
-@media(max-width:590px){.ila-grade-nav{padding:8px;gap:6px}.ila-grade-nav a,.ila-grade-nav button{padding:8px;font-size:12px}.ila-k3-copy{padding:12px 14px!important}}
-</style><style id="ila-v7131-k3-layout-correction">
-/* One navigation bar, proportional source artwork and responsive controls. */
-.ila-grade-nav{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:10px;max-width:100%;box-sizing:border-box}
-.ila-grade-nav .ila-grade-label{min-width:0!important;overflow-wrap:break-word}
-.ila-grade-nav .ila-grade-score{font-variant-numeric:tabular-nums}
-.ila-k3-hero::before{height:auto!important;min-height:0!important;flex:none!important;aspect-ratio:2400 / 633!important;background-size:100% 100%!important}
-.ila-k3-hero{width:100%;max-width:100%;box-sizing:border-box}
-@media(max-width:620px){.ila-grade-nav{grid-template-columns:auto minmax(0,1fr) auto!important;gap:8px!important}.ila-grade-nav>a{grid-column:1 / -1;text-align:center}.ila-grade-nav .ila-grade-score{font-size:clamp(12px,3.4vw,16px)}}
-@media(max-width:360px){.ila-grade-nav{grid-template-columns:auto 1fr!important}.ila-grade-nav .ila-grade-score{grid-column:1/-1;text-align:center}}
-</style><style id="ila-v7132-responsive-repair">
-/* Single source of truth for K–3 presentation; no curriculum or saved-data changes. */
-.back-academy{display:none!important}
-.layout{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:16px!important;width:100%!important;max-width:100%!important;min-width:0!important}
-.layout>.main,.layout>.sidebar{width:100%!important;max-width:100%!important;min-width:0!important;flex:none!important;grid-column:auto!important;grid-row:auto!important}
-.layout>.main{padding:0!important;margin:0!important;overflow:visible!important}
-.layout>.sidebar{margin:0!important;min-height:0!important;align-self:stretch!important}
-.ila-k3-hero{display:flex!important;flex-direction:column!important;align-items:stretch!important;height:auto!important;min-height:0!important;overflow:hidden!important}
-.ila-k3-hero::before{content:""!important;display:block!important;position:relative!important;inset:auto!important;order:-1!important;flex:0 0 auto!important;width:100%!important;height:auto!important;aspect-ratio:2400 / 633!important;background-image:var(--ila-k3-scene)!important;background-repeat:no-repeat!important;background-size:contain!important;background-position:center center!important}
-.ila-k3-copy{width:100%!important;max-width:100%!important;min-width:0!important}
-.ila-grade-nav{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:8px!important;padding:9px 12px!important;margin:10px 0 12px!important;min-height:0!important;height:auto!important}
-.ila-grade-nav .ila-grade-label{flex:1 1 120px!important;min-width:0!important}
-.ila-grade-nav .ila-grade-score{flex:0 0 auto!important;font-size:clamp(13px,1.7vw,17px)!important}
-.ila-grade-nav>a{flex:0 0 auto!important;grid-column:auto!important}
-.ila-grade-nav button,.ila-grade-nav a{white-space:normal!important;line-height:1.2!important;min-height:40px!important;padding:8px 10px!important}
-.ila-k3-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;width:100%!important;min-width:0!important}
-.ila-k3-tile{min-width:0!important;width:100%!important;box-sizing:border-box!important;height:clamp(174px,20vw,225px)!important;min-height:0!important;padding:12px!important}
-.ila-k3-tile img{object-fit:contain!important;max-width:100%!important}
-.ila-k3-tile strong{overflow-wrap:anywhere!important;hyphens:auto!important;font-size:clamp(.92rem,1.5vw,1.2rem)!important}
-.ila-k3-tile small{max-width:100%!important;white-space:normal!important}
-#workspace[hidden]{display:none!important}
-@media(max-width:760px){.ila-k3-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.ila-k3-tile{height:clamp(170px,30vw,220px)!important}.ila-grade-nav .ila-grade-label{flex:1 1 90px!important}}
-@media(max-width:420px){.ila-grade-nav{gap:6px!important;padding:8px!important}.ila-grade-nav .ila-grade-label{flex:1 1 100px!important}.ila-grade-nav .ila-grade-score{flex:1 1 100%!important;order:3!important;text-align:center!important}.ila-grade-nav>a{flex:1 1 auto!important;text-align:center!important;order:4!important}.ila-k3-grid{gap:10px!important}.ila-k3-tile{height:174px!important;padding:10px!important}.ila-k3-tile strong{font-size:.94rem!important}}
-</style><link rel="stylesheet" href="../assets/grade5-parity.css?v=7133"></head>
+body.ila-k3-activity .ila-k3-hero,body.ila-k3-activity .ila-k3-adventures,body.ila-k3-activity #save-notice,body.ila-k3-activity .control-wrap{display:none}
+/* the whole grade scene: the box has the picture's exact shape, so nothing is cropped or stretched */
+.ila-k3-hero{display:flex;flex-direction:column;min-height:0;height:auto;overflow:hidden;background:#291048;border:2px solid #e7c46c;border-radius:20px;margin:10px 0 12px;padding:0}
+.ila-k3-hero:before{content:"";display:block;position:static;inset:auto;width:100%;aspect-ratio:2400/633;background:var(--ila-k3-scene) center/100% 100% no-repeat}
+.ila-k3-copy{position:relative;width:100%;max-width:none;padding:14px 20px;background:linear-gradient(110deg,#361356,#66247b);text-shadow:none}
+.ila-k3-copy h2{font-size:clamp(1.5rem,4vw,2.4rem);margin:8px 0 6px}
+.ila-grade-nav{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 12px;padding:8px 12px;background:linear-gradient(100deg,#3a175f,#61268a);border:1px solid #e6c77b;border-radius:16px;color:#fff}
+.ila-grade-nav button,.ila-grade-nav a{min-height:44px;padding:8px 12px;border-radius:11px;border:1px solid #e8ce8b;background:#55257a;color:#fff;font:800 15px system-ui,-apple-system,sans-serif;text-decoration:none;display:inline-flex;align-items:center}
+.ila-grade-nav .ila-grade-label{font-weight:900;flex:1 1 120px;min-width:0}
+.ila-grade-nav .ila-grade-score{font-weight:850;white-space:nowrap;font-variant-numeric:tabular-nums}
+@media(max-width:420px){.ila-grade-nav .ila-grade-score{flex-basis:100%;order:3;text-align:center}.ila-grade-nav a{order:4;flex:1 1 auto;justify-content:center}}
+</style>
+</head>
 <body>
 <div class="shell"><nav aria-label="Return to Academy" class="back-academy"><a href="../index.html">← Back to the Academy</a></nav>
 <header class="header">
@@ -1131,7 +1083,7 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
   document.querySelectorAll('.grade').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.grade===state.grade)));
   updateSummary();
   document.querySelectorAll('.adult-role').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.role===state.role)));
-  const activityOpen=!!(state.gameMode||state.stemLab||state.lessonId||(state.subject&&lessonsOf(state.subject).length));els.workspace.hidden=!activityOpen;
+  const activityOpen=!!(state.gameMode||state.stemLab||state.lessonId||(state.subject&&lessonsOf(state.subject).length));els.workspace.hidden=!activityOpen;document.body.classList.toggle('ila-k3-activity',activityOpen);document.body.classList.remove('ila-progress-open'); /* V7.13.1: tiles step aside while an activity is open */
   if(state.gameMode)renderGames();else if(state.stemLab)renderStemLab();else if(state.lessonId)renderLesson();else if(state.subject && lessonsOf(state.subject).length)renderSubject();else renderDashboard();
  }
  function gradeSelect(grade) {if(!core.GRADES.includes(grade))return;state.grade=grade;loadSelected();document.dispatchEvent(new CustomEvent("ila-k3-grade-ready",{detail:{grade:state.grade}}));}
@@ -1148,7 +1100,7 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
    state.lessonId=null;state.feedback=null;state.gameMode=null;state.stemLab=false;state.miniMode=false;state.subject=null;state.unitId=null;
    if(['MATH','ELA','STEM'].includes(route)){state.subject=route;}
    else if(route==='GAMES'){state.gameMode='MATH';state.gameStep=0;state.gameAnswered=null;}
-   else if(route==='PROGRESS'){renderDashboard();document.querySelector('.sidebar')?.scrollIntoView({block:'start',behavior:'auto'});return;}
+   else if(route==='PROGRESS'){render();document.body.classList.add('ila-k3-activity','ila-progress-open');window.scrollTo({top:0,behavior:'auto'});return;} /* V7.13.1: My Achievements opens the practice journey */
    else return;
    render();document.getElementById('workspace')?.scrollIntoView({block:'start',behavior:'auto'});
   }
@@ -1162,34 +1114,20 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
 </script>
 
 
-<script id="ila-v7130-final-dashboard">
+<script id="ila-k3-v7131-nav">
+/* V7.13.1: Home, grade, stars and Back to Academy. Reads Academy stars, never writes them. No observers or timers. */
 (()=>{'use strict';
-const main=document.getElementById('main'),workspace=document.getElementById('workspace');
-if(!main||!workspace)return;
+const main=document.getElementById('main');if(!main)return;
 const nav=document.createElement('nav');nav.className='ila-grade-nav';nav.setAttribute('aria-label','Grade dashboard navigation');
 nav.innerHTML='<button type="button" id="ila-grade-home">⌂ Home</button><span class="ila-grade-label" id="ila-grade-name"></span><span class="ila-grade-score" id="ila-grade-score"></span><a href="../index.html">← Back to Academy</a>';
 main.parentNode.insertBefore(nav,main);
-function grade(){return window.ILA_K3_DASHBOARD_BRIDGE?.getGrade()||new URLSearchParams(location.search).get('grade')||'K'}
-function refresh(){
-const g=grade();nav.querySelector('#ila-grade-name').textContent=g==='K'?'Kindergarten':'Grade '+g;
-let points=0;try{const saved=JSON.parse(localStorage.getItem('izzy-academy-v1')||'{}');points=Math.max(0,Math.floor(Number(saved.points)||0))}catch(e){}
-nav.querySelector('#ila-grade-score').textContent='⭐ '+points+' · Level '+(1+Math.floor(points/100));
-}
-function gate(){workspace.hidden=!!workspace.querySelector('.subject-grid');}
-new MutationObserver(()=>{gate();refresh()}).observe(workspace,{childList:true,subtree:false});
-nav.querySelector('#ila-grade-home').addEventListener('click',()=>{
-const b=window.ILA_K3_DASHBOARD_BRIDGE;
-if(b?.selectGrade)b.selectGrade(grade());
-else location.href='little-learners.html?grade='+encodeURIComponent(grade());
-document.querySelector('.ila-k3-hero')?.scrollIntoView({block:'start'});
-});
-document.getElementById('ila-k3-grid')?.addEventListener('click',e=>{
-if(e.target.closest('button:not(:disabled)'))queueMicrotask(gate);
-});
-document.addEventListener('ila-k3-grade-ready',()=>{refresh();gate()});
-window.addEventListener('pageshow',refresh);
-window.addEventListener('storage',refresh);
-refresh();gate();
+const bridge=()=>window.ILA_K3_DASHBOARD_BRIDGE;
+const grade=()=>bridge()?.getGrade()||'K';
+function refresh(){const g=grade();nav.querySelector('#ila-grade-name').textContent=g==='K'?'Kindergarten':'Grade '+g;
+ let points=0;try{points=Math.max(0,Math.floor(Number(JSON.parse(localStorage.getItem('izzy-academy-v1')||'{}').points)||0))}catch(e){}
+ nav.querySelector('#ila-grade-score').textContent='⭐ '+points+' stars · Level '+(1+Math.floor(points/100));}
+nav.querySelector('#ila-grade-home').addEventListener('click',()=>{bridge()?.selectGrade(grade());window.scrollTo({top:0,behavior:'auto'})});
+document.addEventListener('ila-k3-grade-ready',refresh);window.addEventListener('pageshow',refresh);window.addEventListener('storage',refresh);refresh();
 })();
 </script>
 <script id="ila-k3-dashboard-integration">
