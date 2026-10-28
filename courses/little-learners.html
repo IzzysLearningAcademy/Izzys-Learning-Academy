@@ -130,6 +130,58 @@ body.ila-embed{background:transparent;min-height:0}
 body.ila-embed .shell{max-width:none;padding:0;margin:0}
 body.ila-embed .ila-k3-hero,body.ila-embed .ila-k3-adventures,body.ila-embed .ila-grade-nav,body.ila-embed #save-notice:not(.error),body.ila-embed .footer{display:none!important}
 body.ila-k3-activity.ila-progress-open .control-wrap{display:flex} /* the practice profile picker lives in My Achievements */
+</style>
+<style id="ila-k3-v7136-theme">/* V7.13.6 (Dad, Oct 27): inside the Academy, the K-3 pages use the Grade 5 look, so the site feels like one place:
+   the dark Academy background, unit chicklets, cream lesson cards in a purple panel. Colours copied from Grade 5. */
+html:has(body.ila-embed),body.ila-embed{background:transparent!important}
+body.ila-embed{color:#fff}
+body.ila-embed .shell{padding:0!important;max-width:none}
+body.ila-embed .subject-page,body.ila-embed .lesson,body.ila-embed .game-panel{background:radial-gradient(120% 90% at 10% 0%,#5a2a8a 0%,#3a1a66 45%,#22124a 100%)!important;border:2px solid #e6b75f!important;border-radius:24px!important;box-shadow:0 14px 34px #0b052866!important;padding:16px!important;color:#fff}
+body.ila-embed .headline h2,body.ila-embed .lesson h2,body.ila-embed .unit-heading{color:#ffe08f!important}
+body.ila-embed .headline p,body.ila-embed .lesson .lede,body.ila-embed .subject-page>.helper,body.ila-embed .lesson>.helper,body.ila-embed .lesson .crumb{color:#f4e6ff!important}
+body.ila-embed .lesson .crumb{color:#ffd98f!important;font-weight:800}
+body.ila-embed .lesson .lede strong{color:#fff}
+/* buttons on the purple panel: Grade 5 ghost and primary buttons */
+body.ila-embed .subject-page>.secondary,body.ila-embed .lesson-top .secondary,body.ila-embed .lesson>.secondary,body.ila-embed .lesson-nav .secondary,body.ila-embed .headline .sm-button{background:#ffffff1a!important;color:#fff!important;border:2px solid #ffffff55!important;border-radius:16px!important;font-weight:850}
+body.ila-embed .lesson .primary,body.ila-embed .subject-page .primary{background:linear-gradient(135deg,#ff7ac4,#8f3fd6)!important;border:2px solid #ffe3a1!important;border-radius:16px!important;box-shadow:0 4px 0 #2a1144;color:#fff!important}
+body.ila-embed .phase-tag,body.ila-embed .headline .chip{background:#ffffff1f!important;color:#ffe9b8!important;border-color:#ffffff40!important}
+/* units: Grade 5 chicklets */
+body.ila-embed .unit-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important;margin:12px 0 18px!important}
+body.ila-embed .unit-button{--c1:#ff86c9;--c2:#c2187a;--c3:#5e0d58;position:relative;overflow:hidden;display:grid!important;grid-template-columns:54px minmax(0,1fr);align-items:center;gap:4px 12px!important;min-height:84px!important;padding:12px 14px!important;border:2px solid #ffd987!important;border-radius:15px!important;color:#fff!important;text-align:left;
+ background:radial-gradient(130% 120% at 8% 0%,var(--c1) 0%,var(--c2) 52%,var(--c3) 100%)!important;box-shadow:inset 0 2px 0 #ffffff73,inset 0 -10px 22px #00000038,0 6px 0 #1a0b33,0 14px 26px #0a041e6b}
+body.ila-embed .unit-button::before{content:"";position:absolute;inset:-60% -20% 55% -20%;background:linear-gradient(#ffffff52,#fff0 70%);transform:rotate(-6deg);pointer-events:none}
+body.ila-embed .unit-button:nth-child(5n+2){--c1:#ffc271;--c2:#c04a08;--c3:#6e1e06}
+body.ila-embed .unit-button:nth-child(5n+3){--c1:#ffd65e;--c2:#a2560a;--c3:#5e2a04}
+body.ila-embed .unit-button:nth-child(5n+4){--c1:#c993ff;--c2:#6a2bd1;--c3:#2e1375}
+body.ila-embed .unit-button:nth-child(5n){--c1:#6af2d9;--c2:#0a766e;--c3:#0a3a5c}
+body.ila-embed .unit-button strong{grid-row:1/3;display:grid;place-items:center;width:50px!important;height:50px!important;min-width:0!important;border-radius:50%!important;font-size:19px;font-weight:950;color:#2a1342!important;
+ background:radial-gradient(circle at 35% 30%,#fff6 0 18%,#0000 19%),linear-gradient(145deg,#ffd36b,#ff7ac4 55%,#8f3fd6)!important;border:2px solid #fff3c4;box-shadow:0 3px 0 #2a1144}
+body.ila-embed .unit-button span{font-size:15px!important;font-weight:900!important;line-height:1.2!important;color:#fff;text-shadow:0 2px 0 #1e063259}
+body.ila-embed .unit-button small{color:#fff7e3!important;font-size:12px!important;font-weight:700!important;text-shadow:none}
+body.ila-embed .unit-button[aria-pressed=true]{border-color:#fff!important;box-shadow:inset 0 2px 0 #ffffff80,0 0 0 4px #ffffffcc,0 0 22px var(--c1),0 6px 0 #1a0b33!important}
+/* sessions: Grade 5 lesson cards */
+body.ila-embed .session-list{gap:10px!important}
+body.ila-embed .session-button{background:#fffaf3!important;border:2px solid #e9d6ff!important;border-radius:18px!important;box-shadow:0 4px 0 #1a0b33!important;color:#2a1342!important;min-height:70px!important;padding:10px 12px!important;gap:12px!important}
+body.ila-embed .session-number{width:44px;min-width:44px!important;height:44px!important;border-radius:50%!important;color:#2a1342!important;font-weight:950;background:radial-gradient(circle at 35% 30%,#fff6 0 18%,#0000 19%),linear-gradient(145deg,#ffd36b,#ff7ac4 55%,#8f3fd6)!important;border:2px solid #fff3c4;box-shadow:0 3px 0 #2a1144}
+body.ila-embed .session-title{color:#2a1342!important;font-weight:800!important;font-size:15px!important}
+body.ila-embed .session-state{background:#efe6fb;color:#6a4a8a!important;border-radius:99px;padding:3px 9px;font-size:11px!important}
+/* the lesson: cream cards inside the purple panel */
+body.ila-embed .lesson-intro,body.ila-embed .learning-steps section,body.ila-embed .activity,body.ila-embed .hands,body.ila-embed .enrich-panel,body.ila-embed .stem-scene,body.ila-embed .reading-check{background:#fffaf3!important;color:#2a1342!important;border:2px solid #f0dcb5!important;border-radius:20px!important;box-shadow:0 5px 0 #1a0b33}
+body.ila-embed .learning-steps section:nth-child(2){background:#f3f9ff!important}
+body.ila-embed .activity h3,body.ila-embed .learning-steps h3,body.ila-embed .enrich-panel h3,body.ila-embed .enrich-panel summary{color:#3d1a66!important}
+body.ila-embed .activity .helper,body.ila-embed .enrich-panel .helper{color:#5b3a7c!important}
+body.ila-embed #enrichment-mount>.enrich-guide{color:#f4e6ff!important}
+body.ila-embed .choice{border:3px solid #e2d3f5!important;border-radius:16px!important;background:#fff!important;color:#2a1342!important;box-shadow:0 3px 0 #d9c6f0}
+body.ila-embed .choice[aria-pressed=true]{border-color:#6f22b8!important;background:#ead8ff!important;box-shadow:0 0 0 4px #c9a6ff,0 3px 0 #6f22b8}
+body.ila-embed .visual{background:#f6eeff!important}
+body.ila-embed .hint-toggle{background:#fff4fc!important}
+/* My practice journey (My Achievements) */
+body.ila-embed .sidebar{background:radial-gradient(120% 90% at 10% 0%,#5a2a8a 0%,#3a1a66 45%,#22124a 100%)!important;border:2px solid #e6b75f!important;border-radius:24px!important;color:#fff!important}
+body.ila-embed .sidebar h2{color:#ffe08f!important}body.ila-embed .sidebar p,body.ila-embed .sidebar small{color:#f4e6ff!important}
+body.ila-embed .sidebar .side-stat{color:#fff!important}
+body.ila-embed .unit-button span,body.ila-embed .unit-button small{overflow-wrap:normal!important;word-break:normal!important}
+@media(max-width:560px){body.ila-embed .unit-grid{grid-template-columns:1fr!important;gap:10px!important}body.ila-embed .unit-button{grid-template-columns:44px minmax(0,1fr);min-height:68px!important;padding:9px 12px!important}
+ body.ila-embed .unit-button strong{width:42px!important;height:42px!important;font-size:16px}body.ila-embed .unit-button span{font-size:14.5px!important}}
 </style><style id="ila-k3-v7131-layout">
 /* V7.13.1 core engineering: the one K-3 layout layer (replaces five stacked repair blocks and the shared parity sheet).
    The grade is chosen on the Welcome page, so the old brand header, grade buttons and Back link stay out of view; the nav bar below has Home, the grade, stars and Back to Academy. */
