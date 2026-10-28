@@ -1,5 +1,6 @@
 // Izzy's Learning Academy: browser checks for the Welcome page, the K-3 dashboards and the Grade 4-8 dashboards.
 // V7.13.2: K-3 dashboards are the Grade 5 page (academy.html?grade=K|1|2|3); no grade switching from a dashboard.
+// V7.13.6: K-3 and Grades 4-8 subject pages and lessons use the Grade 5 look; Castle Catapult's full pull reaches the far side.
 // V7.13.5: after Languages, Art Studio or Rewards the grade's own tabs open that grade; subject welcomes with a time; Crown Cascade and Castle Catapult.
 // V7.13.4: royal-crest grade badges with a drawn crown (no picture box); every grade's Game Center has its own Brain Lab.
 // V7.13.3: every grade's Game Center has the Grade 5 games, set for that grade, and pays Academy stars once per grade, game and level.
@@ -61,7 +62,10 @@ const SAVE={points:300,done:{}};
    ok(!c.switcher&&!c.change&&c.logo==='index.html',tag+`${name}: no way to other grades on the dashboard; the logo goes to the Welcome page`);
    if(g==='K'||g==='3'){
     for(const [art,what,check] of [['math','Math',v=>v.units>0],['ela','ELA',v=>v.units>0],['stem','STEM',v=>v.units>0],['achievements','My Achievements',v=>v.journey]]){
-     await p.click('#ilaGxTile-'+art);const {v}=await frameView();const tilesGone=(await chrome()).tiles===0;
+     await p.click('#ilaGxTile-'+art);const {f:ff,v}=await frameView();const tilesGone=(await chrome()).tiles===0;
+     if(art!=='achievements'){const look=await ff.evaluate(()=>{const cs=e=>e?getComputedStyle(e):null;const body=cs(document.body),u=cs(document.querySelector('.unit-button')),sp=cs(document.querySelector('.subject-page')),sb=cs(document.querySelector('.session-button'));
+      return{body:body.backgroundColor+' '+body.backgroundImage,unit:u?.backgroundImage||'',panel:sp?.backgroundImage||'',card:sb?.backgroundColor||''}});
+      ok(/rgba\(0, 0, 0, 0\)/.test(look.body)&&!/gradient/.test(look.body.split(' ').slice(4).join(' '))&&/radial-gradient/.test(look.unit)&&/radial-gradient/.test(look.panel)&&look.card==='rgb(255, 250, 243)',tag+`${name}: ${what} uses the Grade 5 look (no white page; unit chicklets; purple panel; cream lesson cards)`)}
      ok(check(v)&&!v.k3chrome&&tilesGone,tag+`${name}: the ${what} tile opens ${what==='My Achievements'?'the practice journey and Family Backup note':'its own view'} under the tab bar`);
      await p.click('[data-academy-tab="home"]');await p.waitForTimeout(500);const h=await chrome();ok(h.tiles===8&&!h.frame&&h.view,tag+`${name}: the Home tab after ${what} brings back the dashboard`);}
     for(const [tab,what,check] of [['math','Math',v=>v.units>0],['creative','Discover',v=>v.units>0]]){
@@ -90,6 +94,15 @@ const SAVE={points:300,done:{}};
    for(const t of ['languages','rewards']){await p.click(`[data-academy-tab="${t}"]`);await p.waitForTimeout(600);await p.click('[data-academy-tab="home"]');await p.waitForTimeout(800);
     ok(await inGrade()&&await p.locator('#ilaGradeExplorerView .izd-gx-home').count()===1,tag+`Grade ${g}: ${t==='rewards'?'Rewards':'Languages'} then Home returns to the Grade ${g} dashboard`);}
    await p.locator('#ilaGxTile-stem').click();await p.waitForTimeout(500);ok(await p.locator('#ilaGradeExplorerView .ila-stem-card').count()===4,tag+`Grade ${g}: the STEM tile opens this grade's STEM center`);
+   await p.click('[data-academy-tab="math"]');await p.waitForTimeout(600);
+   {const x=await p.evaluate(()=>{const v=document.getElementById('ilaGradeExplorerView'),fr=v.querySelector('.ila-gx-frame');return{chips:[...v.querySelectorAll('.izd-chip')].map(c=>c.dataset.izd).join(),cards:v.querySelectorAll('.izd-lessons .izl-lcard').length,frameBg:getComputedStyle(fr).backgroundImage+' '+getComputedStyle(fr).backgroundColor,old:!!v.querySelector('[class*="-game-link"],[class*="ila-gx-g4-"],[class*="ila-gx-g6-"],[class*="ila-gx-g7-"],[class*="ila-gx-g8-"]'),icon:!!v.querySelector('.izd-chip use[href="#izi-book"]')&&!!document.getElementById('izi-book')}});
+    ok(x.chips==='lesson,course,stem,games'&&x.cards===4&&x.icon&&/^none rgba\(0, 0, 0, 0\)/.test(x.frameBg)&&!x.old,tag+`Grade ${g}: Math opens like Grade 5: four chicklets (${x.chips}) and the lesson panel with 4 lesson cards; no old grade page or game links`)}
+   await p.locator('#ilaGradeExplorerView .izl-lcard').first().click();await p.waitForTimeout(300);
+   for(let q=0;q<4;q++){await p.locator('#ilaGradeExplorerView .izl-opt').first().click();await p.locator('#ilaGradeExplorerView .izl-btn.primary',{hasText:'Check my answer'}).click();await p.waitForTimeout(80);
+    if(q===0)ok(await p.locator('#ilaGradeExplorerView .izd-feedback').count()===1&&await p.locator('#ilaGradeExplorerView .izl-card-main').count()===1,tag+`Grade ${g}: a lesson plays in the Grade 5 lesson card and explains the answer`);
+    await p.locator('#ilaGradeExplorerView .izl-btn.primary').last().click();await p.waitForTimeout(80)}
+   {const d=await p.evaluate(G=>{const s=JSON.parse(localStorage.getItem('ila_grade_explorer_demo_v1')||'{}');const recs=Object.values(s.grades?.[G]||{});return{done:recs.filter(r=>r.completed).length,txt:document.querySelector('#ilaGradeExplorerView .izl-card-main')?.innerText||''}},g);
+    ok(d.done>=1&&/Lesson complete/.test(d.txt),tag+`Grade ${g}: finishing the lesson saves it as completed, as before (${d.done} completed)`)}
    for(const [shared,tab,subj] of [['languages','math','math'],['rewards','ela','ela'],['languages','creative','stem'],['rewards','games','games']]){await p.click(`[data-academy-tab="${shared}"]`);await p.waitForTimeout(500);await p.click(`[data-academy-tab="${tab}"]`);await p.waitForTimeout(800);
     const x=await p.evaluate(()=>{const v=document.getElementById('ilaGradeExplorerView');const w=v?.querySelector('.izd-welcome');return{subj:w?.dataset.subject||'',time:w?.querySelector('.izd-welcome-time')?.textContent||'',stem:v?.querySelectorAll('.ila-stem-card').length||0,games:v?.querySelector('#ilaGamePackHub')?.dataset.grade||'',g5:[...document.querySelectorAll('.academy-view')].some(e=>e.getClientRects().length>0)}});
     const right=subj==='games'?x.games===g:subj==='stem'?x.stem===4&&x.subj==='stem':x.subj===subj;
@@ -163,7 +176,10 @@ const SAVE={points:300,done:{}};
      const cl=await p.evaluate(()=>window.ilaArcadePlus.current.test.state);ok(cl.lines===2,tag+`Grade ${g}: filling two rows clears them (lines ${cl.lines})`);
      await p.click('.iap-bar .iap-ghost');await p.click('.iap-card-catapult');await p.click('.iap-level[data-level="0"]');await p.waitForTimeout(1800);
      const before=await p.evaluate(()=>JSON.parse(localStorage.getItem('izzy-academy-v1')).points);
-     await p.evaluate(()=>window.ilaArcadePlus.current.test.shoot(115.9,-31.1));await p.waitForTimeout(6000);const ct=await p.evaluate(()=>window.ilaArcadePlus.current.test.state);
+     await p.evaluate(()=>window.ilaArcadePlus.current.test.shoot(91.9,-91.9));let far=0;for(let t=0;t<16;t++){await p.waitForTimeout(200);const o=await p.evaluate(()=>window.ilaArcadePlus.current.test.state.orb);if(o&&!o.st)far=Math.max(far,o.x)}
+     ok(far>1300,tag+`Grade ${g}: a full pull of the catapult carries the orb past the far castles (reached x=${Math.round(far)} of 1400)`);
+     await p.click('.iap-hud .iap-chip:nth-child(5)');await p.waitForTimeout(1800);
+     await p.evaluate(()=>window.ilaArcadePlus.current.test.shoot(125.6,-33.6));await p.waitForTimeout(6000);const ct=await p.evaluate(()=>window.ilaArcadePlus.current.test.state);
      const after=await p.evaluate(()=>JSON.parse(localStorage.getItem('izzy-academy-v1')).points);stars=after;
      ok(ct.ended&&ct.blobs===0&&await p.locator('.iap-result').isVisible(),tag+`Grade ${g}: one well-aimed orb clears Castle 1 with real physics (score ${ct.score})`);
      ok(after-before===(g==='K'?2:0),tag+`Grade ${g}: clearing Castle 1 pays 2 Academy stars the first time only (${after-before})`);
