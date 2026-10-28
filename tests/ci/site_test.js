@@ -1,5 +1,6 @@
 // Izzy's Learning Academy: browser checks for the Welcome page, the K-3 dashboards and the Grade 4-8 dashboards.
 // V7.13.2: K-3 dashboards are the Grade 5 page (academy.html?grade=K|1|2|3); no grade switching from a dashboard.
+// V7.13.8: Back to Academy button by Settings; K-3 unit and lesson taps bring what opened into view; Grades 4-8 Math/ELA offer only that subject's activities.
 // V7.13.6: K-3 and Grades 4-8 subject pages and lessons use the Grade 5 look; Castle Catapult's full pull reaches the far side.
 // V7.13.5: after Languages, Art Studio or Rewards the grade's own tabs open that grade; subject welcomes with a time; Crown Cascade and Castle Catapult.
 // V7.13.4: royal-crest grade badges with a drawn crown (no picture box); every grade's Game Center has its own Brain Lab.
@@ -50,7 +51,7 @@ const SAVE={points:300,done:{}};
   const chrome=()=>p.evaluate(()=>{const vis=e=>!!e&&e.getClientRects().length>0;const v=document.getElementById('ilaGradeExplorerView');const img=v?.querySelector('.izd-banner-art');const r=img?.getBoundingClientRect();
    return{view:!!v&&!v.hidden,src:img?.getAttribute('src')||'',ratio:r?+(r.width/r.height).toFixed(2):0,nat:img?+(img.naturalWidth/img.naturalHeight).toFixed(2):0,tiles:v?v.querySelectorAll('.izd-gx-home .izd-tile').length:0,
     stars:document.getElementById('points')?.textContent,tabs:document.querySelectorAll('#academyNav [data-academy-tab]').length,head:v?.querySelector('.izd-badge')?.textContent||'',
-    switcher:vis(document.querySelector('.ila-gx-grade-switch')),change:vis(document.getElementById('ilaChangeGrade')),logo:document.querySelector('header h1 a')?.getAttribute('href'),
+    switcher:vis(document.querySelector('.ila-gx-grade-switch')),change:vis(document.getElementById('ilaChangeGrade')),logo:document.querySelector('header h1 a')?.getAttribute('href'),back:(()=>{const a=document.getElementById('izdBackAcademy');return !!a&&a.getClientRects().length>0&&a.getAttribute('href')==='index.html'&&a.nextElementSibling?.id==='izdSettings'})(),
     frame:!!v?.querySelector('iframe.izk3-frame'),purple:vis(document.querySelector('.ila-grade-nav')),wide:document.documentElement.scrollWidth>innerWidth+1}});
   const frameView=async()=>{const fh=await p.waitForSelector('iframe.izk3-frame',{timeout:15000});const f=await fh.contentFrame();await f.waitForLoadState('load');await p.waitForTimeout(700);
    return {f,v:await f.evaluate(()=>{const vis=e=>!!e&&e.getClientRects().length>0;const sb=document.querySelector('.sidebar');return{units:document.querySelectorAll('#workspace .unit-button').length,game:!!document.querySelector('#workspace .game-panel'),
@@ -59,7 +60,7 @@ const SAVE={points:300,done:{}};
    const c=await chrome();const file={K:'k',1:'g1',2:'g2',3:'g3'}[g];
    ok(c.view&&c.src.includes(`assets/k3/${file}-banner.webp`)&&Math.abs(c.ratio-c.nat)<0.03&&c.head.includes(name+' Dashboard'),tag+`${name}: the Grade 5 banner layout with its own whole scene (${c.ratio} vs ${c.nat})`);
    ok(c.tiles===8&&c.stars==='300'&&c.tabs>=8&&!c.purple&&!c.frame&&!c.wide,tag+`${name}: Grade 5 header (300 stars), tab bar and 8 tiles; no purple nav box; nothing under the tiles`);
-   ok(!c.switcher&&!c.change&&c.logo==='index.html',tag+`${name}: no way to other grades on the dashboard; the logo goes to the Welcome page`);
+   ok(!c.switcher&&!c.change&&c.logo==='index.html'&&c.back,tag+`${name}: no way to other grades on the dashboard; a Back to Academy button (next to Settings) and the logo go to the Welcome page`);
    if(g==='K'||g==='3'){
     for(const [art,what,check] of [['math','Math',v=>v.units>0],['ela','ELA',v=>v.units>0],['stem','STEM',v=>v.units>0],['achievements','My Achievements',v=>v.journey]]){
      await p.click('#ilaGxTile-'+art);const {f:ff,v}=await frameView();const tilesGone=(await chrome()).tiles===0;
@@ -71,6 +72,12 @@ const SAVE={points:300,done:{}};
     for(const [tab,what,check] of [['math','Math',v=>v.units>0],['creative','Discover',v=>v.units>0]]){
      await p.click(`[data-academy-tab="${tab}"]`);const {v}=await frameView();ok(check(v),tag+`${name}: the ${what} tab opens ${name}'s ${what}`);
      await p.click('[data-academy-tab="home"]');await p.waitForTimeout(400);}
+    {await p.click('#ilaGxTile-math');const {f:fk}=await frameView();await fk.evaluate(()=>document.querySelectorAll('.unit-button')[5].click());await p.waitForTimeout(1200);
+     const u=await p.evaluate(()=>{const f=document.querySelector('iframe.izk3-frame'),h=f.contentDocument.querySelector('.unit-heading');const t=f.getBoundingClientRect().top+h.getBoundingClientRect().top;return{t:Math.round(t),vh:innerHeight}});
+     ok(u.t>=0&&u.t<u.vh-80,tag+`${name}: tapping a unit chicklet brings its lessons into view (heading at ${u.t}px of ${u.vh})`);
+     await fk.evaluate(()=>document.querySelectorAll('.session-button')[2].click());await p.waitForTimeout(1200);
+     const l=await p.evaluate(()=>{const f=document.querySelector('iframe.izk3-frame');const t=Math.round(f.getBoundingClientRect().top);return{t,lesson:!!f.contentDocument.querySelector('.lesson')}});
+     ok(l.lesson&&l.t>=-5&&l.t<260,tag+`${name}: tapping a lesson opens it at the top of the screen (frame top ${l.t}px)`);await p.click('[data-academy-tab="home"]');await p.waitForTimeout(400)}
     for(const [shared,tab,view,subj] of [['languages','ela','ELA','ela'],['rewards','math','MATH','math'],['languages','creative','STEM','stem']]){await p.click(`[data-academy-tab="${shared}"]`);await p.waitForTimeout(500);await p.click(`[data-academy-tab="${tab}"]`);await p.waitForTimeout(900);
      const x=await p.evaluate(()=>{const v=document.getElementById('ilaGradeExplorerView');const w=v?.querySelector('.izd-welcome');return{gx:!!v&&!v.hidden,src:v?.querySelector('iframe.izk3-frame')?.getAttribute('src')||'',g5:[...document.querySelectorAll('.academy-view')].some(e=>e.getClientRects().length>0),subj:w?.dataset.subject,time:w?.querySelector('.izd-welcome-time')?.textContent||''}});
      ok(x.gx&&x.src.includes('grade='+g)&&x.src.includes('view='+view)&&!x.g5,tag+`${name}: ${shared} then the ${tab==='creative'?'Discover':tab.toUpperCase()} tab opens ${name}'s own ${view}, not Grade 5's`);
@@ -96,13 +103,18 @@ const SAVE={points:300,done:{}};
    await p.locator('#ilaGxTile-stem').click();await p.waitForTimeout(500);ok(await p.locator('#ilaGradeExplorerView .ila-stem-card').count()===4,tag+`Grade ${g}: the STEM tile opens this grade's STEM center`);
    await p.click('[data-academy-tab="math"]');await p.waitForTimeout(600);
    {const x=await p.evaluate(()=>{const v=document.getElementById('ilaGradeExplorerView'),fr=v.querySelector('.ila-gx-frame');return{chips:[...v.querySelectorAll('.izd-chip')].map(c=>c.dataset.izd).join(),cards:v.querySelectorAll('.izd-lessons .izl-lcard').length,frameBg:getComputedStyle(fr).backgroundImage+' '+getComputedStyle(fr).backgroundColor,old:!!v.querySelector('[class*="-game-link"],[class*="ila-gx-g4-"],[class*="ila-gx-g6-"],[class*="ila-gx-g7-"],[class*="ila-gx-g8-"]'),icon:!!v.querySelector('.izd-chip use[href="#izi-book"]')&&!!document.getElementById('izi-book')}});
-    ok(x.chips==='lesson,course,stem,games'&&x.cards===4&&x.icon&&/^none rgba\(0, 0, 0, 0\)/.test(x.frameBg)&&!x.old,tag+`Grade ${g}: Math opens like Grade 5: four chicklets (${x.chips}) and the lesson panel with 4 lesson cards; no old grade page or game links`)}
+    ok(x.chips==='lesson,course,practice,puzzles'&&x.cards===4&&x.icon&&/^none rgba\(0, 0, 0, 0\)/.test(x.frameBg)&&!x.old,tag+`Grade ${g}: Math opens like Grade 5: four Math chicklets (${x.chips}), no STEM or Game Center there and the lesson panel with 4 lesson cards; no old grade page or game links`)}
    await p.locator('#ilaGradeExplorerView .izl-lcard').first().click();await p.waitForTimeout(300);
    for(let q=0;q<4;q++){await p.locator('#ilaGradeExplorerView .izl-opt').first().click();await p.locator('#ilaGradeExplorerView .izl-btn.primary',{hasText:'Check my answer'}).click();await p.waitForTimeout(80);
     if(q===0)ok(await p.locator('#ilaGradeExplorerView .izd-feedback').count()===1&&await p.locator('#ilaGradeExplorerView .izl-card-main').count()===1,tag+`Grade ${g}: a lesson plays in the Grade 5 lesson card and explains the answer`);
     await p.locator('#ilaGradeExplorerView .izl-btn.primary').last().click();await p.waitForTimeout(80)}
    {const d=await p.evaluate(G=>{const s=JSON.parse(localStorage.getItem('ila_grade_explorer_demo_v1')||'{}');const recs=Object.values(s.grades?.[G]||{});return{done:recs.filter(r=>r.completed).length,txt:document.querySelector('#ilaGradeExplorerView .izl-card-main')?.innerText||''}},g);
     ok(d.done>=1&&/Lesson complete/.test(d.txt),tag+`Grade ${g}: finishing the lesson saves it as completed, as before (${d.done} completed)`)}
+   await p.click('[data-academy-tab="math"]');await p.waitForTimeout(400);await p.click('.izd-chip[data-izd="practice"]');await p.waitForTimeout(400);
+   ok(await p.evaluate(()=>window.ilaGamePacks.current()?.id==='dash'&&!!document.querySelector('#ilaGamePackHub .eg-stage:not([hidden])')),tag+`Grade ${g}: Math Practice opens the grade's math rocket`);
+   await p.click('[data-academy-tab="ela"]');await p.waitForTimeout(400);ok(await p.evaluate(()=>[...document.querySelectorAll('#ilaGradeExplorerView .izd-chip')].map(c=>c.dataset.izd).join())==='lesson,course,practice,puzzles',tag+`Grade ${g}: ELA has only ELA chicklets`);
+   await p.click('.izd-chip[data-izd="practice"]');await p.waitForTimeout(400);ok(await p.evaluate(()=>window.ilaGamePacks.current()?.id==='reading'),tag+`Grade ${g}: Reading Practice opens Reading Detective`);
+   await p.click('[data-academy-tab="home"]');await p.waitForTimeout(300);
    for(const [shared,tab,subj] of [['languages','math','math'],['rewards','ela','ela'],['languages','creative','stem'],['rewards','games','games']]){await p.click(`[data-academy-tab="${shared}"]`);await p.waitForTimeout(500);await p.click(`[data-academy-tab="${tab}"]`);await p.waitForTimeout(800);
     const x=await p.evaluate(()=>{const v=document.getElementById('ilaGradeExplorerView');const w=v?.querySelector('.izd-welcome');return{subj:w?.dataset.subject||'',time:w?.querySelector('.izd-welcome-time')?.textContent||'',stem:v?.querySelectorAll('.ila-stem-card').length||0,games:v?.querySelector('#ilaGamePackHub')?.dataset.grade||'',g5:[...document.querySelectorAll('.academy-view')].some(e=>e.getClientRects().length>0)}});
     const right=subj==='games'?x.games===g:subj==='stem'?x.stem===4&&x.subj==='stem':x.subj===subj;
@@ -115,7 +127,7 @@ const SAVE={points:300,done:{}};
   // Grade 5 still opens its own home and keeps the stars
   await p.goto(U+'academy.html');await p.waitForTimeout(1500);
   ok(await p.evaluate(()=>document.getElementById('points')?.textContent==='300'&&!!document.querySelector('#academyDashboard .izd-banner')),tag+'Grade 5: its own dashboard, with the same 300 stars');
-  {const c=await chrome();ok(!c.change&&c.logo==='index.html',tag+'Grade 5: no Change grade link; the logo goes to the Welcome page')}
+  {const c=await chrome();ok(!c.change&&c.logo==='index.html'&&c.back,tag+'Grade 5: no Change grade link; Back to Academy and the logo go to the Welcome page')}
   ok(JSON.parse(await p.evaluate(()=>localStorage.getItem('izzy-academy-v1'))).points===300,tag+'Academy stars unchanged after all the flows');
   ok(errs.length===0,tag+'no page errors '+errs.slice(0,3).join(' | '));ok(missing.length===0,tag+'no missing files '+missing.slice(0,5).join(' '));
   await ctx.close()}

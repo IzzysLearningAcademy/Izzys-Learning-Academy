@@ -1183,6 +1183,12 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
  if(q.get('embed')!=='1'){location.replace('../academy.html?grade='+encodeURIComponent(['K','1','2','3'].includes(g)?g:'K'));return}
  document.body.classList.add('ila-embed');const b=window.ILA_K3_DASHBOARD_BRIDGE,v=q.get('view');
  if(b&&['MATH','ELA','STEM','GAMES','PROGRESS'].includes(v)){b.open(v);window.__ilaK3Opened=true}})();
+</script>
+<script id="ila-k3-v7138-scroll">
+/* V7.13.8 (Dad): inside the Academy, after a unit or lesson is opened, ask the Academy page to scroll to it (the frame itself never scrolls). */
+(()=>{'use strict';if(!document.body.classList.contains('ila-embed')||window.parent===window)return;
+ document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('.unit-button,.session-button,#go-back,#next-session,.lesson-nav button');if(!t)return;const unit=t.classList.contains('unit-button');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{const el=unit?document.querySelector('.unit-heading'):document.getElementById('workspace');const y=el?el.getBoundingClientRect().top+window.scrollY:0;try{window.parent.izK3Scroll?.(y)}catch(_){}}))},true)})();
 </script><script id="ila-k3-v7131-nav">
 /* V7.13.1: Home, grade, stars and Back to Academy. Reads Academy stars, never writes them. No observers or timers. */
 (()=>{'use strict';
