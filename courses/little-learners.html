@@ -134,7 +134,6 @@ body.ila-k3-activity.ila-progress-open .control-wrap{display:flex} /* the practi
 <style id="ila-k3-v7136-theme">/* V7.13.6 (Dad, Oct 27): inside the Academy, the K-3 pages use the Grade 5 look, so the site feels like one place:
    the dark Academy background, unit chicklets, cream lesson cards in a purple panel. Colours copied from Grade 5. */
 html:has(body.ila-embed),body.ila-embed{background:transparent!important}
-body.ila-embed{color:#fff}
 body.ila-embed .shell{padding:0!important;max-width:none}
 body.ila-embed .subject-page,body.ila-embed .lesson,body.ila-embed .game-panel{background:radial-gradient(120% 90% at 10% 0%,#5a2a8a 0%,#3a1a66 45%,#22124a 100%)!important;border:2px solid #e6b75f!important;border-radius:24px!important;box-shadow:0 14px 34px #0b052866!important;padding:16px!important;color:#fff}
 body.ila-embed .headline h2,body.ila-embed .lesson h2,body.ila-embed .unit-heading{color:#ffe08f!important}
@@ -182,6 +181,12 @@ body.ila-embed .sidebar .side-stat{color:#fff!important}
 body.ila-embed .unit-button span,body.ila-embed .unit-button small{overflow-wrap:normal!important;word-break:normal!important}
 @media(max-width:560px){body.ila-embed .unit-grid{grid-template-columns:1fr!important;gap:10px!important}body.ila-embed .unit-button{grid-template-columns:44px minmax(0,1fr);min-height:68px!important;padding:9px 12px!important}
  body.ila-embed .unit-button strong{width:42px!important;height:42px!important;font-size:16px}body.ila-embed .unit-button span{font-size:14.5px!important}}
+/* solid colours under the gradients (what the gradients sit on, and what contrast is measured against) */
+body.ila-embed .subject-page,body.ila-embed .lesson,body.ila-embed .game-panel,body.ila-embed .sidebar{background-color:#3a1a66!important}
+body.ila-embed .unit-button{background-color:var(--c2)!important}
+body.ila-embed .lesson .primary,body.ila-embed .subject-page .primary{background-color:#8f3fd6!important}
+body.ila-embed .game-score,body.ila-embed .game-teaser,body.ila-embed .notice{color:#2a1342!important}
+body.ila-embed .unit-button strong,body.ila-embed .session-number{background-color:#ff9fd0!important}
 </style><style id="ila-k3-v7131-layout">
 /* V7.13.1 core engineering: the one K-3 layout layer (replaces five stacked repair blocks and the shared parity sheet).
    The grade is chosen on the Welcome page, so the old brand header, grade buttons and Back link stay out of view; the nav bar below has Home, the grade, stars and Back to Academy. */
