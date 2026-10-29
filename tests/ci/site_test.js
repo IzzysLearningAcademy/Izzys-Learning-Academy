@@ -1,5 +1,7 @@
 // Izzy's Learning Academy: browser checks for the Welcome page, the K-3 dashboards and the Grade 4-8 dashboards.
 // V7.13.2: K-3 dashboards are the Grade 5 page (academy.html?grade=K|1|2|3); no grade switching from a dashboard.
+// V7.13.10: Grades 4, 6, 7, 8 have their own banner scenes and descriptions.
+// V7.13.9: the Level chip uses a wider Izzy crop (Dad: too zoomed in).
 // V7.13.8: Back to Academy button by Settings; K-3 unit and lesson taps bring what opened into view; Grades 4-8 Math/ELA offer only that subject's activities.
 // V7.13.6: K-3 and Grades 4-8 subject pages and lessons use the Grade 5 look; Castle Catapult's full pull reaches the far side.
 // V7.13.5: after Languages, Art Studio or Rewards the grade's own tabs open that grade; subject welcomes with a time; Crown Cascade and Castle Catapult.
@@ -96,6 +98,9 @@ const SAVE={points:300,done:{}};
   for(const g of ['4','6','7','8']){await p.goto(U+'academy.html?grade='+g);await p.waitForTimeout(1500);
    const inGrade=()=>p.evaluate(G=>{const v=document.getElementById('ilaGradeExplorerView');return !!v&&!v.hidden&&new RegExp('Grade '+G).test(v.innerText.slice(0,1500))},g);
    {const c=await chrome();ok(!c.switcher&&!c.change&&c.logo==='index.html',tag+`Grade ${g}: no grade switcher; the logo goes to the Welcome page`)}
+   {const SC={'4':/discovery garden/,'6':/maker lab/,'7':/library/,'8':/observatory/};const b=await p.evaluate(async()=>{const i=document.querySelector('#ilaGradeExplorerView .izd-banner-art');if(!i.complete)await new Promise(r=>{i.onload=r;i.onerror=r});const h=await crypto.subtle.digest('SHA-256',await (await fetch(i.src)).arrayBuffer());return{src:i.getAttribute('src'),alt:i.alt,nw:i.naturalWidth,nh:i.naturalHeight,hash:[...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join(''),wide:document.documentElement.scrollWidth>innerWidth+1}});
+    ok(b.src===`assets/dash/g${g}-banner.jpg?v=7.13.10`&&b.nw===2400&&b.nh===703&&b.hash!=='8c9f99b5b7e9b9bbdcbe03f69d03e4d625ea90672ed4d3c1a5b3a7c4b34107fe'&&!b.wide,tag+`Grade ${g}: its own banner loads (2400x703, not the Grade 5 picture, fresh address)`);
+    ok(/^Izzy /.test(b.alt)&&SC[g].test(b.alt)&&!/campus at sunset/.test(b.alt),tag+`Grade ${g}: the banner's description names its own scene ("${b.alt.slice(0,60)}…")`)}
    await p.click('[data-academy-tab="creative"]');await p.waitForTimeout(700);
    ok(await inGrade()&&await p.locator('#ilaGradeExplorerView .ila-stem-card').count()===4,tag+`Grade ${g}: Discover opens this grade's STEM center`);
    for(const t of ['languages','rewards']){await p.click(`[data-academy-tab="${t}"]`);await p.waitForTimeout(600);await p.click('[data-academy-tab="home"]');await p.waitForTimeout(800);
@@ -128,6 +133,8 @@ const SAVE={points:300,done:{}};
   await p.goto(U+'academy.html');await p.waitForTimeout(1500);
   ok(await p.evaluate(()=>document.getElementById('points')?.textContent==='300'&&!!document.querySelector('#academyDashboard .izd-banner')),tag+'Grade 5: its own dashboard, with the same 300 stars');
   {const c=await chrome();ok(!c.change&&c.logo==='index.html'&&c.back,tag+'Grade 5: no Change grade link; Back to Academy and the logo go to the Welcome page')}
+  {const v=await p.evaluate(async()=>{const i=document.querySelector('#izdLevel img');if(!i.complete)await new Promise(r=>i.onload=r);const r=i.getBoundingClientRect();return{src:i.getAttribute('src'),nw:i.naturalWidth,nh:i.naturalHeight,w:Math.round(r.width),round:getComputedStyle(i).borderRadius}});
+   ok(v.src==='assets/dash/izzy-avatar-v2.jpg'&&v.nw===240&&v.nh===240&&v.w===40&&v.round==='50%',tag+`Level chip: the wider head-and-shoulders Izzy picture (${v.nw}x${v.nh}) shows in the 40px circle`)}
   ok(JSON.parse(await p.evaluate(()=>localStorage.getItem('izzy-academy-v1'))).points===300,tag+'Academy stars unchanged after all the flows');
   ok(errs.length===0,tag+'no page errors '+errs.slice(0,3).join(' | '));ok(missing.length===0,tag+'no missing files '+missing.slice(0,5).join(' '));
   await ctx.close()}
