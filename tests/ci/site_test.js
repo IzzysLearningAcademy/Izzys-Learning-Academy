@@ -1,5 +1,6 @@
 // Izzy's Learning Academy: browser checks for the Welcome page, the K-3 dashboards and the Grade 4-8 dashboards.
 // V7.13.2: K-3 dashboards are the Grade 5 page (academy.html?grade=K|1|2|3); no grade switching from a dashboard.
+// V7.13.12: the touched-up K-3 banners (2400x703, own descriptions, fresh address).
 // V7.13.11: the Welcome page grade choices are the Royal Library Books.
 // V7.13.10: Grades 4, 6, 7, 8 have their own banner scenes and descriptions.
 // V7.13.9: the Level chip uses a wider Izzy crop (Dad: too zoomed in).
@@ -29,11 +30,12 @@ const SAVE={points:300,done:{}};
   const geo=async url=>{await p.goto(U+url);await p.waitForTimeout(1200);return p.evaluate(()=>{const v=document.getElementById('ilaGradeExplorerView');const root=v&&!v.hidden?v:document.getElementById('academyDashboard');
    const g=root.querySelector('.izd-grid');const cs=getComputedStyle(g);const t=[...g.querySelectorAll('.izd-tile')].map(x=>x.getBoundingClientRect());
    const img=root.querySelector('.izd-banner-art');const r=img.getBoundingClientRect();
-   return{cols:cs.gridTemplateColumns.split(' ').length,gap:cs.columnGap,tw:Math.round(t[0].width),n:t.length,ratio:+(r.width/r.height).toFixed(2),nat:+(img.naturalWidth/img.naturalHeight).toFixed(2),fit:getComputedStyle(img).objectFit}})};
+   return{cols:cs.gridTemplateColumns.split(' ').length,gap:cs.columnGap,tw:Math.round(t[0].width),n:t.length,ratio:+(r.width/r.height).toFixed(2),nat:+(img.naturalWidth/img.naturalHeight).toFixed(2),fit:getComputedStyle(img).objectFit,src:img.getAttribute('src'),alt:img.alt,nw:img.naturalWidth,nh:img.naturalHeight}})};
   const g5=await geo('academy.html');
   for(const g of ['K','1','2','3','4','6','7','8']){const x=await geo('academy.html?grade='+g);
    ok(x.n===8&&x.cols===g5.cols&&x.gap===g5.gap&&Math.abs(x.tw-g5.tw)<=2,`${w}px: Grade ${g} dashboard matches Grade 5 (${x.cols} vs ${g5.cols} columns, gap ${x.gap} vs ${g5.gap}, tile ${x.tw} vs ${g5.tw}px)`);
-   if(w<700)ok(Math.abs(x.ratio-x.nat)<0.03,`${w}px: Grade ${g} banner shows the whole picture (shape ${x.ratio} vs ${x.nat})`);}
+   if(w<700)ok(Math.abs(x.ratio-x.nat)<0.03,`${w}px: Grade ${g} banner shows the whole picture (shape ${x.ratio} vs ${x.nat})`);
+   if('K123'.includes(g)){const n=g==='K'?'k':'g'+g;ok(x.src===`assets/k3/${n}-banner.webp?v=7.13.12`&&x.nw===2400&&x.nh===703&&Math.abs(x.ratio-x.nat)<0.05&&/^(Young )?Izzy /.test(x.alt)&&!/a smiling student/.test(x.alt),`${w}px: ${g==='K'?'Kindergarten':'Grade '+g} touched-up banner loads fresh at 2400x703, shown at its own shape (${x.ratio} vs ${x.nat}), with its own description`)}}
   if(w<700)ok(Math.abs(g5.ratio-g5.nat)<0.03,`${w}px: Grade 5 banner shows the whole picture (shape ${g5.ratio} vs ${g5.nat})`);
   await ctx.close()}
  // ---- flows at phone, iPad and laptop ----
