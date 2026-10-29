@@ -1,5 +1,6 @@
 // Izzy's Learning Academy: browser checks for the Welcome page, the K-3 dashboards and the Grade 4-8 dashboards.
 // V7.13.2: K-3 dashboards are the Grade 5 page (academy.html?grade=K|1|2|3); no grade switching from a dashboard.
+// V7.13.10: Grades 4, 6, 7, 8 have their own banner scenes and descriptions.
 // V7.13.9: the Level chip uses a wider Izzy crop (Dad: too zoomed in).
 // V7.13.8: Back to Academy button by Settings; K-3 unit and lesson taps bring what opened into view; Grades 4-8 Math/ELA offer only that subject's activities.
 // V7.13.6: K-3 and Grades 4-8 subject pages and lessons use the Grade 5 look; Castle Catapult's full pull reaches the far side.
@@ -97,6 +98,9 @@ const SAVE={points:300,done:{}};
   for(const g of ['4','6','7','8']){await p.goto(U+'academy.html?grade='+g);await p.waitForTimeout(1500);
    const inGrade=()=>p.evaluate(G=>{const v=document.getElementById('ilaGradeExplorerView');return !!v&&!v.hidden&&new RegExp('Grade '+G).test(v.innerText.slice(0,1500))},g);
    {const c=await chrome();ok(!c.switcher&&!c.change&&c.logo==='index.html',tag+`Grade ${g}: no grade switcher; the logo goes to the Welcome page`)}
+   {const SC={'4':/discovery garden/,'6':/maker lab/,'7':/library/,'8':/observatory/};const b=await p.evaluate(async()=>{const i=document.querySelector('#ilaGradeExplorerView .izd-banner-art');if(!i.complete)await new Promise(r=>{i.onload=r;i.onerror=r});const h=await crypto.subtle.digest('SHA-256',await (await fetch(i.src)).arrayBuffer());return{src:i.getAttribute('src'),alt:i.alt,nw:i.naturalWidth,nh:i.naturalHeight,hash:[...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join(''),wide:document.documentElement.scrollWidth>innerWidth+1}});
+    ok(b.src===`assets/dash/g${g}-banner.jpg?v=7.13.10`&&b.nw===2400&&b.nh===703&&b.hash!=='8c9f99b5b7e9b9bbdcbe03f69d03e4d625ea90672ed4d3c1a5b3a7c4b34107fe'&&!b.wide,tag+`Grade ${g}: its own banner loads (2400x703, not the Grade 5 picture, fresh address)`);
+    ok(/^Izzy /.test(b.alt)&&SC[g].test(b.alt)&&!/campus at sunset/.test(b.alt),tag+`Grade ${g}: the banner's description names its own scene ("${b.alt.slice(0,60)}…")`)}
    await p.click('[data-academy-tab="creative"]');await p.waitForTimeout(700);
    ok(await inGrade()&&await p.locator('#ilaGradeExplorerView .ila-stem-card').count()===4,tag+`Grade ${g}: Discover opens this grade's STEM center`);
    for(const t of ['languages','rewards']){await p.click(`[data-academy-tab="${t}"]`);await p.waitForTimeout(600);await p.click('[data-academy-tab="home"]');await p.waitForTimeout(800);
