@@ -135,6 +135,10 @@ const SAVE={points:300,done:{}};
   // Grade 5 still opens its own home and keeps the stars
   await p.goto(U+'academy.html');await p.waitForTimeout(1500);
   ok(await p.evaluate(()=>document.getElementById('points')?.textContent==='300'&&!!document.querySelector('#academyDashboard .izd-banner')),tag+'Grade 5: its own dashboard, with the same 300 stars');
+  {const V=(await (await fetch(U+'index.html')).text()).match(/Academy Version (\d+\.\d+\.\d+)/)[1];
+   for(const g of ['','?grade=K','?grade=3','?grade=4','?grade=8']){await p.goto(U+'academy.html'+g);await p.waitForTimeout(1300);const h=await p.evaluate(()=>({hdr:[...document.querySelectorAll('header p')].map(x=>x.textContent).join(' '),title:document.title}));
+    ok(h.hdr.includes('Academy Version '+V+' ')&&h.title.includes('V'+V+' ')&&!/Version \d/.test(h.hdr.replace('Academy Version '+V,'')),tag+`academy.html${g}: the header and tab title show the same version as the Welcome page (${V})`)}
+   await p.goto(U+'academy.html');await p.waitForTimeout(1300)}
   {const c=await chrome();ok(!c.change&&c.logo==='index.html'&&c.back,tag+'Grade 5: no Change grade link; Back to Academy and the logo go to the Welcome page')}
   {const v=await p.evaluate(async()=>{const i=document.querySelector('#izdLevel img');if(!i.complete)await new Promise(r=>i.onload=r);const r=i.getBoundingClientRect();return{src:i.getAttribute('src'),nw:i.naturalWidth,nh:i.naturalHeight,w:Math.round(r.width),round:getComputedStyle(i).borderRadius}});
    ok(v.src==='assets/dash/izzy-avatar-v2.jpg'&&v.nw===240&&v.nh===240&&v.w===40&&v.round==='50%',tag+`Level chip: the wider head-and-shoulders Izzy picture (${v.nw}x${v.nh}) shows in the 40px circle`)}

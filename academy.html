@@ -9181,7 +9181,7 @@ window.izSpeechPlay=function(utter){if(!('speechSynthesis' in window)||!window.S
 })();
 </script>
 <script id="izPremiumIntegrationEngine">(function(){'use strict';
-const VERSION='7.13.8';
+const VERSION='7.13.12';
 function init(){
 const by=id=>document.getElementById(id),nav=by('academyNav');if(!nav)return;
 const stamp=()=>{const p=[...document.querySelectorAll('header p')].find(x=>x.textContent.includes('Academy Version'));if(p)p.textContent='✨ Academy Version '+VERSION+' · Demo Builder';document.title="Izzy's Learning Academy · V"+VERSION+' Demo Builder';};stamp();
