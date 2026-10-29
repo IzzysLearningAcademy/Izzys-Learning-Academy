@@ -1,5 +1,6 @@
 // Izzy's Learning Academy: browser checks for the Welcome page, the K-3 dashboards and the Grade 4-8 dashboards.
 // V7.13.2: K-3 dashboards are the Grade 5 page (academy.html?grade=K|1|2|3); no grade switching from a dashboard.
+// V7.13.11: the Welcome page grade choices are the Royal Library Books.
 // V7.13.10: Grades 4, 6, 7, 8 have their own banner scenes and descriptions.
 // V7.13.9: the Level chip uses a wider Izzy crop (Dad: too zoomed in).
 // V7.13.8: Back to Academy button by Settings; K-3 unit and lesson taps bring what opened into view; Grades 4-8 Math/ELA offer only that subject's activities.
@@ -42,10 +43,10 @@ const SAVE={points:300,done:{}};
   await p.goto(U+'index.html');await p.evaluate(s=>{localStorage.clear();localStorage.setItem('izzy-academy-v1',JSON.stringify(s))},SAVE);await p.reload();await p.waitForTimeout(400);
   // Welcome
   const W=await p.evaluate(()=>{const cards=[...document.querySelectorAll('a.gradecard')];const h=document.querySelector('.hero img');const r=h.getBoundingClientRect();
-   return{n:cards.length,badges:cards.filter(c=>c.querySelector('.medal .num')&&c.querySelector('svg.crest-crown use')&&c.querySelector('.name')).length,faces:document.querySelectorAll('a.gradecard img').length,
+   return{n:cards.length,badges:cards.filter((c,k)=>{const i=c.querySelector('img.book');return i&&i.complete&&i.naturalWidth>0&&i.getAttribute('src')===`assets/welcome/book-${'k12345678'[k]}.webp`&&i.alt===''&&c.querySelector('.name')&&/^Open the (Kindergarten|Grade [1-8]) dashboard$/.test(c.getAttribute('aria-label'))&&c.getBoundingClientRect().height>=44}).length,faces:document.querySelectorAll('a.gradecard img:not(.book)').length,
     jump:document.querySelectorAll('a[href="#choose"]').length,h2:document.querySelectorAll('h2').length,hero:+(r.width/r.height).toFixed(2),heroNat:+(h.naturalWidth/h.naturalHeight).toFixed(2),
     hrefs:cards.map(c=>c.getAttribute('href')).join(' '),wide:document.documentElement.scrollWidth>innerWidth+1,fine:/not an accredited school/.test(document.body.textContent)}});
-  ok(W.n===9&&W.badges===9&&W.faces===0,tag+'Welcome: nine royal-crest grade badges with a drawn crown, medal and ribbon; no pictures inside the badges (so no picture box or file name)');
+  ok(W.n===9&&W.badges===9&&W.faces===0,tag+'Welcome: nine Royal Library Books, each its own grade link (K, then 1–8, labelled for VoiceOver, at least 44px tall); no faces in the grade choices');
   ok(W.jump===0&&W.h2===1,tag+'Welcome: one "Choose your grade", no extra jump buttons');
   ok(Math.abs(W.hero-W.heroNat)<0.03,tag+`Welcome: the whole Izzy scene at its own shape (${W.hero} vs ${W.heroNat})`);
   ok(W.hrefs==='academy.html?grade=K academy.html?grade=1 academy.html?grade=2 academy.html?grade=3 academy.html?grade=4 academy.html academy.html?grade=6 academy.html?grade=7 academy.html?grade=8'&&!W.wide&&W.fine,tag+'Welcome: each badge goes to its grade; no sideways scroll; "not an accredited school" shown');
