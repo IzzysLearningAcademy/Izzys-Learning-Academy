@@ -1,5 +1,6 @@
 // Izzy's Learning Academy: browser checks for the Welcome page, the K-3 dashboards and the Grade 4-8 dashboards.
 // V7.13.2: K-3 dashboards are the Grade 5 page (academy.html?grade=K|1|2|3); no grade switching from a dashboard.
+// V7.13.9: the Level chip uses a wider Izzy crop (Dad: too zoomed in).
 // V7.13.8: Back to Academy button by Settings; K-3 unit and lesson taps bring what opened into view; Grades 4-8 Math/ELA offer only that subject's activities.
 // V7.13.6: K-3 and Grades 4-8 subject pages and lessons use the Grade 5 look; Castle Catapult's full pull reaches the far side.
 // V7.13.5: after Languages, Art Studio or Rewards the grade's own tabs open that grade; subject welcomes with a time; Crown Cascade and Castle Catapult.
@@ -128,6 +129,8 @@ const SAVE={points:300,done:{}};
   await p.goto(U+'academy.html');await p.waitForTimeout(1500);
   ok(await p.evaluate(()=>document.getElementById('points')?.textContent==='300'&&!!document.querySelector('#academyDashboard .izd-banner')),tag+'Grade 5: its own dashboard, with the same 300 stars');
   {const c=await chrome();ok(!c.change&&c.logo==='index.html'&&c.back,tag+'Grade 5: no Change grade link; Back to Academy and the logo go to the Welcome page')}
+  {const v=await p.evaluate(async()=>{const i=document.querySelector('#izdLevel img');if(!i.complete)await new Promise(r=>i.onload=r);const r=i.getBoundingClientRect();return{src:i.getAttribute('src'),nw:i.naturalWidth,nh:i.naturalHeight,w:Math.round(r.width),round:getComputedStyle(i).borderRadius}});
+   ok(v.src==='assets/dash/izzy-avatar-v2.jpg'&&v.nw===240&&v.nh===240&&v.w===40&&v.round==='50%',tag+`Level chip: the wider head-and-shoulders Izzy picture (${v.nw}x${v.nh}) shows in the 40px circle`)}
   ok(JSON.parse(await p.evaluate(()=>localStorage.getItem('izzy-academy-v1'))).points===300,tag+'Academy stars unchanged after all the flows');
   ok(errs.length===0,tag+'no page errors '+errs.slice(0,3).join(' | '));ok(missing.length===0,tag+'no missing files '+missing.slice(0,5).join(' '));
   await ctx.close()}
