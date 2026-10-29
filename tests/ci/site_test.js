@@ -1,5 +1,6 @@
 // Izzy's Learning Academy: browser checks for the Welcome page, the K-3 dashboards and the Grade 4-8 dashboards.
 // V7.13.2: K-3 dashboards are the Grade 5 page (academy.html?grade=K|1|2|3); no grade switching from a dashboard.
+// V7.13.12: the touched-up K-3 banners (2400x703, own descriptions, fresh address).
 // V7.13.11: the Welcome page grade choices are the Royal Library Books.
 // V7.13.10: Grades 4, 6, 7, 8 have their own banner scenes and descriptions.
 // V7.13.9: the Level chip uses a wider Izzy crop (Dad: too zoomed in).
@@ -29,11 +30,12 @@ const SAVE={points:300,done:{}};
   const geo=async url=>{await p.goto(U+url);await p.waitForTimeout(1200);return p.evaluate(()=>{const v=document.getElementById('ilaGradeExplorerView');const root=v&&!v.hidden?v:document.getElementById('academyDashboard');
    const g=root.querySelector('.izd-grid');const cs=getComputedStyle(g);const t=[...g.querySelectorAll('.izd-tile')].map(x=>x.getBoundingClientRect());
    const img=root.querySelector('.izd-banner-art');const r=img.getBoundingClientRect();
-   return{cols:cs.gridTemplateColumns.split(' ').length,gap:cs.columnGap,tw:Math.round(t[0].width),n:t.length,ratio:+(r.width/r.height).toFixed(2),nat:+(img.naturalWidth/img.naturalHeight).toFixed(2),fit:getComputedStyle(img).objectFit}})};
+   return{cols:cs.gridTemplateColumns.split(' ').length,gap:cs.columnGap,tw:Math.round(t[0].width),n:t.length,ratio:+(r.width/r.height).toFixed(2),nat:+(img.naturalWidth/img.naturalHeight).toFixed(2),fit:getComputedStyle(img).objectFit,src:img.getAttribute('src'),alt:img.alt,nw:img.naturalWidth,nh:img.naturalHeight}})};
   const g5=await geo('academy.html');
   for(const g of ['K','1','2','3','4','6','7','8']){const x=await geo('academy.html?grade='+g);
    ok(x.n===8&&x.cols===g5.cols&&x.gap===g5.gap&&Math.abs(x.tw-g5.tw)<=2,`${w}px: Grade ${g} dashboard matches Grade 5 (${x.cols} vs ${g5.cols} columns, gap ${x.gap} vs ${g5.gap}, tile ${x.tw} vs ${g5.tw}px)`);
-   if(w<700)ok(Math.abs(x.ratio-x.nat)<0.03,`${w}px: Grade ${g} banner shows the whole picture (shape ${x.ratio} vs ${x.nat})`);}
+   if(w<700)ok(Math.abs(x.ratio-x.nat)<0.03,`${w}px: Grade ${g} banner shows the whole picture (shape ${x.ratio} vs ${x.nat})`);
+   if('K123'.includes(g)){const n=g==='K'?'k':'g'+g;ok(x.src===`assets/k3/${n}-banner.webp?v=7.13.12`&&x.nw===2400&&x.nh===703&&Math.abs(x.ratio-x.nat)<0.05&&/^(Young )?Izzy /.test(x.alt)&&!/a smiling student/.test(x.alt),`${w}px: ${g==='K'?'Kindergarten':'Grade '+g} touched-up banner loads fresh at 2400x703, shown at its own shape (${x.ratio} vs ${x.nat}), with its own description`)}}
   if(w<700)ok(Math.abs(g5.ratio-g5.nat)<0.03,`${w}px: Grade 5 banner shows the whole picture (shape ${g5.ratio} vs ${g5.nat})`);
   await ctx.close()}
  // ---- flows at phone, iPad and laptop ----
@@ -133,6 +135,10 @@ const SAVE={points:300,done:{}};
   // Grade 5 still opens its own home and keeps the stars
   await p.goto(U+'academy.html');await p.waitForTimeout(1500);
   ok(await p.evaluate(()=>document.getElementById('points')?.textContent==='300'&&!!document.querySelector('#academyDashboard .izd-banner')),tag+'Grade 5: its own dashboard, with the same 300 stars');
+  {const V=(await (await fetch(U+'index.html')).text()).match(/Academy Version (\d+\.\d+\.\d+)/)[1];
+   for(const g of ['','?grade=K','?grade=3','?grade=4','?grade=8']){await p.goto(U+'academy.html'+g);await p.waitForTimeout(1300);const h=await p.evaluate(()=>({hdr:[...document.querySelectorAll('header p')].map(x=>x.textContent).join(' '),title:document.title}));
+    ok(h.hdr.includes('Academy Version '+V+' ')&&h.title.includes('V'+V+' ')&&!/Version \d/.test(h.hdr.replace('Academy Version '+V,'')),tag+`academy.html${g}: the header and tab title show the same version as the Welcome page (${V})`)}
+   await p.goto(U+'academy.html');await p.waitForTimeout(1300)}
   {const c=await chrome();ok(!c.change&&c.logo==='index.html'&&c.back,tag+'Grade 5: no Change grade link; Back to Academy and the logo go to the Welcome page')}
   {const v=await p.evaluate(async()=>{const i=document.querySelector('#izdLevel img');if(!i.complete)await new Promise(r=>i.onload=r);const r=i.getBoundingClientRect();return{src:i.getAttribute('src'),nw:i.naturalWidth,nh:i.naturalHeight,w:Math.round(r.width),round:getComputedStyle(i).borderRadius}});
    ok(v.src==='assets/dash/izzy-avatar-v2.jpg'&&v.nw===240&&v.nh===240&&v.w===40&&v.round==='50%',tag+`Level chip: the wider head-and-shoulders Izzy picture (${v.nw}x${v.nh}) shows in the 40px circle`)}
