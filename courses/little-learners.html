@@ -131,6 +131,359 @@ body.ila-embed .shell{max-width:none;padding:0;margin:0}
 body.ila-embed .ila-k3-hero,body.ila-embed .ila-k3-adventures,body.ila-embed .ila-grade-nav,body.ila-embed #save-notice:not(.error),body.ila-embed .footer{display:none!important}
 body.ila-k3-activity.ila-progress-open .control-wrap{display:flex} /* the practice profile picker lives in My Achievements */
 </style>
+<style id="ila-k3-v71313-steps">/* V7.13.13: Grade 5's lesson styles (copied from academy.html izLessonsV79Style at build time) so K-3 lessons look exactly like Grade 5 */
+/* ===== Full Learning Sessions V7.9 ===== */
+.iz680-panel.izl{--ink:#2a1342;--ink2:#5b3a7c;--paper:#fffaf3;--line:#ecdcf7;--gold:#f2c46d;--pink:#ff6fb5;--purple:#7b3fd1;--good:#169a6b;--bad:#d1435b;
+  padding:16px!important;margin:12px 0!important;border:2px solid #e6b75f!important;border-radius:24px!important;background:radial-gradient(120% 90% at 10% 0%,#5a2a8a 0%,#3a1a66 45%,#22124a 100%)!important;color:#fff;box-shadow:0 14px 34px #0b052866}
+.izl *{box-sizing:border-box}
+.izl .izl-head h2{margin:0 0 4px!important;font-size:clamp(19px,2.4vw,24px)!important;color:#ffe08f}
+.izl .izl-head p{margin:0 0 12px!important;font-size:14px;line-height:1.4!important;color:#f4e6ff}
+.izl button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.izl .izl-btn{min-height:48px;padding:10px 18px;border-radius:16px;border:2px solid transparent;font-weight:850;font-size:16px;line-height:1.15;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:transform .1s,filter .1s}
+.izl .izl-btn:active{transform:translateY(2px)}
+.izl .izl-btn.primary{background:linear-gradient(135deg,#ff7ac4,#8f3fd6);color:#fff;border-color:#ffe3a1;box-shadow:0 4px 0 #2a1144}
+.izl .izl-btn.primary:disabled{filter:grayscale(.75) brightness(.95);opacity:.55;cursor:default;box-shadow:none}
+.izl .izl-btn.ghost{background:#fff;color:#4a2378;border-color:#d9c2f2}
+.izl-body > .izl-hero .izl-btn.ghost,.izl .izl-top .izl-btn.ghost{background:#ffffff1a;color:#fff;border-color:#ffffff55}
+.izl .izl-btn.sm{min-height:40px;padding:6px 12px;font-size:14px}
+.izl .izl-btn.big{min-height:54px;font-size:17px;padding:10px 22px}
+.izl .izl-btn:focus-visible,.izl .izl-opt:focus-visible,.izl .izl-key:focus-visible,.izl .izl-lcard:focus-visible,.izl .izl-sent.pick:focus-visible{outline:3px solid #ffd36b;outline-offset:2px}
+/* medallions + stars */
+.izl .izl-medal{flex:0 0 auto;display:grid;place-items:center;width:74px;height:74px;border-radius:50%;font-size:38px;line-height:1;background:radial-gradient(circle at 35% 30%,#fff6 0 18%,transparent 19%),linear-gradient(145deg,#ffd36b,#ff7ac4 55%,#8f3fd6);border:3px solid #fff3c4;box-shadow:0 5px 0 #2a1144,0 0 18px #ff9be055}
+.izl .izl-medal.sm{width:54px;height:54px;font-size:27px;border-width:2px;box-shadow:0 3px 0 #2a1144}
+.izl .izl-medal.xs{width:40px;height:40px;font-size:21px;border-width:2px;box-shadow:none}
+.izl .izl-stars i{font-style:normal;color:#d9cbe8;font-size:18px;letter-spacing:1px}
+.izl .izl-stars i.on{color:#ffb300;text-shadow:0 0 6px #ffd36b}
+/* map */
+.izl .izl-hero{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:16px;border-radius:20px;background:linear-gradient(120deg,#ff7ac433,#8f3fd633);border:2px solid #ffd98766;margin-bottom:12px}
+.izl .izl-hero-txt{flex:1 1 220px;min-width:0}
+.izl .izl-hero-txt small{display:block;color:#ffd98f;font-weight:800;text-transform:uppercase;letter-spacing:.5px;font-size:12px}
+.izl .izl-hero-txt h3{margin:2px 0 4px;font-size:clamp(18px,2.2vw,22px);color:#fff}
+.izl .izl-hero-txt p{margin:0;color:#f3e6ff;font-size:14px;line-height:1.4}
+.izl .izl-hero-btns{display:flex;gap:8px;flex-wrap:wrap}
+.izl .izl-summary{margin:4px 2px 10px!important;font-weight:800;color:#ffe9b8;font-size:14px}
+.izl .izl-path{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:10px}
+.izl .izl-lcard{position:relative;display:flex;align-items:center;gap:12px;text-align:left;padding:12px;border-radius:18px;border:2px solid #e9d6ff;background:var(--paper);color:var(--ink);box-shadow:0 4px 0 #1a0b33;min-height:84px}
+.izl .izl-lcard.done{border-color:#ffd36b;background:linear-gradient(135deg,#fffaf0,#fff0d0)}
+.izl .izl-lcard.next{outline:3px solid #ff9be0;outline-offset:2px}
+.izl .izl-lcard:active{transform:translateY(3px);box-shadow:0 1px 0 #1a0b33}
+.izl .izl-lc-txt{display:flex;flex-direction:column;min-width:0;flex:1}
+.izl .izl-lc-txt small{color:#7a5a9a;font-weight:700;font-size:12px}
+.izl .izl-lc-txt b{font-size:16px;line-height:1.2;margin:1px 0 2px;color:var(--ink)}
+.izl .izl-tag{position:absolute;top:8px;right:10px;font-size:11px;font-weight:850;padding:2px 8px;border-radius:99px;background:#efe6fb;color:#6a4a8a}
+.izl .izl-tag.ok{background:#ffe08f;color:#5e3504}.izl .izl-tag.go{background:#d8f5ea;color:#0f6b4b}
+/* lesson top + stepper */
+.izl .izl-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.izl .izl-title{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.izl .izl-title b{display:block;font-size:17px;line-height:1.2;color:#fff}.izl .izl-title small{color:#ffd98f;font-weight:700}
+.izl .izl-steps{list-style:none;display:flex;gap:6px;margin:0 0 12px!important;padding:0!important;overflow-x:auto;scrollbar-width:none}
+.izl .izl-steps::-webkit-scrollbar{display:none}
+.izl .izl-steps li{flex:1 0 auto;display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:99px;background:#ffffff14;color:#e7d6fa;font-weight:750;font-size:13px;white-space:nowrap}
+.izl .izl-steps li span{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#ffffff22;font-size:12px}
+.izl .izl-steps li.cur{background:linear-gradient(135deg,#ffd36b,#ff9be0);color:#3a1450}.izl .izl-steps li.cur span{background:#fff}
+.izl .izl-steps li.done{color:#fff}.izl .izl-steps li.done span{background:#2ec48f;color:#fff}
+/* main card */
+.izl .izl-card-main{position:relative;background:var(--paper);color:var(--ink);border-radius:22px;padding:18px;border:2px solid #f0dcb5;box-shadow:0 6px 0 #1a0b33,0 14px 26px #0a041e55;overflow:hidden}
+.izl .izl-card-main h3{margin:6px 0 8px;color:#3d1a66;font-size:clamp(19px,2.3vw,24px);line-height:1.25}
+.izl .izl-card-main h4{margin:14px 0 6px;color:#5b2a86}
+.izl .izl-lead{font-size:17px;line-height:1.55!important;margin:0 0 10px;color:var(--ink)}
+.izl .izl-qhead{display:flex;align-items:center;gap:10px}
+.izl .izl-pill{font-size:12.5px;font-weight:850;padding:4px 10px;border-radius:99px;background:#efe3ff;color:#5b2a86;white-space:nowrap}
+.izl .izl-pill.guided{background:#d9f4ff;color:#0d5579}.izl .izl-pill.ind{background:#ffe9c7;color:#7a3d00}.izl .izl-pill.mastery{background:linear-gradient(135deg,#ffe08f,#ffb3d9);color:#4a1a52}.izl .izl-pill.write{background:#e2f7dc;color:#215c14}
+.izl .izl-qprog{display:flex;gap:5px;flex:1;justify-content:center}
+.izl .izl-qprog i{width:12px;height:12px;border-radius:50%;background:#e6daf3}
+.izl .izl-qprog i.cur{background:#8f3fd6;box-shadow:0 0 0 3px #e3cffb}.izl .izl-qprog i.ok{background:#2ec48f}.izl .izl-qprog i.no{background:#ffb3c1}
+.izl .izl-say{margin-left:auto;width:44px;height:44px;border-radius:50%;border:2px solid #e2cff7;background:#fff;font-size:20px;flex:0 0 auto}
+.izl .izl-ph .izl-say{width:40px;height:40px;font-size:18px}
+.izl .izl-saynote{margin:6px 0 0!important;font-size:13px;color:#8a3d00;background:#fff3d6;border-radius:10px;padding:6px 10px}
+.izl .izl-coach{margin:8px 0 0!important;font-size:14px;color:#5b3a7c;font-weight:650}
+.izl .izl-prompt{font-size:clamp(19px,2.2vw,23px)!important}
+.izl .izl-prompt sup{font-size:.65em}
+.izl .izl-ctx{margin:10px 0 4px;padding:10px 14px;border-left:5px solid #c79bf2;background:#f6efff;border-radius:0 12px 12px 0;font-size:16px;line-height:1.5;white-space:pre-line;color:var(--ink)}
+.izl .izl-try{margin:10px 0 0!important;font-weight:750;color:#7a3d00;background:#fff3d6;border-radius:12px;padding:8px 12px}
+/* answer options */
+.izl .izl-opts{display:grid;gap:10px;margin:12px 0}
+.izl .izl-opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;min-height:58px;padding:10px 14px;border-radius:16px;border:3px solid #e2d3f5;background:#fff;color:var(--ink);font-size:17px;font-weight:650;line-height:1.3;box-shadow:0 3px 0 #e2d3f5;transition:border-color .12s,background .12s,transform .1s}
+.izl .izl-letter{flex:0 0 auto;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#efe3ff;color:#5b2a86;font-weight:900;font-size:15px}
+.izl .izl-otext{flex:1;min-width:0;overflow-wrap:anywhere}
+.izl .izl-mark{flex:0 0 auto;width:28px;text-align:center;font-size:20px;font-weight:900}
+.izl .izl-opt[aria-pressed="true"]{border-color:#6f22b8;background:#ead8ff;box-shadow:0 0 0 4px #c9a6ff,0 3px 0 #6f22b8}
+.izl .izl-opt[aria-pressed="true"] .izl-letter{background:#8f3fd6;color:#fff}
+.izl .izl-opt[aria-pressed="true"]:not(.right):not(.wrong) .izl-mark{width:auto;min-width:28px}.izl .izl-opt[aria-pressed="true"]:not(.right):not(.wrong) .izl-mark::after{content:"Chosen";display:inline-block;padding:3px 9px;border-radius:999px;background:#6f22b8;color:#fff;font-size:12.5px;font-weight:800;letter-spacing:.2px}
+.izl .izl-opt.right{border-color:var(--good)!important;background:#e7fbf2!important;box-shadow:0 0 0 4px #b9efd9,0 3px 0 var(--good)!important}
+.izl .izl-opt.right .izl-letter{background:var(--good);color:#fff}.izl .izl-opt.right .izl-mark::after{content:"\2713";color:var(--good);font-size:22px}
+.izl .izl-opt.wrong{border-color:var(--bad)!important;background:#fff0f2!important;box-shadow:0 3px 0 var(--bad)!important;opacity:.85}
+.izl .izl-opt.wrong .izl-letter{background:var(--bad);color:#fff}.izl .izl-opt.wrong .izl-mark::after{content:"\2715";color:var(--bad);font-size:20px}
+.izl .izl-opt.locked{cursor:default}
+/* keypad */
+.izl .izl-numwrap{display:flex;flex-direction:column;align-items:center;gap:10px;margin:12px 0}
+.izl .izl-display{display:flex;align-items:center;gap:6px;min-width:min(100%,280px);min-height:62px;padding:8px 16px;border-radius:16px;border:3px solid #8f3fd6;background:#fff;font-size:30px;font-weight:900;color:var(--ink);box-shadow:0 0 0 4px #e8d8ff;justify-content:center;outline:none}
+.izl .izl-display .pre,.izl .izl-display .unit{font-size:17px;font-weight:750;color:#7a5a9a}
+.izl .izl-display .caret{width:3px;height:30px;background:#8f3fd6;animation:izlblink 1s steps(2) infinite}
+.izl .izl-display.right{border-color:var(--good);box-shadow:0 0 0 4px #b9efd9;background:#e7fbf2}.izl .izl-display.right .caret,.izl .izl-display.wrong .caret{display:none}
+.izl .izl-display.wrong{border-color:var(--bad);box-shadow:0 0 0 4px #ffd0d8;background:#fff0f2;animation:izlshake .35s}
+@keyframes izlblink{50%{opacity:0}}@keyframes izlshake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.izl .izl-keypad{display:grid;grid-template-columns:repeat(3,72px);gap:8px}
+.izl .izl-key{height:56px;border-radius:14px;border:2px solid #d9c2f2;background:linear-gradient(#fff,#f3eaff);color:var(--ink);font-size:24px;font-weight:850;box-shadow:0 3px 0 #c6aee6}
+.izl .izl-key:active{transform:translateY(2px);box-shadow:0 1px 0 #c6aee6}
+.izl .izl-key.del{background:linear-gradient(#ffe9f1,#ffd5e6);color:#a3245d}
+.izl .izl-tip{margin:4px 0!important;font-size:14px;color:#6a4a8a;font-weight:650;text-align:center}
+.izl .izl-tip.big{font-size:16px;background:#f3eaff;border-radius:12px;padding:10px}
+/* feedback, hint, how */
+.izl .izl-feedback{margin:12px 0 0;padding:12px 14px;border-radius:14px;font-size:16px;line-height:1.45;display:flex;flex-wrap:wrap;gap:4px;align-items:baseline}
+.izl .izl-feedback.good{background:#e1f8ee;color:#0d5a3e;border:2px solid #9fe2c6}
+.izl .izl-feedback.bad{background:#fff1e6;color:#7a3500;border:2px solid #ffd2a8}
+.izl .izl-feedback.retry,.izl .izl-feedback.info{background:#fff7d9;color:#6a4a00;border:2px solid #ffe08f}
+.izl .izl-pts{margin-left:auto;font-weight:900;color:#a86400;background:#fff;border-radius:99px;padding:2px 10px;animation:izlpop .5s}
+@keyframes izlpop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.2)}}
+.izl .izl-hint{margin:10px 0 0;padding:10px 14px;border-radius:14px;background:#f0f7ff;border:2px dashed #9cc8f5;color:#16416a;font-size:15.5px;line-height:1.45}
+.izl .izl-how{margin:10px 0 0;padding:12px 14px;border-radius:14px;background:#f6efff;border:2px solid #e0cdf7;color:var(--ink)}
+.izl .izl-steplist{margin:6px 0 0;padding-left:22px;font-size:16px;line-height:1.6}
+.izl .izl-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:14px}
+.izl .izl-actions.wrap{justify-content:center}
+.izl .izl-tools{display:flex;gap:8px;flex-wrap:wrap}
+.izl .izl-go{display:flex;gap:8px;margin-left:auto}
+.izl .izl-dots{display:flex;gap:6px}.izl .izl-dots i{width:10px;height:10px;border-radius:50%;background:#e1d3f5}.izl .izl-dots i.on{background:#8f3fd6}
+.izl .izl-card-main.learn .izl-tools{margin-top:10px}
+/* passages */
+.izl .izl-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:14px;align-items:start}
+.izl .izl-passage{background:#fffdf8;color:var(--ink);border-radius:20px;padding:14px 16px;border:2px solid #f0dcb5;box-shadow:0 6px 0 #1a0b33;position:sticky;top:76px}
+.izl .izl-card-main .izl-passage{position:static;box-shadow:none;margin:6px 0}
+.izl .izl-ph{display:flex;align-items:center;gap:8px;margin-bottom:6px}.izl .izl-ph b{font-size:16px;color:#5b2a86}
+.izl .izl-ptext{font-size:17px;line-height:1.7;font-family:Georgia,"Times New Roman",serif}
+.izl .izl-passage.poem .izl-ptext{font-style:normal}
+.izl .izl-stanza{display:block;height:6px}
+.izl .izl-sent{border-radius:6px;padding:1px 2px;transition:background .15s}
+.izl .izl-sent.hl{background:linear-gradient(transparent 35%,#ffe08f 35%);box-shadow:none}
+.izl .izl-sent em{display:inline-block;margin-left:6px;font:800 12px system-ui,sans-serif;font-style:normal;color:#fff;background:#8f3fd6;border-radius:99px;padding:1px 8px;vertical-align:2px}
+.izl .izl-sent.pick{display:block;width:100%;text-align:left;margin:6px 0;padding:8px 10px 8px 8px;border:2px solid #eadcf8;border-radius:12px;background:#fff;color:var(--ink);font:inherit;line-height:1.5;min-height:48px}
+.izl .izl-mixkey{margin-top:8px;min-height:44px}.izl-wpick{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 10px}.izl-wpick .izl-chipbtn{min-height:44px}.izl-wpick .izl-chipbtn[aria-pressed="true"]{outline:3px solid #8f3fd6;outline-offset:1px}.izl-pair{display:grid;gap:10px}.izl-pair .izl-passage{position:static}@media (max-width:900px){.izl .izl-split>.izl-pair{order:2}}.izl-sent.para{display:block;margin:0 0 10px}.izl-sent.para .n{display:inline-grid;place-items:center;width:24px;height:24px;margin-right:8px;border-radius:50%;background:#efe3ff;color:#5b2a86;font:900 12px system-ui,sans-serif;vertical-align:1px}.izl-sent.pick .n{display:inline-grid;place-items:center;width:24px;height:24px;margin-right:8px;border-radius:50%;background:#efe3ff;color:#5b2a86;font:900 12px system-ui,sans-serif;vertical-align:1px}
+.izl .izl-sent.pick[aria-pressed="true"]{border-color:#8f3fd6;background:#f6edff;box-shadow:0 0 0 4px #d9c0ff}
+.izl .izl-sent.pick.right{border-color:var(--good);background:#e7fbf2;box-shadow:0 0 0 3px #b9efd9}
+.izl .izl-sent.pick.wrong{border-color:var(--bad);background:#fff0f2}
+.izl .izl-sent.pick.hl{background:#fff6cf}
+/* teaching models */
+.izl .izl-vizwrap{margin:12px 0 4px;padding:12px;border-radius:16px;background:#fff;border:2px solid var(--line);overflow-x:auto}
+.izl .izl-vizwrap.sm{margin-top:8px;padding:8px}
+.izl .izl-viz-svg svg{display:block;width:100%;max-width:520px;height:auto;margin:0 auto}
+.izl .izl-viz-svg .lbl{font:800 15px system-ui,sans-serif;fill:#4a2378}.izl .izl-viz-svg .lbl:not([text-anchor]){text-anchor:middle}.izl .izl-viz-svg .lbl.sm{font-size:12px}
+.izl .izl-viz-svg .cell{font:900 16px system-ui,sans-serif;fill:#fff;text-anchor:middle;paint-order:stroke;stroke:#0003;stroke-width:2px}
+.izl .izl-viz-cap{text-align:center;margin:8px 0 0!important;font-weight:750;color:#4a2378;font-size:16px}
+.izl .izl-pv-table{display:flex;justify-content:center;gap:4px;flex-wrap:nowrap}
+.izl .izl-pv-col{display:flex;flex-direction:column;align-items:center;min-width:54px;border-radius:12px;background:#f3ebff;padding:6px 2px}
+.izl .izl-pv-col.dec{background:#e6f6ff}
+.izl .izl-pv-col small{font-size:10.5px;font-weight:800;color:#6a4a8a}
+.izl .izl-pv-col b{font-size:28px;line-height:1.2;color:#c8b6dd;min-height:34px}
+.izl .izl-pv-col.has b{color:#3d1a66}.izl .izl-pv-col b.slide{animation:izlpop .35s}
+.izl .izl-pv-dot{align-self:flex-end;font-size:30px;font-weight:900;color:#d1435b;padding-bottom:4px}
+.izl .izl-pv-val{text-align:center;font-size:17px;margin:8px 0 0!important;color:var(--ink)}
+.izl .izl-pv-btns{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:8px}
+.izl .izl-chipbtn{min-height:46px;min-width:72px;padding:6px 14px;border-radius:14px;border:2px solid #e7cfa0;background:linear-gradient(135deg,#ffe08f,#ffb3d9);color:#3a1450;font-weight:900;font-size:17px}
+.izl .izl-chipbtn.ghost{background:#fff;border-color:#d9c2f2;font-size:14px}.izl .izl-chipbtn.sm{min-width:44px;min-height:44px;padding:0}
+.izl .izl-chipbtn:disabled{opacity:.4}
+.izl .izl-step{display:inline-flex;align-items:center;gap:6px;background:#f6efff;border-radius:14px;padding:4px}.izl .izl-step b{min-width:78px;text-align:center;font-size:14px;color:#4a2378}
+.izl .izl-prism svg{max-width:300px;max-height:240px}
+.izl .izl-ladder{max-width:440px;margin:0 auto;font-size:16px;color:var(--ink)}
+.izl .izl-ladder-head,.izl .izl-ladder-row{display:flex;justify-content:space-between;gap:10px;padding:7px 10px;border-bottom:2px dashed #e1d3f5}
+.izl .izl-ladder-head{font-weight:900;color:#5b2a86;border-bottom-style:solid}
+.izl .izl-ladder-row b{min-width:40px;text-align:center;background:#ffe08f;border-radius:10px}
+.izl .izl-ladder-row small{color:#7a5a9a}
+.izl .izl-ladder-total{padding:8px 10px;text-align:right}
+.izl .izl-column{font:900 30px ui-monospace,Menlo,Consolas,monospace;text-align:center;color:#3d1a66;line-height:1.3}
+.izl .izl-column div{display:inline-block;min-width:8ch;text-align:right}.izl .izl-column div+div{display:block;margin:0 auto}
+.izl .izl-column span{margin-right:10px;color:#d1435b}.izl .izl-column i{font-style:normal;color:#c8b6dd}
+.izl .izl-column hr{width:9ch;margin:4px auto;border:0;border-top:3px solid #3d1a66}
+.izl .izl-column small{display:block;font:700 13px system-ui,sans-serif;color:#7a5a9a}
+.izl .izl-groups{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.izl .izl-group{display:flex;flex-wrap:wrap;gap:4px;max-width:86px;padding:6px;border-radius:12px;border:2px dashed #d9c2f2;justify-content:center}
+.izl .izl-group i{width:14px;height:14px;border-radius:50%;background:#e6daf3}
+.izl .izl-group.on{border-style:solid;border-color:#ff7ac4;background:#fff0f8}.izl .izl-group.on i{background:#ff7ac4}
+.izl .izl-stairs{font:800 21px system-ui,sans-serif;color:#3d1a66;line-height:1.9}
+.izl .izl-stairs .eq{color:#d1435b;margin-right:8px}
+.izl .izl-stairs div:last-child b{background:#ffe08f;border-radius:8px;padding:0 8px}
+.izl .izl-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:8px}
+.izl .izl-card{display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:14px;background:#fff;border:2px solid var(--k,#e2d3f5);border-top-width:6px;color:var(--ink);font-size:15px;line-height:1.35}
+.izl .izl-card b{font-size:15.5px;color:#3d1a66}
+.izl .izl-card.good{background:#e9fbf3;border-color:#2ec48f}.izl .izl-card.bad{background:#fff3f3;border-color:#ff9aa8}
+.izl .izl-eqn{display:flex;align-items:stretch;flex-wrap:wrap;gap:8px;justify-content:center}
+.izl .izl-eqn .izl-card{flex:1 1 140px;max-width:240px}
+.izl .izl-eqn .op{align-self:center;font:900 26px system-ui;color:#8f3fd6}
+.izl .izl-roof{max-width:520px;margin:0 auto;text-align:center;color:var(--ink)}
+.izl .izl-roof-top{position:relative;padding:22px 30px 12px;background:#ffe08f;clip-path:polygon(50% 0,100% 62%,100% 100%,0 100%,0 62%);font-weight:850;font-size:15px;color:#5e3504}
+.izl .izl-roof-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:10px 6px;background:#fff}
+.izl .izl-roof-cols div{min-height:84px;display:grid;place-items:center;padding:8px 6px;border-radius:10px;border:3px solid var(--k);font-size:14px;font-weight:700}
+.izl .izl-roof-base{background:#8f3fd6;color:#fff;border-radius:0 0 12px 12px;padding:4px;font-size:12px;font-weight:800}
+/* writing */
+.izl .izl-write{width:100%;min-height:120px;border:3px solid #d9c2f2!important;border-radius:16px!important;padding:12px 14px!important;font:17px/1.5 system-ui,sans-serif!important;color:var(--ink)!important;background:#fff!important;margin:6px 0}
+.izl .izl-write.big{min-height:200px}
+.izl .izl-write:focus{outline:none;border-color:#8f3fd6!important;box-shadow:0 0 0 4px #e3cffb}
+.izl .izl-checks{display:grid;gap:6px}
+.izl .izl-checks label{display:flex;align-items:center;gap:10px;font-size:16px;padding:8px 10px;border-radius:12px;background:#f6efff;cursor:pointer;min-height:46px}
+.izl .izl-checks input{width:24px;height:24px;accent-color:#8f3fd6;flex:0 0 auto}
+/* results */
+.izl .results{text-align:center}
+.izl .izl-bigstars{display:flex;justify-content:center;gap:10px;margin:6px 0}
+.izl .izl-bigstars i{font-style:normal;font-size:64px;line-height:1;color:#e6daf3;transform:scale(.6);animation:izlstar .5s var(--d) forwards}
+.izl .izl-bigstars i.on{color:#ffb300;text-shadow:0 0 18px #ffd36b,0 4px 0 #c27a00}
+@keyframes izlstar{to{transform:scale(1)}}
+.izl .izl-bonus{display:inline-block;font-weight:900;color:#7a4300;background:#fff1c9;border-radius:99px;padding:6px 14px}
+.izl .izl-review{display:grid;gap:8px;text-align:left}
+.izl .izl-review div{display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:14px;background:#fff6ec;border:2px solid #ffd8b0;font-size:15px}
+.izl .izl-review small{color:#7a5a9a}
+.izl .izl-confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.izl .izl-confetti i{position:absolute;top:-14px;left:var(--x);width:10px;height:16px;border-radius:3px;background:var(--c);animation:izlfall 2.6s var(--d) ease-in forwards}
+@keyframes izlfall{to{transform:translateY(520px) rotate(540deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){.izl *{animation:none!important;transition:none!important}.izl .izl-bigstars i{transform:none}}
+/* iPad portrait and phones */
+@media (max-width:900px){.izl .izl-split{grid-template-columns:minmax(0,1fr)}.izl .izl-passage{position:static}}
+@media (max-width:600px){
+  .iz680-panel.izl{padding:12px!important;border-radius:18px!important}
+  .izl .izl-hero{padding:12px;gap:10px}.izl .izl-hero .izl-medal{width:56px;height:56px;font-size:28px}
+  .izl .izl-hero-btns{width:100%}.izl .izl-hero-btns .izl-btn{flex:1}
+  .izl .izl-card-main{padding:14px;border-radius:18px}
+  .izl .izl-steps li{padding:5px 8px;font-size:12px}
+  .izl .izl-opt{font-size:16px;min-height:54px;padding:8px 10px;gap:8px}
+  .izl .izl-letter{width:30px;height:30px}
+  .izl .izl-keypad{grid-template-columns:repeat(3,minmax(64px,1fr));width:100%;max-width:300px}
+  .izl .izl-go{width:100%}.izl .izl-go .izl-btn{flex:1}
+  .izl .izl-pv-col{min-width:38px}.izl .izl-pv-col small{font-size:8.5px}.izl .izl-pv-col b{font-size:22px}
+  .izl .izl-roof-cols{grid-template-columns:1fr}
+  .izl .izl-bigstars i{font-size:52px}
+  .izl .izl-qprog{display:none}
+}
+
+/* ===== STEM Lab V7.11: virtual experiments, data tables, Discover Challenges ===== */
+.izl .izs-sim{display:flex;flex-direction:column;gap:8px;align-items:center}
+.izl .izs-stage{width:100%;display:flex;justify-content:center}
+.izl .izs-stage svg{display:block;width:100%;max-width:520px;height:auto;border-radius:14px;touch-action:manipulation}
+.izl .izs-stage .lbl{font:800 14px system-ui,sans-serif;fill:#4a2378}.izl .izs-stage .lbl:not([text-anchor]){text-anchor:middle}.izl .izs-stage .lbl.sm{font-size:12px}
+.izl .izs-camo svg{cursor:crosshair}
+.izl .izs-slider{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:14px;background:#f6efff;font-weight:800;color:#4a2378;font-size:14px;min-height:46px}
+.izl .izs-slider input{width:min(42vw,180px);accent-color:#8f3fd6;min-height:32px}
+.izl .izs-slider b{min-width:54px;text-align:right}
+.izl .izs-select{min-height:46px;max-width:100%;padding:6px 10px;border-radius:12px;border:2px solid #d9c2f2;background:#fff;color:#2a1342;font:700 15px system-ui,sans-serif}
+.izl .izs-note{margin:4px 0 0!important;padding:8px 12px;border-radius:12px;background:#eef9f3;color:#0d5a3e;font-weight:650;font-size:15px;line-height:1.45;text-align:center;max-width:560px}
+.izl .izs-timer{font:900 20px ui-monospace,monospace;color:#c2187a;min-width:70px;text-align:center}
+.izl .izl-chipbtn.sm2{font-size:13px;min-width:0;padding:6px 10px}
+.izl .izs-prog{display:flex;flex-wrap:wrap;gap:6px;min-height:52px;width:100%;max-width:520px;padding:8px;border-radius:14px;border:2px dashed #d9c2f2;background:#fff;align-items:center}
+.izl .izs-block{min-height:40px;min-width:44px;padding:4px 8px;border-radius:10px;border:2px solid #8f3fd6;background:#f6edff;font:800 16px system-ui,sans-serif;color:#3d1a66}
+.izl .izs-empty{color:#8a76a8;font-size:14px;margin:0}
+.izl .izs-level{margin:0!important;font-weight:850;color:#5b2a86;text-align:center}
+.izl .izl-pill.lab{background:linear-gradient(135deg,#b9f6e0,#ffe08f);color:#0f4f3b}
+.izl .izs-steps3{display:flex;gap:6px;flex:1;justify-content:center}
+.izl .izs-steps3 i{font-style:normal;font:800 12px system-ui,sans-serif;padding:3px 9px;border-radius:99px;background:#efe6fb;color:#7a5a9a}
+.izl .izs-steps3 i.cur{background:#8f3fd6;color:#fff}.izl .izs-steps3 i.ok{background:#2ec48f;color:#fff}
+.izl .izs-pred{margin:6px 0!important;padding:8px 12px;border-radius:12px;background:#fff3d6;color:#6a4300;font-size:15px}
+.izl .izs-tablewrap,.izl .izs-ref{overflow-x:auto}
+.izl .izs-ref{margin:8px 0;padding:10px 12px;border-radius:14px;background:#f2f9ff;border:2px solid #cfe6fb;display:flex;flex-direction:column;gap:6px}
+.izl .izs-ref small{color:#5b3a7c}
+.izl .izs-table{width:100%;border-collapse:separate;border-spacing:0;font-size:14.5px;color:#2a1342;background:#fff;border-radius:12px;overflow:hidden;border:2px solid #e2d3f5}
+.izl .izs-table th{background:#8f3fd6;color:#fff;font-weight:850;padding:7px 8px;text-align:left;white-space:nowrap}
+.izl .izs-table td{padding:7px 8px;border-top:1px solid #efe6fb}
+.izl .izs-table tbody tr:nth-child(even) td{background:#faf6ff}
+.izl .izs-table tbody tr:last-child td{animation:izlpop .4s}
+.izl .izs-labwrap{display:flex;justify-content:center}
+@media (max-width:600px){.izl .izs-slider{width:100%;justify-content:space-between}.izl .izs-slider input{flex:1;width:auto}.izl .izs-steps3{display:none}.izl .izs-table{font-size:13px}}
+/* Discover Challenges: hands-on engineering journal */
+#izPremiumDiscoverChallenges.izc2{--ink:#2a1342;padding:16px!important;border:2px solid #e6b75f!important;border-radius:24px!important;background:radial-gradient(120% 90% at 10% 0%,#1f6b63 0%,#283c74 55%,#22124a 100%)!important;color:#fff;box-shadow:0 14px 34px #0b052866}
+#izPremiumDiscoverChallenges.izc2 h2{margin:0 0 4px;color:#ffe08f;font-size:clamp(19px,2.4vw,24px)}
+#izPremiumDiscoverChallenges.izc2 > p{margin:0 0 12px;color:#e9f7ff;font-size:14px}
+.izc2 .izc2-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:10px}
+.izc2 .izc2-card{display:flex;gap:12px;align-items:center;text-align:left;padding:12px;border-radius:18px;border:2px solid #cfeee5;background:#fffaf3;color:var(--ink);box-shadow:0 4px 0 #0d1a33;min-height:92px;font:inherit;cursor:pointer}
+.izc2 .izc2-card.done{border-color:#ffd36b;background:linear-gradient(135deg,#fffaf0,#fff0d0)}
+.izc2 .izc2-ico{flex:0 0 auto;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-size:28px;background:linear-gradient(145deg,#b9f6e0,#5aa9ff 60%,#8f3fd6);border:2px solid #fff3c4}
+.izc2 .izc2-card b{display:block;font-size:16px}.izc2 .izc2-card small{display:block;color:#5b5a7c;font-size:13px;line-height:1.3}
+.izc2 .izc2-badge{margin-left:auto;font-size:11px;font-weight:850;padding:2px 8px;border-radius:99px;background:#e6f7f1;color:#0f6b4b;white-space:nowrap}
+.izc2 .izc2-main{background:#fffaf3;color:var(--ink);border-radius:22px;padding:18px;border:2px solid #f0dcb5;box-shadow:0 6px 0 #0d1a33}
+.izc2 .izc2-main h3{margin:4px 0 6px;color:#1d4a6e;font-size:clamp(19px,2.3vw,24px)}
+.izc2 .izc2-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:8px;margin:8px 0}
+.izc2 .izc2-meta div{padding:10px 12px;border-radius:14px;background:#fff;border:2px solid #e2ecf5;font-size:14.5px;line-height:1.4}
+.izc2 .izc2-meta b{display:block;color:#1d4a6e;margin-bottom:2px}
+.izc2 .izc2-safe{background:#fff3d6!important;border-color:#ffe08f!important}
+.izc2 .izc2-steps{list-style:none;display:flex;gap:6px;margin:10px 0!important;padding:0!important;overflow-x:auto;scrollbar-width:none}
+.izc2 .izc2-steps li{flex:1 0 auto;padding:6px 10px;border-radius:99px;background:#eef3fb;color:#4a5a7a;font-weight:800;font-size:13px;white-space:nowrap}
+.izc2 .izc2-steps li.cur{background:linear-gradient(135deg,#b9f6e0,#ffe08f);color:#0f3f3b}.izc2 .izc2-steps li.done{background:#2ec48f;color:#fff}
+.izc2 textarea{width:100%;min-height:96px;border:3px solid #cfe0f2!important;border-radius:14px!important;padding:10px 12px!important;font:16px/1.5 system-ui,sans-serif!important;color:var(--ink)!important;background:#fff!important}
+.izc2 .izc2-num{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:8px 0}
+.izc2 .izc2-num input{width:120px;min-height:48px;font:800 20px system-ui,sans-serif;padding:6px 10px;border-radius:12px;border:3px solid #cfe0f2;color:var(--ink)}
+.izc2 .izc2-btn{min-height:48px;padding:10px 18px;border-radius:16px;border:2px solid #ffe3a1;background:linear-gradient(135deg,#2ec4b6,#5a5bd6);color:#fff;font:850 16px system-ui,sans-serif;cursor:pointer;box-shadow:0 4px 0 #142a4a}
+.izc2 .izc2-btn.ghost{background:#fff;color:#1d4a6e;border-color:#cfe0f2;box-shadow:none}
+.izc2 .izc2-btn:disabled{opacity:.5}
+.izc2 .izc2-actions{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px}
+.izc2 .izc2-checks{display:grid;gap:6px;margin:8px 0}
+.izc2 .izc2-checks label{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:#eef6ff;min-height:44px;font-size:15px}
+.izc2 .izc2-checks input{width:22px;height:22px;accent-color:#2ec4b6}
+.izc2 .izc2-result{padding:12px;border-radius:14px;background:#e1f8ee;border:2px solid #9fe2c6;color:#0d5a3e;font-weight:700}
+.izc2 .izc2-warn{margin:10px 0 0;padding:10px 12px;border-radius:12px;background:#fff3d6;color:#6a4300;font-weight:750}
+
+
+/* V7.12.10: Review what we learned */
+.izl .izl-review2{margin:16px 0 6px;text-align:left}
+.izl .izl-review2 h4{margin:0 0 4px;font-size:19px}
+.izl .izl-rv{margin:12px 0;padding:14px 16px;border-radius:16px;background:#fff;border:2px solid #e2d3f5}
+.izl .izl-rv-ph{display:inline-block;margin-bottom:6px;padding:2px 9px;border-radius:999px;background:#efe4ff;color:#5b2a86;font-weight:800;font-size:12px}
+.izl .izl-rv-q{display:block;margin:4px 0 8px;font-size:16.5px;line-height:1.35}
+.izl .izl-rv p{margin:5px 0;line-height:1.45}
+.izl .izl-rv-yours b{color:#a01f3c}.izl .izl-rv-right b{color:#0f7a4e}
+.izl .izl-rv-yours::before{content:"\2715  ";color:#a01f3c;font-weight:900}.izl .izl-rv-right::before{content:"\2713  ";color:#0f7a4e;font-weight:900}
+.izl .izl-rv-try,.izl .izl-mini{margin-top:10px}
+.izl .izl-mini{padding:12px;border-radius:14px;background:#f8f2ff;border:2px dashed #c9a6ff}
+.izl .izl-mini-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0}
+.izl .izl-mini-in{min-width:120px;min-height:44px;padding:8px 12px;border:2px solid #c9a6ff;border-radius:12px;font:700 18px system-ui,sans-serif}
+.izl .izl-mini-passage{margin:6px 0;padding:8px 10px;border-radius:12px;background:#fff}
+.izl .izl-mini-passage summary{cursor:pointer;font-weight:800;min-height:32px}
+.izl .izl-rv-open{display:block;width:100%;margin:10px 0 0;text-align:left}
+.izl .izl-rv-none{font-weight:800;color:#0f7a4e}
+/* V7.12.13 ENG-07 "Let's Try Another Way!" */
+.izl-another{margin:12px 0 0;padding:14px;border-radius:18px;background:linear-gradient(135deg,#fff4fb,#f1ecff);border:2px solid #e3b6f0;color:#2b1348}
+.izl-an-head b{display:block;font-size:18px;color:#7a1f6e}
+.izl-an-head span{font-size:14.5px;color:#4a315a}
+.izl-an-idea{margin:8px 0;padding:10px 12px;border-radius:14px;background:#faf6ff;border:1px solid #e6d9f7}.izl-an-idea p{margin:4px 0 0}.izl-an-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.izl-an-tab{min-height:44px;padding:0 14px;border-radius:99px;border:2px solid #d9c2f2;background:#fff;color:#4a2378;font:800 14.5px system-ui,-apple-system,sans-serif;cursor:pointer}
+.izl-an-tab[aria-pressed="true"]{background:#7a2a9e;border-color:#7a2a9e;color:#fff}
+.izl-an-tab:focus-visible,.izl-an-chip:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+.izl-an-out h4{margin:4px 0 8px;font-size:17px;color:#3d1a65;outline:none}
+.izl-an-out p{margin:6px 0;font-size:15.5px;line-height:1.45}
+.izl-an-pic{overflow-x:auto;padding:4px 0}
+.izl-an-pic svg{display:block;max-width:100%;height:auto}
+.izl-an-big{font-size:17px!important;font-weight:700;color:#3d1a65}
+.izl-an-ex{font-size:15px;color:#4a315a}
+.izl-an-steps{margin:6px 0 8px;padding-left:22px}
+.izl-an-steps li{margin:6px 0;font-size:15.5px;line-height:1.45}
+.izl-an-steps li.now{background:#fff6d6;border-radius:8px;padding:2px 6px;margin-left:-6px}
+.izl-an-chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
+.izl-an-chip{min-width:44px;min-height:44px;border-radius:12px;border:2px solid #d9c2f2;background:#fff;color:#3d1a65;font:800 18px system-ui,-apple-system,sans-serif;cursor:pointer}
+.izl-an-chip:disabled{opacity:.5;cursor:default}
+.izl-an-q{margin:8px 0}
+.izl-an-next{min-height:44px;padding:0 18px;border-radius:99px;border:0;background:#7a2a9e;color:#fff;font:800 15px system-ui,-apple-system,sans-serif;cursor:pointer;box-shadow:0 3px 0 #3d1460}
+.izl-an-next:focus-visible{outline:3px solid #ffb703;outline-offset:2px}
+
+/* V7.13.13: extra pieces for the shared five-step lesson player (the rest is Grade 5's own izl styles) */
+.izl .ila-steps-visual{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;font-size:32px;line-height:1.1;padding:10px;background:#fff7fd;border-radius:16px;margin:8px 0}
+.izl .ila-steps-counter{display:grid;gap:8px;justify-items:center;padding:12px;border:3px solid #e2d3f5;border-radius:18px;background:#fff;margin:10px 0}
+.izl .ila-steps-counter.right{border-color:#169a6b;background:#effbf5}.izl .ila-steps-counter.wrong{border-color:#d1435b;background:#fff1f3}
+.izl .ila-steps-frames{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.izl .ila-steps-frame{display:grid;grid-template-columns:repeat(5,34px);gap:5px;padding:7px;border:3px solid #6f22b8;border-radius:12px;background:#fbf6ff}
+.izl .ila-steps-frame i{width:34px;height:34px;border-radius:50%;border:2px dashed #c9a6ff;display:block}
+.izl .ila-steps-frame i.on{border:2px solid #8a4b05;background:radial-gradient(circle at 35% 30%,#fff6 0 18%,#0000 19%),linear-gradient(145deg,#ffd36b,#ff7ac4 60%,#8f3fd6)}
+.izl .ila-steps-count{font-size:28px;color:#2a1342}
+.izl .ila-steps-learnnode{display:block;color:#2a1342;text-align:left}
+.izl-steps-player .izl-rv{background:#fff;color:#2a1342;border:2px solid #ecdcf7;border-radius:14px;padding:10px 12px;margin:8px 0}
+.izl-steps-player .izl-rv p{margin:4px 0}
+@media(max-width:420px){.izl .ila-steps-frame{grid-template-columns:repeat(5,26px);gap:4px}.izl .ila-steps-frame i{width:26px;height:26px}}
+/* solid colours under the gradients (what the gradients sit on, and what contrast is measured against) */
+.izl-steps-player .izl-btn.primary,.ila-k3-bubble .izl-btn.primary{background-color:#8f3fd6}
+.izl-steps-player .izl-medal,.ila-k3-bubble .izl-medal{background-color:#ff9fd0;color:#2a1342}
+/* readable white text on the step ticks and the answer letters (darker green/red than the Grade 5 sheet; same look) */
+.izl-steps-player .izl-steps li.done span{background:#14805a}
+.izl-steps-player .izl-opt.right .izl-letter{background:#14805a;color:#fff}
+.izl-steps-player .izl-opt.wrong .izl-letter{background:#b52d46;color:#fff}
+/* V7.13.13 (Dad): a unit's lessons open in a bubble right under the unit chicklet, like Grade 5's lesson panel */
+body.ila-embed .unit-grid>.ila-k3-bubble{grid-column:1/-1;margin:0 0 6px!important}
+.ila-k3-bubble .ila-k3-bubble-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ila-k3-bubble .ila-k3-bubble-head .izl-btn{flex:0 0 auto;min-width:48px}
+body.ila-embed .unit-button[aria-expanded=true]{margin-bottom:-4px}
+</style>
 <style id="ila-k3-v7136-theme">/* V7.13.6 (Dad, Oct 27): inside the Academy, the K-3 pages use the Grade 5 look, so the site feels like one place:
    the dark Academy background, unit chicklets, cream lesson cards in a purple panel. Colours copied from Grade 5. */
 html:has(body.ila-embed),body.ila-embed{background:transparent!important}
@@ -844,6 +1197,176 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
  root.ILA_K3_ENRICH=Object.freeze({content,mount,ordered});
 })(globalThis);
 </script>
+<script id="ila-k3-steps-player">/* V7.13.13 (Dad, Nov 4): "All grade levels should function similar to how fifth grade is when you're in the lesson:
+   1. Learn 2. Practice 3. On my own 4. Mastery check 5. Stars." One lesson player for Kindergarten-Grade 3 and Grades 4-8,
+   built to match Grade 5's Full Learning Session: the same five steps, the same look (Grade 5's izl styles), the same
+   rules. Practice together gives a hint and a second try; On my own has hints; the Mastery check has none; the Stars
+   step shows lesson stars (all right = 3, one miss = 2, two misses = 1) and pays Academy stars exactly like Grade 5
+   (+5 first-try practice answer, +2 after help, +10 each mastery answer, +50 the first time a lesson is mastered,
+   +10 for each new lesson star). Grade 5's own player is not changed.
+   Saves: ila_lesson_steps_v1 (new key; Family Backup copies every ila_ key): {version:1, records:{key:{stars,best,of,
+   passed,attempts,last,date,lastDate}}, live:{key:{phase,qi,slide,seed,log}}}. A save that cannot be read is left alone
+   and nothing is written over it. */
+(function () {
+  'use strict';
+  const KEY = 'ila_lesson_steps_v1';
+  const PHASES = ['learn', 'guided', 'ind', 'mastery', 'results'];
+  const NAME = {learn: 'Learn', guided: 'Practice together', ind: 'On my own', mastery: 'Mastery check', results: 'Stars'};
+  let store = {version: 1, records: {}, live: {}}, writable = true;
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) { const x = JSON.parse(raw); if (x && x.version === 1 && x.records && typeof x.records === 'object' && x.live && typeof x.live === 'object') store = x; else writable = false; }
+  } catch (e) { writable = false; }
+  function reload() { try { const raw = localStorage.getItem(KEY); if (raw) { const x = JSON.parse(raw); if (x && x.version === 1 && x.records && x.live) store = x; } } catch (e) {} }
+  function persist() { if (!writable) return false; try { localStorage.setItem(KEY, JSON.stringify(store)); return true; } catch (e) { return false; } }
+  function record(key) { reload(); const r = store.records[key]; return r && typeof r === 'object' ? {stars: Math.max(0, Math.min(3, Number(r.stars) || 0)), passed: !!r.passed, started: true, best: Number(r.best) || 0, of: Number(r.of) || 0} : {stars: 0, passed: false, started: !!store.live[key], best: 0, of: 0}; }
+  function hasLive(key) { reload(); return !!store.live[key]; }
+  function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function shuffle(r, a) { const b = a.slice(); for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } return b; }
+  function el(tag, attrs, kids) {
+    const e = document.createElement(tag);
+    if (attrs) for (const [k, v] of Object.entries(attrs)) { if (v == null || v === false) continue; if (k === 'class') e.className = v; else if (k === 'text') e.textContent = v; else if (k.startsWith('on') && typeof v === 'function') e.addEventListener(k.slice(2), v); else e.setAttribute(k, v === true ? '' : v); }
+    for (const c of [].concat(kids == null ? [] : kids)) if (c != null && c !== false) e.append(c.nodeType ? c : String(c));
+    return e;
+  }
+  const K = (...a) => a.filter(x => x != null && x !== false);
+  const CHEERS = ['Brilliant!', 'You got it!', 'Super thinking!', 'Royal work!', 'Spot on!', 'Fantastic!'];
+  const PAL = ['#ff7ac4', '#ffd36b', '#8f3fd6', '#6af2d9', '#ff9f43', '#fff'];
+
+  /* spec: {key, title, icon, sub, build(seed) -> {learn:[{h,t,node?,try?}], guided:[q], ind:[q], mastery:[q]},
+            speak(text), award(n), onExit(), next: {title, go()} | null, handsOn, onAnswer(phase, q, ok), onFinish(result), top()}
+     q: {prompt, passage:{title,text}|null, visual:{emoji,count}|null, kind:'choice'|'count', options:[{id,label}], answer, max, hint, why} */
+  function mount(root, spec) {
+    let st = null;
+    const top = () => { try { (spec.top || (() => root.scrollIntoView({block: 'start'})))(); } catch (e) {} };
+    const panel = el('section', {class: 'iz680-panel izl izl-steps-player', 'data-key': spec.key, 'aria-label': spec.title + ' lesson'});
+    root.replaceChildren(panel);
+    function saveLive() { if (!st) return; reload(); store.live[spec.key] = {phase: st.phase, qi: st.qi, slide: st.slide, seed: st.seed, log: st.log}; persist(); }
+    function clearLive() { reload(); delete store.live[spec.key]; persist(); }
+    function start() { const seed = (Date.now() ^ Math.floor(Math.random() * 1e9)) | 0; st = {seed, phase: 'learn', qi: 0, slide: 0, log: {guided: [], ind: [], mastery: []}}; st.qs = spec.build(seed); saveLive(); render(); top(); }
+    function resume(L) { st = {seed: L.seed, phase: PHASES.includes(L.phase) && L.phase !== 'results' ? L.phase : 'learn', qi: L.qi || 0, slide: L.slide || 0, log: L.log || {guided: [], ind: [], mastery: []}}; st.qs = spec.build(st.seed);
+      for (const k of ['guided', 'ind', 'mastery']) { st.log[k] = (st.log[k] || []).slice(0, st.qs[k].length); } if (st.phase !== 'learn' && st.qi >= st.qs[st.phase].length) st.qi = Math.max(0, st.qs[st.phase].length - 1); if (st.phase === 'learn') st.slide = Math.min(st.slide, st.qs.learn.length - 1); render(); }
+    function nextPhase() { let i = PHASES.indexOf(st.phase) + 1; while (PHASES[i] && PHASES[i] !== 'results' && !st.qs[PHASES[i]].length) i++; st.phase = PHASES[i]; st.qi = 0; st.slide = 0; if (st.phase === 'results') finish(); else saveLive(); render(); top(); }
+    function finish() {
+      const prev = record(spec.key), m = st.log.mastery, of = st.qs.mastery.length, score = m.filter(x => x && x.ok).length;
+      const stars = score >= of ? 3 : score >= of - 1 ? 2 : score >= of - 2 ? 1 : 0, passed = score >= of - 1;
+      reload(); const old = store.records[spec.key] && typeof store.records[spec.key] === 'object' ? store.records[spec.key] : {};
+      const today = new Date().toISOString().slice(0, 10);
+      store.records[spec.key] = Object.assign({}, old, {stars: Math.max(stars, prev.stars), best: Math.max(score, Number(old.best) || 0), of, attempts: (Number(old.attempts) || 0) + 1, last: score, passed: !!(old.passed || passed), date: old.passed && old.date ? old.date : today, lastDate: today});
+      delete store.live[spec.key]; persist();
+      let bonus = 0; if (passed && !prev.passed) bonus += 50; if (stars > prev.stars) bonus += 10 * (stars - prev.stars);
+      st.result = {score, of, stars, passed, bonus}; if (bonus) spec.award(bonus);
+      try { spec.onFinish && spec.onFinish(st.result); } catch (e) {}
+    }
+    function render() {
+      const steps = el('ol', {class: 'izl-steps'}, PHASES.map((p, i) => { const cur = PHASES.indexOf(st.phase); return el('li', {class: i < cur ? 'done' : i === cur ? 'cur' : ''}, [el('span', null, i < cur ? '✓' : String(i + 1)), NAME[p]]); }));
+      const bar = el('div', {class: 'izl-top'}, [el('button', {type: 'button', class: 'izl-btn ghost sm', onclick() { spec.onExit(); }}, '← All lessons'),
+        el('div', {class: 'izl-title'}, [el('span', {class: 'izl-medal xs', 'aria-hidden': 'true'}, spec.icon || '⭐'), el('div', null, [el('b', {id: spec.titleId || 'ilaStepsTitle', tabindex: '-1'}, spec.title), el('small', null, spec.sub || '')])])]);
+      const stage = el('div', {class: 'izl-stage'});
+      panel.replaceChildren(bar, steps, stage);
+      const c = steps.querySelector('.cur'); if (c) steps.scrollLeft = Math.max(0, c.offsetLeft - 16);
+      ({learn: renderLearn, guided: renderQ, ind: renderQ, mastery: renderQ, results: renderResults})[st.phase](stage);
+    }
+    function sayBtn(text, label) { return el('button', {type: 'button', class: 'izl-say', 'aria-label': label || 'Read aloud', onclick() { try { spec.speak(typeof text === 'function' ? text() : text); } catch (e) {} }}, '🔊'); }
+    function passageBox(P) { return el('div', {class: 'izl-passage'}, [el('div', {class: 'izl-ph'}, [el('b', null, '📖 ' + (P.title || 'Read the passage')), sayBtn(P.text, 'Read the passage aloud')]), el('div', {class: 'izl-ptext'}, el('span', {class: 'izl-sent'}, P.text))]); }
+    function visualBox(v) { if (!v || !v.emoji || !(v.count > 0)) return null; return el('div', {class: 'izl-vizwrap ila-steps-visual', role: 'img', 'aria-label': v.count + ' pictures'}, Array.from({length: v.count}, () => el('span', {'aria-hidden': 'true'}, v.emoji))); }
+    function renderLearn(stage) {
+      const L = st.qs.learn, sl = L[st.slide], last = st.slide === L.length - 1;
+      const card = el('div', {class: 'izl-card-main learn'}, [el('div', {class: 'izl-qhead'}, [el('span', {class: 'izl-pill'}, `Learn · ${st.slide + 1} of ${L.length}`), sayBtn(() => sl.h + '. ' + (sl.t || ''))]), el('h3', null, sl.h)]);
+      if (sl.t) card.append(el('p', {class: 'izl-lead'}, sl.t));
+      if (sl.passage) card.append(passageBox(sl.passage));
+      const v = visualBox(sl.visual); if (v) card.append(v);
+      if (sl.node) { const slot = el('div', {class: 'izl-vizwrap ila-steps-learnnode'}); card.append(slot); try { sl.node(slot); } catch (e) { slot.remove(); } }
+      if (sl.try) card.append(el('p', {class: 'izl-try'}, '👉 Try it: ' + sl.try));
+      const dots = el('div', {class: 'izl-dots'}, L.map((_, i) => el('i', {class: i === st.slide ? 'on' : ''})));
+      card.append(el('div', {class: 'izl-actions'}, [st.slide ? el('button', {type: 'button', class: 'izl-btn ghost', onclick() { st.slide--; saveLive(); render(); }}, '← Back') : el('span'), dots,
+        el('button', {type: 'button', class: 'izl-btn primary', onclick() { if (last) nextPhase(); else { st.slide++; saveLive(); render(); top(); } }}, last ? 'Start practice →' : 'Next →')]));
+      stage.append(card);
+    }
+    function renderQ(stage) {
+      const phase = st.phase, list = st.qs[phase], q = list[st.qi], n = list.length, guided = phase === 'guided', mastery = phase === 'mastery';
+      if (!q) { nextPhase(); return; }
+      const r = rng(st.seed + st.qi * 31 + PHASES.indexOf(phase) * 977);
+      let sel = null, tries = 0, hinted = false, done = false, count = 0;
+      const card = el('div', {class: 'izl-card-main q'});
+      const prog = el('div', {class: 'izl-qprog'}, list.map((_, i) => el('i', {class: i < st.qi ? (st.log[phase][i] && st.log[phase][i].ok ? 'ok' : 'no') : i === st.qi ? 'cur' : ''})));
+      const opts = q.kind === 'count' ? [] : shuffle(r, q.options);
+      card.append(el('div', {class: 'izl-qhead'}, [el('span', {class: 'izl-pill ' + phase}, `${NAME[phase]} · ${st.qi + 1} of ${n}`), prog, sayBtn(() => q.prompt + (opts.length ? '. ' + opts.map(o => o.label).join('. ') : ''), 'Read the question aloud')]));
+      if (guided && st.qi === 0) card.append(el('p', {class: 'izl-coach'}, '🤝 We’ll do these together. If you miss one, you get a hint and another try.'));
+      if (phase === 'ind' && st.qi === 0) card.append(el('p', {class: 'izl-coach'}, '🌟 Your turn! Hints are here if you need them.'));
+      if (mastery && st.qi === 0) card.append(el('p', {class: 'izl-coach'}, `👑 Mastery check: show what you know. Get ${n - 1} of ${n} to master this lesson.`));
+      card.append(el('h3', {class: 'izl-prompt'}, q.prompt));
+      const v = visualBox(q.visual); if (v) card.append(v);
+      const feedback = el('div', {class: 'izl-feedback', role: 'status', hidden: true}), hintBox = el('div', {class: 'izl-hint', hidden: true});
+      const checkBtn = el('button', {type: 'button', class: 'izl-btn primary big', disabled: true, onclick: check}, '✔ Check my answer');
+      const hintBtn = el('button', {type: 'button', class: 'izl-btn ghost', onclick: showHint}, '💡 Hint');
+      const nextBtn = el('button', {type: 'button', class: 'izl-btn primary big', hidden: true, onclick: advance}, st.qi === n - 1 ? (mastery ? 'See my stars →' : 'Keep going →') : 'Next question →');
+      const setSel = x => { sel = x; checkBtn.disabled = sel === null; };
+      let answerArea;
+      if (q.kind === 'count') {
+        const max = q.max || 10, out = el('b', {class: 'ila-steps-count', 'aria-live': 'polite'}, '0');
+        const frames = el('div', {class: 'ila-steps-frames', 'aria-hidden': 'true'});
+        const paint = () => { out.textContent = String(count); frames.replaceChildren(...Array.from({length: Math.ceil(max / 10)}, (_, f) => el('div', {class: 'ila-steps-frame'}, Array.from({length: 10}, (_, k) => el('i', {class: f * 10 + k < count ? 'on' : ''}))))); setSel(count); };
+        const minus = el('button', {type: 'button', class: 'izl-btn ghost', onclick() { if (done) return; count = Math.max(0, count - 1); paint(); }}, '− Take one away');
+        const plus = el('button', {type: 'button', class: 'izl-btn ghost', onclick() { if (done) return; count = Math.min(max, count + 1); paint(); }}, '+ Add one');
+        answerArea = el('div', {class: 'ila-steps-counter'}, [frames, el('p', {class: 'izl-lead'}, ['Counters: ', out]), el('div', {class: 'izl-actions'}, [minus, plus])]); paint();
+      } else {
+        answerArea = el('div', {class: 'izl-opts', role: 'group', 'aria-label': 'Answer choices'}, opts.map((o, i) => el('button', {type: 'button', class: 'izl-opt', 'aria-pressed': 'false', 'data-id': o.id, onclick(e) { if (done || e.currentTarget.classList.contains('wrong')) return; answerArea.querySelectorAll('.izl-opt').forEach(x => x.setAttribute('aria-pressed', 'false')); e.currentTarget.setAttribute('aria-pressed', 'true'); setSel(o.id); }}, [el('span', {class: 'izl-letter'}, 'ABCDEF'[i]), el('span', {class: 'izl-otext'}, o.label), el('span', {class: 'izl-mark', 'aria-hidden': 'true'})])));
+      }
+      function showHint() { hinted = true; hintBox.hidden = false; hintBox.replaceChildren(el('b', null, '💡 Hint: '), el('span', null, q.hint || 'Read the question again slowly. What is it really asking?')); hintBtn.disabled = true; }
+      const isRight = x => q.kind === 'count' ? Number(x) === Number(q.answer) : String(x) === String(q.answer);
+      const label = x => { if (q.kind === 'count') return String(x); const o = q.options.find(o => String(o.id) === String(x)); return o ? o.label : String(x); };
+      function mark(ok, reveal) {
+        if (q.kind === 'count') { answerArea.classList.toggle('right', ok); answerArea.classList.toggle('wrong', !ok); return; }
+        answerArea.querySelectorAll('.izl-opt').forEach(b => { const id = b.dataset.id; if (id === String(sel)) b.classList.add(ok ? 'right' : 'wrong'); if (reveal && isRight(id)) b.classList.add('right'); if (reveal) b.classList.add('locked'); });
+      }
+      function check() {
+        if (done || sel === null) return; tries++;
+        const ok = isRight(sel);
+        try { spec.onAnswer && spec.onAnswer(phase, q, ok, sel); } catch (e) {}
+        if (!ok && guided && tries < 2) {
+          mark(false, false); feedback.hidden = false; feedback.className = 'izl-feedback retry'; feedback.replaceChildren(el('b', null, 'Not quite yet. '), el('span', null, 'Here’s a hint. Give it one more try!'));
+          if (!hinted) showHint(); if (q.kind !== 'count') setSel(null); else { answerArea.classList.remove('wrong'); }
+          return;
+        }
+        done = true; mark(ok, true); checkBtn.hidden = true; nextBtn.hidden = false; hintBtn.disabled = true;
+        const before = st.log[phase][st.qi];
+        const pts = ok && !before ? (mastery ? 10 : tries === 1 && !hinted ? 5 : 2) : 0; if (pts) spec.award(pts);
+        if (!before) st.log[phase][st.qi] = {ok, tries, hinted, ans: label(sel)}; saveLive();
+        feedback.hidden = false; feedback.className = 'izl-feedback ' + (ok ? 'good' : 'bad');
+        feedback.replaceChildren(...K(el('b', null, ok ? '🌟 ' + CHEERS[(st.qi + n) % CHEERS.length] + ' ' : '💜 Good try. '), el('span', null, (ok ? '' : `The answer is ${label(q.answer)}. `) + (q.why || '')), pts ? el('span', {class: 'izl-pts'}, `+${pts} ⭐`) : null));
+        setTimeout(() => nextBtn.focus({preventScroll: true}), 30);
+      }
+      function advance() { if (st.qi < n - 1) { st.qi++; saveLive(); render(); top(); } else nextPhase(); }
+      card.append(answerArea, hintBox, feedback, el('div', {class: 'izl-actions'}, [el('div', {class: 'izl-tools'}, [mastery ? null : hintBtn]), el('div', {class: 'izl-go'}, [checkBtn, nextBtn])]));
+      stage.append(q.passage ? el('div', {class: 'izl-split'}, [passageBox(q.passage), card]) : card);
+    }
+    function renderResults(stage) {
+      const R = st.result || {score: 0, of: 0, stars: 0, passed: false, bonus: 0};
+      const g = st.log.guided.filter(x => x && x.ok).length, i = st.log.ind.filter(x => x && x.ok).length;
+      const card = el('div', {class: 'izl-card-main results' + (R.passed ? ' win' : '')});
+      if (R.passed) card.append(el('div', {class: 'izl-confetti', 'aria-hidden': 'true'}, Array.from({length: 24}, (_, k) => el('i', {style: `--x:${(k * 37) % 100}%;--d:${(k % 6) * .12}s;--c:${PAL[k % PAL.length]}`}))));
+      card.append(...K(el('div', {class: 'izl-bigstars', 'aria-label': `${R.stars} of 3 stars`}, [0, 1, 2].map(k => el('i', {class: k < R.stars ? 'on' : '', style: `--d:${k * .25}s`}, '★'))),
+        el('h3', null, R.passed ? '👑 Lesson mastered!' : R.score >= 2 ? '💪 So close. Let’s grow!' : '💜 Great effort. Let’s review!'),
+        el('p', {class: 'izl-lead'}, `Mastery check: ${R.score} of ${R.of} correct. Practice: ${g} of ${st.qs.guided.length} together and ${i} of ${st.qs.ind.length} on your own.`),
+        R.bonus ? el('p', {class: 'izl-bonus'}, `+${R.bonus} ⭐ bonus stars added to your Rewards!`) : null));
+      const missed = []; for (const ph of ['guided', 'ind', 'mastery']) (st.qs[ph] || []).forEach((q, k) => { const r = st.log[ph][k]; if (r && !r.ok) missed.push({q, r}); });
+      if (missed.length) { const wrap = el('div', {class: 'izl-review2'}, [el('h4', null, '📖 Review what we learned'), el('p', {class: 'izl-tip'}, missed.length === 1 ? 'One question to look at again, with the right answer.' : `${missed.length} questions to look at again, with the right answer.`)]);
+        missed.forEach(({q, r}) => wrap.append(el('div', {class: 'izl-rv'}, [el('b', null, q.prompt), el('p', null, 'Your answer: ' + (r.ans || '—')), el('p', null, 'Right answer: ' + (q.kind === 'count' ? String(q.answer) : (q.options.find(o => String(o.id) === String(q.answer)) || {}).label)), q.why ? el('p', null, q.why) : null]))); card.append(wrap); }
+      else card.append(el('p', {class: 'izl-rv-none'}, '✅ Every answer was right in the end. Nothing to review!'));
+      if (spec.handsOn) card.append(el('p', {class: 'izl-try'}, '✋ Show what you learned, off the screen: ' + spec.handsOn));
+      card.append(el('div', {class: 'izl-actions wrap'}, K(
+        R.passed && spec.next ? el('button', {type: 'button', class: 'izl-btn primary big', onclick() { spec.next.go(); }}, `Next: ${spec.next.title} →`) : el('button', {type: 'button', class: 'izl-btn primary big', onclick() { start(); }}, R.passed ? 'Practice this lesson again' : 'Redo the lesson'),
+        R.passed && spec.next ? el('button', {type: 'button', class: 'izl-btn ghost', onclick() { start(); }}, 'Practice this lesson again') : null,
+        el('button', {type: 'button', class: 'izl-btn ghost', onclick() { spec.onExit(); }}, 'All lessons'))));
+      stage.append(card);
+    }
+    reload(); const L = store.live[spec.key];
+    if (L && Number.isFinite(L.seed)) { resume(L); top(); } else start();
+    return {phase: () => st && st.phase};
+  }
+  window.ILA_STEPS = {mount, record, hasLive, KEY, NAME, writable: () => writable};
+})();</script>
 <script>/* Izzy's Learning Academy K-3 36-week authoring candidate; never integrates into live Academy. */
 (function () {
  'use strict';
@@ -894,7 +1417,7 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
   const result = core.readProgress(storage(),state.learner,state.grade);
   state.progress=result.value; state.storageIssue=result.issue; state.feedback=null; state.lessonId=null; state.subject=null; state.counter=0; state.showHint=false; state.gameMode=null; state.miniMode=false; state.stemLab=false; state.stemSolved=false; state.stemChain=[];
   if (result.issue) updateNotice('error',result.message + ' Practice can continue in this tab, but saved progress cannot be promised.');
-  else updateNotice('normal','Your practice is saved separately for each learner and grade. Academy stars stay unchanged.');
+  else updateNotice('normal','Your practice is saved separately for each learner and grade. Lessons add Academy stars the same way Grade 5 does.');
   render();
  }
  function persist(next) {
@@ -903,7 +1426,7 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
   try {
    core.writeProgress(storage(),next);
    state.storageIssue=null;
-   updateNotice('ok','Your Little Learners practice was saved on this device. Academy stars stay unchanged.');
+   updateNotice('ok','Your Little Learners practice was saved on this device.');
   } catch(err) {
    state.storageIssue='STORAGE_BLOCKED';
    updateNotice('error','NOT SAVED on this device: '+err.message+' The grown-up panel can display current practice, but a blocked-storage session does not have a restorable full backup.');
@@ -982,23 +1505,31 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
   }catch(err){const feedback=document.getElementById('journal-feedback');if(feedback)feedback.textContent='NOT SAVED: '+err.message;updateNotice('error','Weather journal NOT SAVED: '+err.message);}
  }
  function renderSubject() {
+  /* V7.13.13 (Dad, Nov 4): like Grade 5, tapping a unit opens a bubble with that unit's lessons right under it;
+     tapping a lesson opens it. No more scrolling down to a list below all the units. */
   const sub=subjects.find(s=>s.id===state.subject);
   if(!sub){state.subject=null;renderDashboard();return;}
   const units=lessonUnits(state.grade,sub.id);
-  if(!state.unitId||!units.some(u=>u.unitId===state.unitId))state.unitId=units[0].unitId;
+  if(state.unitId&&!units.some(u=>u.unitId===state.unitId))state.unitId=null;
+  const S=globalThis.ILA_STEPS;const rec=l=>S?S.record(k3StepsKey(l.lessonId)):{stars:0,passed:false,started:false};const live=l=>!!(S&&S.hasLive(k3StepsKey(l.lessonId)));
+  const bubble=(u,ui)=>{const recs=u.lessons.map(rec);const mastered=recs.filter(r=>r.passed).length,total=recs.reduce((a,r)=>a+r.stars,0);
+   const liveI=u.lessons.findIndex(live);const nextI=liveI>=0?liveI:Math.max(0,recs.findIndex(r=>!r.passed));const n=u.lessons[nextI];
+   const cards=u.lessons.map((l,i)=>{const r=recs[i],inP=live(l);return `<button type="button" class="izl-lcard session-button${r.passed?' done':''}${i===nextI?' next':''}" data-lesson="${esc(l.lessonId)}"><span class="izl-medal sm" aria-hidden="true">${String(i+1).padStart(2,'0')}</span><span class="izl-lc-txt"><small>Lesson ${i+1} of ${u.lessons.length}</small><b>${esc(l.title)}</b><span class="izl-stars" aria-label="${r.stars} of 3 stars">${[0,1,2].map(k=>`<i class="${k<r.stars?'on':''}">★</i>`).join('')}</span></span><span class="izl-tag ${r.passed?'ok':(inP||r.started)?'go':''}">${r.passed?'Mastered':inP?'In progress':r.started?'Practiced':'New'}</span></button>`;}).join('');
+   return `<div class="iz680-panel izl ila-k3-bubble" role="region" aria-label="${esc(u.title)} lessons" id="ila-k3-bubble"><div class="ila-k3-bubble-head"><div class="izl-head"><h2>📖 ${esc(u.title)}</h2><p>Unit ${ui+1} · Weeks ${u.weekStart}–${u.weekEnd} · ${esc(u.objective)}</p></div><button type="button" class="izl-btn ghost sm" id="ila-k3-bubble-close" aria-label="Close the ${esc(u.title)} lessons">✕</button></div><div class="izl-body"><div class="izl-hero"><div class="izl-medal" aria-hidden="true">${sub.icon}</div><div class="izl-hero-txt"><small>${liveI>=0?'Welcome back! Pick up where you left off':mastered===u.lessons.length?'Every lesson mastered! Practice any lesson again':'Up next'}</small><h3>Lesson ${nextI+1}: ${esc(n.title)}</h3><p>Learn → Practice together → On my own → Mastery check → Stars · about ${u.sessionGuidelineMinutes.join('–')} minutes</p></div><div class="izl-hero-btns"><button type="button" class="izl-btn primary session-button" data-lesson="${esc(n.lessonId)}">${liveI>=0?'Continue ▶':'Start lesson ▶'}</button></div></div><p class="izl-summary">🏆 ${mastered} of ${u.lessons.length} lessons mastered · ⭐ ${total} of ${u.lessons.length*3} stars</p><div class="izl-path">${cards}</div></div></div>`;};
+  const unitNav=units.map((u,i)=>{const open=u.unitId===state.unitId;const done=u.lessons.filter(l=>rec(l).passed).length;return `<button type="button" class="unit-button" data-unit="${esc(u.unitId)}" aria-pressed="${open}" aria-expanded="${open}"><strong>${String(i+1).padStart(2,'0')}</strong><span>${esc(u.title)}<small>Weeks ${u.weekStart}–${u.weekEnd} · ${done}/12 mastered</small></span></button>${open?bubble(u,i):''}`;}).join('');
   const unit=units.find(u=>u.unitId===state.unitId);
-  const unitNav=units.map((u,i)=>{const tried=u.lessons.filter(l=>state.progress.lessons[l.lessonId]?.attempts>0).length;return `<button type="button" class="unit-button" data-unit="${esc(u.unitId)}" aria-pressed="${u.unitId===unit.unitId}"><strong>${String(i+1).padStart(2,'0')}</strong><span>${esc(u.title)}<small>Weeks ${u.weekStart}–${u.weekEnd} · ${tried}/12 tried</small></span></button>`;}).join('');
-  const buttons=unit.lessons.map((l,i)=>{const record=state.progress.lessons[l.lessonId];const tried=record&&record.attempts>0;return `<button type="button" class="session-button" data-lesson="${esc(l.lessonId)}"><span class="session-number">${String(i+1).padStart(2,'0')}</span><span class="session-title">${esc(l.title)}</span><span class="session-state">${tried?'✓ Tried':'Try it'}</span></button>`;}).join('');
-  const used=unit.lessons.filter(l=>state.progress.lessons[l.lessonId]?.attempts>0);
-  const scienceJournal=sub.id==='STEM'?`<button type="button" class="primary" id="subject-stem-lab">🔬 Open ${esc(grades[state.grade])} STEM Lab</button><section class="science-journal"><h3>🔎 Model-response notebook</h3><p class="helper">Recent on-screen choices from this unit. These are not actual experiment measurements. Off-screen observations belong in the learner’s paper notebook.</p>${used.map(l=>{const r=state.progress.lessons[l.lessonId],a=l.activities[0];const choice=a.options?.find(o=>o.id===r.lastChoice);return `<p><strong>${esc(l.title)}:</strong> ${esc(choice?.label||r.lastChoice)} <span class="helper">(${esc((r.updatedAt||'').slice(0,10))})</span></p>`;}).join('')||'<p class="helper">No model responses recorded in this unit yet.</p>'}</section>${state.grade==='K'&&unit.unitId==='GK-STEM-U01'?renderDailyJournal():''}`:'';
-  els.workspace.innerHTML=`<section class="subject-page"><button type="button" class="secondary" id="subject-back">← All subjects</button><div class="headline"><div><h2>${sub.icon} ${esc(sub.name)}</h2><p>${esc(grades[state.grade])} · 9 units · 108 sessions · select a four-week unit below</p></div><span class="phase-tag">PICK A LESSON</span></div><div class="unit-grid" aria-label="Choose a four-week unit">${unitNav}</div><h3 class="unit-heading">${esc(unit.title)} · Weeks ${unit.weekStart}–${unit.weekEnd}</h3><p class="helper">${esc(unit.objective)} Flexible session length ${unit.sessionGuidelineMinutes.join('–')} minutes; choose any lesson. No timed mastery tests.</p><div class="session-list">${buttons}</div>${scienceJournal}</section>`;
+  const used=unit?unit.lessons.filter(l=>state.progress.lessons[l.lessonId]?.attempts>0):[];
+  const scienceJournal=sub.id==='STEM'?`<button type="button" class="primary" id="subject-stem-lab">🔬 Open ${esc(grades[state.grade])} STEM Lab</button>${unit?`<section class="science-journal"><h3>🔎 Model-response notebook</h3><p class="helper">Recent on-screen choices from this unit. These are not actual experiment measurements. Off-screen observations belong in the learner’s paper notebook.</p>${used.map(l=>{const r=state.progress.lessons[l.lessonId],a=l.activities[0];const choice=a.options?.find(o=>o.id===r.lastChoice);return `<p><strong>${esc(l.title)}:</strong> ${esc(choice?.label||r.lastChoice)} <span class="helper">(${esc((r.updatedAt||'').slice(0,10))})</span></p>`;}).join('')||'<p class="helper">No model responses recorded in this unit yet.</p>'}</section>`:''}${state.grade==='K'&&unit&&unit.unitId==='GK-STEM-U01'?renderDailyJournal():''}`:'';
+  els.workspace.innerHTML=`<section class="subject-page"><button type="button" class="secondary" id="subject-back">← All subjects</button><div class="headline"><div><h2>${sub.icon} ${esc(sub.name)}</h2><p>${esc(grades[state.grade])} · 9 units · 108 lessons · tap a unit to see its lessons</p></div><span class="phase-tag">PICK A LESSON</span></div><p class="helper">Each lesson: Learn → Practice together → On my own → Mastery check → Stars. No timers.</p><div class="unit-grid" aria-label="Choose a four-week unit">${unitNav}</div>${scienceJournal}</section>`;
+  const toParent=sel=>{if(window.parent===window||!window.parent.izK3Scroll)return;requestAnimationFrame(()=>{const e=document.querySelector(sel);if(e)window.parent.izK3Scroll(e.getBoundingClientRect().top+window.scrollY-8);});};
   document.getElementById('subject-back').addEventListener('click',()=>{state.subject=null;state.unitId=null;render();});
-  els.workspace.querySelectorAll('.unit-button').forEach(b=>b.addEventListener('click',()=>{state.unitId=b.dataset.unit;render();}));
+  els.workspace.querySelectorAll('.unit-button').forEach(b=>b.addEventListener('click',()=>{const id=b.dataset.unit;state.unitId=state.unitId===id?null:id;render();toParent(state.unitId?`.unit-button[data-unit="${id}"]`:'.unit-grid');}));
+  const close=document.getElementById('ila-k3-bubble-close');if(close)close.addEventListener('click',()=>{const id=state.unitId;state.unitId=null;render();toParent(`.unit-button[data-unit="${id}"]`);});
   els.workspace.querySelectorAll('.session-button').forEach(b=>b.addEventListener('click',()=>startLesson(b.dataset.lesson)));
   const stemOpen=document.getElementById('subject-stem-lab');if(stemOpen)stemOpen.addEventListener('click',()=>{state.stemOrigin='STEM';state.stemLab=true;state.stemRound=0;resetStem();render();});
   const journalSave=document.getElementById('journal-save');if(journalSave)journalSave.addEventListener('click',saveJournalForm);
  }
- function renderGames() {
+  function renderGames() {
   if(state.miniMode){renderMini();return;}
   const mode=subjects.find(s=>s.id===state.gameMode)||subjects[0];
   const bank=lessonsOf(mode.id).filter(l=>l.activities[0]?.options?.length>=3 && l.activities[0].kind!=='observation');
@@ -1099,41 +1630,40 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
   const frames=twoFrames?[0,1].map(n=>`<div class="ten-frame" aria-label="Ten-frame ${n+1}">${Array.from({length:10},(_,i)=>cell(i+n*10)).join('')}</div>`).join(''):`<div class="ten-frame" aria-label="Interactive ten-frame with ${state.counter} counters">${Array.from({length:10},(_,i)=>cell(i)).join('')}</div>`;
   return `<div class="frame-wrap"><div class="frame-count" aria-live="polite">${state.counter} of ${count} counters placed</div><div class="frames ${twoFrames?'two-frames':''}">${frames}</div><div class="frame-actions"><button type="button" id="frame-minus" class="secondary" ${state.counter===0?'disabled':''}>− Remove one</button><button type="button" id="frame-plus" class="primary" ${state.counter===count?'disabled':''}>+ Add one</button></div><button type="button" id="check-frame" class="primary full-check">Check my frame</button></div>`;
  }
+ function k3StepsKey(id){return 'k3|'+state.learner+'|'+id;}
  function renderLesson() {
+  /* V7.13.13 (Dad, Nov 4): every K-3 lesson runs Grade 5's five steps: Learn, Practice together, On my own,
+     Mastery check, Stars (window.ILA_STEPS). The lesson's own question is still recorded in this page's practice
+     history exactly as before; the other questions come from the same four-week unit. */
   const lesson=lessonFor(state.lessonId);
-  if(!lesson){state.lessonId=null;renderDashboard();return;}
-  const a=lesson.activities[0];const s=lesson.unit.subject;
-  const coach=globalThis.ILA_K3_COACH.forLesson(lesson);
-  const enriched=globalThis.ILA_K3_ENRICH.content(lesson);
-  const record=state.progress.lessons[lesson.lessonId];
-  const pos=lessonsOf(s).findIndex(l=>l.lessonId===lesson.lessonId);
-  const next=lessonsOf(s)[pos+1];const previous=lessonsOf(s)[pos-1];
-  const selected=state.feedback && state.feedback.lessonId===lesson.lessonId?state.feedback.optionId:null;
-  const feedback=state.feedback && state.feedback.lessonId===lesson.lessonId?`<div class="feedback ${state.feedback.correct?'':'try'}" role="status" aria-live="polite">${esc(state.feedback.message)}</div>`:'';
-  let activityHtml='';
-  if(a.kind==='build'||a.kind==='doubleframe') activityHtml=renderTenFrame(a.kind==='doubleframe');
-  else {
-   const visual=(a.visual.count>0&&a.visual.emoji)?`<div class="visual" role="img" aria-label="${a.visual.count} ${s==='MATH'?'objects': 'picture symbols'}">${Array(a.visual.count).fill(`<span aria-hidden="true">${esc(a.visual.emoji)}</span>`).join('')}</div>`:'';
-   const choiceHtml=orderedOptions(a,lesson.lessonId).map(o=>`<button class="choice" type="button" data-option="${esc(o.id)}" aria-pressed="${selected===o.id}">${esc(o.label)}</button>`).join('');
-   activityHtml=visual+`<div class="choices ${a.kind==='observation'?'observations':''}">${choiceHtml}</div>`;
-  }
-  const nav=`<div class="lesson-nav">${previous?`<button type="button" class="secondary" id="previous-session">← Previous</button>`:''}${next?`<button type="button" class="secondary" id="next-session">Next lesson →</button>`:`<button type="button" class="secondary" id="all-sessions">Back to lesson list</button>`}</div>`;
-  els.workspace.innerHTML=`<section class="lesson"><div class="lesson-top"><button type="button" class="secondary" id="go-back">← ${esc(s)} lessons</button><span class="crumb">${esc(s)} · Session ${pos+1} of ${lessonsOf(s).length} · PRACTICE</span></div><h2>${esc(lesson.title)}</h2><p class="lede"><strong>Our goal:</strong> ${esc(lesson.unit.objective)}</p><div class="lesson-intro">${esc(lesson.intro)}</div><div class="learning-steps" aria-label="Learning steps"><section><h3><span>1</span> See a worked example</h3><p>${esc(coach.model)}</p></section><section><h3><span>2</span> Try it together</h3><p>${esc(enriched.learningPath?.guided||coach.prompt)}</p></section></div>${lesson.readingText?`<section class="reading-pass" aria-label="Reading passage"><h3>Read the passage</h3><p>${esc(lesson.readingText)}</p></section>`:''}${lesson.scienceMode?'<p class="model-warning">Science MODEL question · not real measurements. Do your own safe observation with a grown-up.</p>':''}<button type="button" class="secondary" id="read-lesson">🔊 Read directions aloud</button><div class="activity"><h3>3 · Your turn</h3><p class="child-task">${esc(a.prompt)}</p>${activityHtml}${feedback}<button type="button" class="hint-toggle" id="hint-toggle" aria-expanded="${state.showHint}">💡 ${state.showHint?'Hide':'Show'} a little help</button>${state.showHint?`<p class="help-text">${esc(lesson.support)}</p>`:''}<p class="helper">${a.kind==='observation'?'Record only what you saw or learned with an adult. Every answer is welcome.':'Keep trying. The goal is to learn and practice, not to win a timed test.'}</p></div><div id="enrichment-mount" aria-label="Extra guided practice"></div><div class="hands"><strong>4 · Show what you learned:</strong> ${esc(lesson.handsOn)}</div><p class="helper">${record&&record.attempts?record.attempts+' practice response(s) recorded for this activity.':'Opened lesson; no responses attempted yet.'} No automatic mastery, stars or certificates.</p>${nav}</section>`;
-  globalThis.ILA_K3_ENRICH.mount(lesson,document.getElementById('enrichment-mount'),speak);
-  document.getElementById('go-back').addEventListener('click',()=>{state.lessonId=null;state.feedback=null;render();});
-  document.getElementById('read-lesson').addEventListener('click',()=>speak(lesson.intro+' '+coach.model+' '+(lesson.readingText||'')+' '+a.prompt));
-  document.getElementById('hint-toggle').addEventListener('click',()=>{state.showHint=!state.showHint;renderLesson();});
-  if(a.kind==='build'||a.kind==='doubleframe'){
-   document.getElementById('frame-minus').addEventListener('click',()=>{state.counter=Math.max(0,state.counter-1);state.feedback=null;renderLesson();});
-   document.getElementById('frame-plus').addEventListener('click',()=>{state.counter=Math.min(a.kind==='doubleframe'?20:10,state.counter+1);state.feedback=null;renderLesson();});
-   els.workspace.querySelectorAll('.ten-cell').forEach(cell=>cell.addEventListener('click',()=>{const idx=Number(cell.dataset.cell);state.counter=idx<state.counter?idx:idx+1;state.feedback=null;renderLesson();}));
-   document.getElementById('check-frame').addEventListener('click',()=>respond(lesson,a,String(state.counter)));
-  } else els.workspace.querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>respond(lesson,a,b.dataset.option)));
-  if(next)document.getElementById('next-session').addEventListener('click',()=>startLesson(next.lessonId));
-  if(previous)document.getElementById('previous-session').addEventListener('click',()=>startLesson(previous.lessonId));
-  if(!next)document.getElementById('all-sessions').addEventListener('click',()=>{state.lessonId=null;render();});
+  if(!lesson||!globalThis.ILA_STEPS){state.lessonId=null;renderDashboard();return;}
+  const unit=lesson.unit,s=unit.subject,sub=subjects.find(x=>x.id===s)||{icon:'⭐',name:s};
+  const inUnit=unit.lessons.map(l=>({...l,unit}));const idx=inUnit.findIndex(l=>l.lessonId===lesson.lessonId);
+  const all=lessonsOf(s),pos=all.findIndex(l=>l.lessonId===lesson.lessonId),next=all[pos+1];
+  const units=lessonUnits(state.grade,s),ui=units.findIndex(u=>u.unitId===unit.unitId);
+  const coach=globalThis.ILA_K3_COACH.forLesson(lesson);let enriched={};try{enriched=globalThis.ILA_K3_ENRICH.content(lesson)||{};}catch(e){}
+  const own=lesson.activities[0];
+  const toQ=l=>{const a=l.activities[0];if(!a||a.kind==='observation')return null;const count=a.kind==='build'||a.kind==='doubleframe';
+   return {lessonId:l.lessonId,prompt:a.prompt,passage:l.readingText?{title:l.title,text:l.readingText}:null,visual:a.visual,kind:count?'count':'choice',max:a.kind==='doubleframe'?20:10,options:count?[]:a.options.map(o=>({id:o.id,label:o.label})),answer:a.correctOptionId,hint:a.hint||l.support,why:explain(l,a)};};
+  const build=seed=>{let x=seed|0;const r=()=>{x=x+0x6D2B79F5|0;let t=Math.imul(x^x>>>15,1|x);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};
+   const near=inUnit.map((l,i)=>({l,d:Math.abs(i-idx)+r()*0.9})).filter(o=>o.l.lessonId!==lesson.lessonId).sort((a,b)=>a.d-b.d).map(o=>toQ(o.l)).filter(Boolean);
+   const me=toQ(lesson);const pool=me?[me,...near]:near.slice();const take=(from,n)=>{const out=[];for(const q of from){if(out.length>=n)break;if(!out.includes(q))out.push(q);}return out;};
+   const guided=take(pool,3),ind=take(pool.filter(q=>!guided.includes(q)),3);let rest=pool.filter(q=>!guided.includes(q)&&!ind.includes(q));
+   const mastery=take(me?[me,...rest,...near]:[...rest,...near],4);
+   const learn=[{h:lesson.title,t:lesson.intro+' Our goal: '+unit.objective,passage:lesson.readingText?{title:lesson.title,text:lesson.readingText}:null},
+    {h:'See a worked example',t:coach.model,visual:own&&own.visual}];
+   learn.push({h:'Try it hands-on',t:(enriched.learningPath&&enriched.learningPath.guided)||coach.prompt,node:slot=>{try{globalThis.ILA_K3_ENRICH.mount(lesson,slot,speak);}catch(e){}if(!slot.childNodes.length)slot.remove();}});
+   if(own&&own.kind==='observation')learn.push({h:'Share what you noticed',t:own.prompt+' Every answer is welcome.',node:slot=>{const box=document.createElement('div');box.className='izl-opts';own.options.forEach(o=>{const b=document.createElement('button');b.type='button';b.className='izl-opt';b.setAttribute('aria-pressed','false');b.innerHTML='<span class="izl-otext"></span>';b.firstChild.textContent=o.label;b.addEventListener('click',()=>{box.querySelectorAll('.izl-opt').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));recordOwn(o.id,true);});box.append(b);});slot.append(box);}});
+   return {learn,guided,ind,mastery};};
+  function recordOwn(optionId,correct){try{const nextP=core.applyResponse(state.progress,lesson.lessonId,String(optionId),correct?'practiced':'needs-support');persist(nextP);}catch(err){updateNotice('error','Could not record this practice: '+err.message);}}
+  const toTop=()=>{if(window.parent!==window&&window.parent.izK3Scroll)requestAnimationFrame(()=>window.parent.izK3Scroll(0));};
+  globalThis.ILA_STEPS.mount(els.workspace,{key:k3StepsKey(lesson.lessonId),title:lesson.title,icon:sub.icon,sub:`${grades[state.grade]} · ${sub.name} · Unit ${ui+1}, lesson ${idx+1} of ${inUnit.length}`,
+   build,speak:t=>speak(t),award:n=>{try{if(window.parent!==window&&window.parent.ilaAwardStars)window.parent.ilaAwardStars(n);}catch(e){}},
+   onAnswer:(phase,q,ok,sel)=>{if(q.lessonId===lesson.lessonId)recordOwn(sel,ok);},
+   onExit:()=>{state.lessonId=null;state.feedback=null;state.unitId=unit.unitId;render();if(window.parent!==window&&window.parent.izK3Scroll)requestAnimationFrame(()=>{const e=document.querySelector(`.unit-button[data-unit="${unit.unitId}"]`);window.parent.izK3Scroll(e?e.getBoundingClientRect().top+window.scrollY-8:0);});},
+   next:next?{title:next.title,go:()=>{startLesson(next.lessonId);toTop();}}:null,handsOn:lesson.handsOn,top:toTop});
  }
- function respond(lesson,a,optionId) {
+  function respond(lesson,a,optionId) {
   const valid=(a.kind==='build'||a.kind==='doubleframe')?Number.isInteger(Number(optionId)) && +optionId>=0 && +optionId<=(a.kind==='doubleframe'?20:10) : a.options.some(o=>o.id===optionId);
   if(!valid)return;
   const correct=a.kind==='observation'||optionId===a.correctOptionId;
@@ -1184,12 +1714,7 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
  document.body.classList.add('ila-embed');const b=window.ILA_K3_DASHBOARD_BRIDGE,v=q.get('view');
  if(b&&['MATH','ELA','STEM','GAMES','PROGRESS'].includes(v)){b.open(v);window.__ilaK3Opened=true}})();
 </script>
-<script id="ila-k3-v7138-scroll">
-/* V7.13.8 (Dad): inside the Academy, after a unit or lesson is opened, ask the Academy page to scroll to it (the frame itself never scrolls). */
-(()=>{'use strict';if(!document.body.classList.contains('ila-embed')||window.parent===window)return;
- document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('.unit-button,.session-button,#go-back,#next-session,.lesson-nav button');if(!t)return;const unit=t.classList.contains('unit-button');
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{const el=unit?document.querySelector('.unit-heading'):document.getElementById('workspace');const y=el?el.getBoundingClientRect().top+window.scrollY:0;try{window.parent.izK3Scroll?.(y)}catch(_){}}))},true)})();
-</script><script id="ila-k3-v7131-nav">
+<script id="ila-k3-v7131-nav">
 /* V7.13.1: Home, grade, stars and Back to Academy. Reads Academy stars, never writes them. No observers or timers. */
 (()=>{'use strict';
 const main=document.getElementById('main');if(!main)return;
