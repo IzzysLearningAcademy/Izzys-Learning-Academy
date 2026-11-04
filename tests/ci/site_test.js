@@ -1,5 +1,7 @@
 // Izzy's Learning Academy: browser checks for the Welcome page, the K-3 dashboards and the Grade 4-8 dashboards.
 // V7.13.2: K-3 dashboards are the Grade 5 page (academy.html?grade=K|1|2|3); no grade switching from a dashboard.
+// V7.13.13: the old home picture never flashes while a grade page loads; every grade's lessons run Grade 5's five steps
+//   (Learn, Practice together, On my own, Mastery check, Stars) and pay Academy stars like Grade 5; a K-3 unit opens a bubble of lessons.
 // V7.13.12: the touched-up K-3 banners (2400x703, own descriptions, fresh address).
 // V7.13.11: the Welcome page grade choices are the Royal Library Books.
 // V7.13.10: Grades 4, 6, 7, 8 have their own banner scenes and descriptions.
@@ -20,6 +22,18 @@ let pass=0,fail=0;const ok=(c,m)=>{if(c){pass++;console.log('PASS',m)}else{fail+
 const server=http.createServer((q,r)=>{let u=decodeURIComponent(q.url.split('?')[0].split('#')[0]);if(u.endsWith('/'))u+='index.html';const f=path.join(SITE,u);
  if(!f.startsWith(SITE)||!fs.existsSync(f)||fs.statSync(f).isDirectory()){r.writeHead(404);r.end();return}r.writeHead(200,{'content-type':TYPES[path.extname(f)]||'application/octet-stream'});fs.createReadStream(f).pipe(r)});
 const SAVE={points:300,done:{}};
+const STEPS=['Learn','Practice together','On my own','Mastery check','Stars'];
+async function playSteps(ctx,scope,answerOf,opts={}){const seen=new Set();let retry=false;
+ for(let k=0;k<60;k++){const st=await ctx.evaluate(S=>{const r=document.querySelector(S);return{pill:r.querySelector('.izl-pill')?.textContent||'',stars:!!r.querySelector('.izl-bigstars'),prompt:r.querySelector('.izl-prompt')?.textContent||'',count:!!r.querySelector('.ila-steps-counter'),steps:[...r.querySelectorAll('.izl-steps li')].map(li=>li.textContent.replace(/^[0-9✓]/,''))}},scope);
+  if(st.stars){seen.add('Stars');return{seen:[...seen],steps:st.steps,retry}}if(st.pill)seen.add(st.pill.split(' · ')[0]);
+  if(/^Learn/.test(st.pill)){await ctx.click(scope+' .izl-card-main.learn .izl-actions .izl-btn.primary');continue}
+  const a=await answerOf(st.prompt);const wrongFirst=opts.wrongFirst&&!retry&&/^Practice together/.test(st.pill)&&!st.count;
+  if(st.count){for(let c=0;c<Number(a);c++)await ctx.click(scope+' .ila-steps-counter .izl-btn >> text=Add one')}
+  else{const ids=await ctx.$$eval(scope+' .izl-opt',bs=>bs.map(b=>b.dataset.id));const id=wrongFirst?ids.find(x=>x!==String(a)):String(a);await ctx.click(`${scope} .izl-opt[data-id="${id}"]`)}
+  await ctx.click(scope+' .izl-go .izl-btn.primary:not([hidden])');
+  if(wrongFirst){retry=await ctx.evaluate(S=>!!document.querySelector(S+' .izl-feedback.retry')&&!document.querySelector(S+' .izl-hint').hidden,scope);await ctx.click(`${scope} .izl-opt[data-id="${String(a)}"]`);await ctx.click(scope+' .izl-go .izl-btn.primary:not([hidden])')}
+  await ctx.click(scope+' .izl-go .izl-btn.primary:not([hidden])')}
+ return{seen:[...seen],steps:[],retry,stuck:true}}
 (async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));const U=`http://127.0.0.1:${server.address().port}/`;const b=await chromium.launch();
  const src=fs.readFileSync(path.join(SITE,'courses/little-learners.html'),'utf8');
  ok(!/MutationObserver/.test(src)&&/id="ila-k3-v7132-embed"/.test(src),'K-3 page: no MutationObserver repair layer; it has the embed mode the Academy uses');
@@ -64,25 +78,37 @@ const SAVE={points:300,done:{}};
   for(const g of ['K','1','2','3']){const name=g==='K'?'Kindergarten':'Grade '+g;await p.goto(U+'index.html');await Promise.all([p.waitForNavigation(),p.click(`a.gradecard[href="academy.html?grade=${g}"]`)]);await p.waitForTimeout(1500);
    const c=await chrome();const file={K:'k',1:'g1',2:'g2',3:'g3'}[g];
    ok(c.view&&c.src.includes(`assets/k3/${file}-banner.webp`)&&Math.abs(c.ratio-c.nat)<0.03&&c.head.includes(name+' Dashboard'),tag+`${name}: the Grade 5 banner layout with its own whole scene (${c.ratio} vs ${c.nat})`);
-   ok(c.tiles===8&&c.stars==='300'&&c.tabs>=8&&!c.purple&&!c.frame&&!c.wide,tag+`${name}: Grade 5 header (300 stars), tab bar and 8 tiles; no purple nav box; nothing under the tiles`);
+   ok(c.tiles===8&&c.stars===String(await p.evaluate(()=>state.points))&&c.tabs>=8&&!c.purple&&!c.frame&&!c.wide,tag+`${name}: Grade 5 header (300 stars), tab bar and 8 tiles; no purple nav box; nothing under the tiles`);
    ok(!c.switcher&&!c.change&&c.logo==='index.html'&&c.back,tag+`${name}: no way to other grades on the dashboard; a Back to Academy button (next to Settings) and the logo go to the Welcome page`);
    if(g==='K'||g==='3'){
     for(const [art,what,check] of [['math','Math',v=>v.units>0],['ela','ELA',v=>v.units>0],['stem','STEM',v=>v.units>0],['achievements','My Achievements',v=>v.journey]]){
      await p.click('#ilaGxTile-'+art);const {f:ff,v}=await frameView();const tilesGone=(await chrome()).tiles===0;
-     if(art!=='achievements'){const look=await ff.evaluate(()=>{const cs=e=>e?getComputedStyle(e):null;const body=cs(document.body),u=cs(document.querySelector('.unit-button')),sp=cs(document.querySelector('.subject-page')),sb=cs(document.querySelector('.session-button'));
+     if(art!=='achievements'){await ff.click('.unit-button >> nth=0');await p.waitForTimeout(300);const look=await ff.evaluate(()=>{const cs=e=>e?getComputedStyle(e):null;const body=cs(document.body),u=cs(document.querySelector('.unit-button')),sp=cs(document.querySelector('.subject-page')),sb=cs(document.querySelector('#ila-k3-bubble .izl-lcard'));
       return{body:body.backgroundColor+' '+body.backgroundImage,unit:u?.backgroundImage||'',panel:sp?.backgroundImage||'',card:sb?.backgroundColor||''}});
-      ok(/rgba\(0, 0, 0, 0\)/.test(look.body)&&!/gradient/.test(look.body.split(' ').slice(4).join(' '))&&/radial-gradient/.test(look.unit)&&/radial-gradient/.test(look.panel)&&look.card==='rgb(255, 250, 243)',tag+`${name}: ${what} uses the Grade 5 look (no white page; unit chicklets; purple panel; cream lesson cards)`)}
+      ok(/rgba\(0, 0, 0, 0\)/.test(look.body)&&!/gradient/.test(look.body.split(' ').slice(4).join(' '))&&/radial-gradient/.test(look.unit)&&/radial-gradient/.test(look.panel)&&/rgb\(255, 2[45]\d, 2[34]\d\)/.test(look.card),tag+`${name}: ${what} uses the Grade 5 look (no white page; unit chicklets; purple panel; Grade 5 lesson cards in the unit's bubble: ${look.card})`)}
      ok(check(v)&&!v.k3chrome&&tilesGone,tag+`${name}: the ${what} tile opens ${what==='My Achievements'?'the practice journey and Family Backup note':'its own view'} under the tab bar`);
      await p.click('[data-academy-tab="home"]');await p.waitForTimeout(500);const h=await chrome();ok(h.tiles===8&&!h.frame&&h.view,tag+`${name}: the Home tab after ${what} brings back the dashboard`);}
     for(const [tab,what,check] of [['math','Math',v=>v.units>0],['creative','Discover',v=>v.units>0]]){
      await p.click(`[data-academy-tab="${tab}"]`);const {v}=await frameView();ok(check(v),tag+`${name}: the ${what} tab opens ${name}'s ${what}`);
      await p.click('[data-academy-tab="home"]');await p.waitForTimeout(400);}
-    {await p.click('#ilaGxTile-math');const {f:fk}=await frameView();await fk.evaluate(()=>document.querySelectorAll('.unit-button')[5].click());await p.waitForTimeout(1200);
-     const u=await p.evaluate(()=>{const f=document.querySelector('iframe.izk3-frame'),h=f.contentDocument.querySelector('.unit-heading');const t=f.getBoundingClientRect().top+h.getBoundingClientRect().top;return{t:Math.round(t),vh:innerHeight}});
-     ok(u.t>=0&&u.t<u.vh-80,tag+`${name}: tapping a unit chicklet brings its lessons into view (heading at ${u.t}px of ${u.vh})`);
-     await fk.evaluate(()=>document.querySelectorAll('.session-button')[2].click());await p.waitForTimeout(1200);
-     const l=await p.evaluate(()=>{const f=document.querySelector('iframe.izk3-frame');const t=Math.round(f.getBoundingClientRect().top);return{t,lesson:!!f.contentDocument.querySelector('.lesson')}});
-     ok(l.lesson&&l.t>=-5&&l.t<260,tag+`${name}: tapping a lesson opens it at the top of the screen (frame top ${l.t}px)`);await p.click('[data-academy-tab="home"]');await p.waitForTimeout(400)}
+    {await p.click('#ilaGxTile-math');const {f:fk}=await frameView();const pts0=await p.evaluate(()=>state.points);
+     await fk.click('.unit-button >> nth=5');await p.waitForTimeout(700);
+     const u=await p.evaluate(()=>{const f=document.querySelector('iframe.izk3-frame'),d=f.contentDocument,unit=d.querySelectorAll('.unit-button')[5],bub=d.getElementById('ila-k3-bubble');const t=bub?Math.round(f.getBoundingClientRect().top+bub.getBoundingClientRect().top):-1;
+      return{after:!!bub&&unit.nextElementSibling===bub,cards:bub?bub.querySelectorAll('.izl-lcard').length:0,t,vh:innerHeight,old:!!d.querySelector('.unit-heading,.session-list'),pressed:unit.getAttribute('aria-expanded')}});
+     ok(u.after&&u.cards===12&&u.t>=0&&u.t<u.vh-80&&!u.old&&u.pressed==='true',tag+`${name}: tapping a unit opens a bubble of its 12 lessons right under it, on screen (at ${u.t}px of ${u.vh}); no list further down the page`);
+     await fk.click('.unit-button >> nth=5');await p.waitForTimeout(300);ok(!(await fk.$('#ila-k3-bubble')),tag+`${name}: tapping the unit again closes its bubble`);
+     await fk.click('.unit-button >> nth=0');await p.waitForTimeout(300);await fk.click('#ila-k3-bubble .izl-lcard >> nth=0');await p.waitForTimeout(900);
+     const l=await p.evaluate(()=>{const f=document.querySelector('iframe.izk3-frame'),d=f.contentDocument;return{t:Math.round(f.getBoundingClientRect().top+d.querySelector('.izl-steps-player').getBoundingClientRect().top),vh:innerHeight,steps:[...d.querySelectorAll('.izl-steps li')].map(li=>li.textContent.replace(/^[0-9✓]/,'')).join('|'),cur:d.querySelector('.izl-steps li.cur')?.textContent||'',old:!!d.querySelector('.lesson')}});
+     ok(l.steps===STEPS.join('|')&&/Learn/.test(l.cur)&&!l.old&&l.t>=60&&l.t<Math.min(420,l.vh-300),tag+`${name}: one tap on a lesson opens it in view, just under the tab bar, in Grade 5's five steps (${l.steps}; lesson top ${l.t}px of ${l.vh})`);
+     const k3ans=pr=>fk.evaluate(P=>{const d=JSON.parse(document.getElementById('k3-data').textContent);for(const u of d.samples)for(const x of u.lessons){const a=x.activities[0];if(a.prompt===P)return a.correctOptionId}return null},pr);
+     const r=await playSteps(fk,'#workspace',k3ans,{wrongFirst:true});
+     const res=await p.evaluate(()=>{const f=document.querySelector('iframe.izk3-frame'),d=f.contentDocument;const st=JSON.parse(localStorage.getItem('ila_lesson_steps_v1')||'{}');return{stars:d.querySelectorAll('.izl-bigstars i.on').length,txt:d.querySelector('.izl-card-main.results')?.innerText||'',rec:Object.entries(st.records||{}).find(([k])=>k.startsWith('k3|')),pts:state.points}});
+     ok(r.seen.join('|')===STEPS.join('|')&&r.retry,tag+`${name}: the lesson goes Learn, Practice together (a wrong answer gets a hint and a second try), On my own, Mastery check, Stars (${r.seen.join(' → ')})`);
+     ok(res.stars===3&&/Lesson mastered/.test(res.txt)&&!/null/.test(res.txt)&&res.rec&&res.rec[1].passed===true&&res.rec[1].stars===3&&res.pts>pts0,tag+`${name}: all right in the Mastery check gives 3 lesson stars, saves the lesson as mastered and pays Academy stars like Grade 5 (${pts0} → ${res.pts})`);
+     await fk.click('.izl-card-main.results .izl-btn.ghost >> text=All lessons');await p.waitForTimeout(700);
+     const back=await fk.evaluate(()=>({bubble:!!document.getElementById('ila-k3-bubble'),first:document.querySelector('#ila-k3-bubble .izl-lcard')?.innerText||'',unit:document.querySelector('.unit-button small')?.textContent||''}));
+     ok(back.bubble&&/Mastered/.test(back.first)&&/1\/12 mastered/.test(back.unit),tag+`${name}: "All lessons" goes back to the unit's bubble, which shows the lesson as Mastered (${back.unit})`);
+     await p.click('[data-academy-tab="home"]');await p.waitForTimeout(400)}
     for(const [shared,tab,view,subj] of [['languages','ela','ELA','ela'],['rewards','math','MATH','math'],['languages','creative','STEM','stem']]){await p.click(`[data-academy-tab="${shared}"]`);await p.waitForTimeout(500);await p.click(`[data-academy-tab="${tab}"]`);await p.waitForTimeout(900);
      const x=await p.evaluate(()=>{const v=document.getElementById('ilaGradeExplorerView');const w=v?.querySelector('.izd-welcome');return{gx:!!v&&!v.hidden,src:v?.querySelector('iframe.izk3-frame')?.getAttribute('src')||'',g5:[...document.querySelectorAll('.academy-view')].some(e=>e.getClientRects().length>0),subj:w?.dataset.subject,time:w?.querySelector('.izd-welcome-time')?.textContent||''}});
      ok(x.gx&&x.src.includes('grade='+g)&&x.src.includes('view='+view)&&!x.g5,tag+`${name}: ${shared} then the ${tab==='creative'?'Discover':tab.toUpperCase()} tab opens ${name}'s own ${view}, not Grade 5's`);
@@ -90,8 +116,8 @@ const SAVE={points:300,done:{}};
      await p.click('[data-academy-tab="home"]');await p.waitForTimeout(400)}
     // inside the frame: leaving the subject returns to the dashboard; a lesson saves to the K-3 key
     await p.click('#ilaGxTile-math');let {f}=await frameView();await f.click('#subject-back');await p.waitForTimeout(700);ok((await chrome()).tiles===8,tag+`${name}: "All subjects" inside Math returns to the ${name} dashboard`);
-    await p.click('#ilaGxTile-math');({f}=await frameView());await f.locator('.unit-button').first().click();await f.locator('.session-button').first().click();await p.waitForTimeout(200);
-    await f.locator('#workspace .choice[data-option]').first().click();await p.waitForTimeout(300);
+    await p.click('#ilaGxTile-math');({f}=await frameView());await f.locator('.unit-button').nth(1).click();await f.locator('#ila-k3-bubble .izl-lcard').first().click();await p.waitForTimeout(300);
+    for(let k=0;k<4&&await f.$('.izl-card-main.learn');k++){await f.click('.izl-card-main.learn .izl-actions .izl-btn.primary');}await f.locator('#workspace .izl-opt').first().click();await f.click('#workspace .izl-go .izl-btn.primary:not([hidden])');await p.waitForTimeout(300);
     const keys=await p.evaluate(()=>Object.keys(localStorage));ok(keys.some(x=>x.startsWith('ila_k3_sandbox_v1:'))&&keys.every(x=>/^(izzy[-_]|ila_)/.test(x)),tag+`${name}: a lesson saves to the existing K-3 key (every key is one Family Backup copies)`);
     await p.click('[data-academy-tab="home"]');await p.waitForTimeout(400);}
   }
@@ -112,12 +138,14 @@ const SAVE={points:300,done:{}};
    await p.click('[data-academy-tab="math"]');await p.waitForTimeout(600);
    {const x=await p.evaluate(()=>{const v=document.getElementById('ilaGradeExplorerView'),fr=v.querySelector('.ila-gx-frame');return{chips:[...v.querySelectorAll('.izd-chip')].map(c=>c.dataset.izd).join(),cards:v.querySelectorAll('.izd-lessons .izl-lcard').length,frameBg:getComputedStyle(fr).backgroundImage+' '+getComputedStyle(fr).backgroundColor,old:!!v.querySelector('[class*="-game-link"],[class*="ila-gx-g4-"],[class*="ila-gx-g6-"],[class*="ila-gx-g7-"],[class*="ila-gx-g8-"]'),icon:!!v.querySelector('.izd-chip use[href="#izi-book"]')&&!!document.getElementById('izi-book')}});
     ok(x.chips==='lesson,course,practice,puzzles'&&x.cards===4&&x.icon&&/^none rgba\(0, 0, 0, 0\)/.test(x.frameBg)&&!x.old,tag+`Grade ${g}: Math opens like Grade 5: four Math chicklets (${x.chips}), no STEM or Game Center there and the lesson panel with 4 lesson cards; no old grade page or game links`)}
-   await p.locator('#ilaGradeExplorerView .izl-lcard').first().click();await p.waitForTimeout(300);
-   for(let q=0;q<4;q++){await p.locator('#ilaGradeExplorerView .izl-opt').first().click();await p.locator('#ilaGradeExplorerView .izl-btn.primary',{hasText:'Check my answer'}).click();await p.waitForTimeout(80);
-    if(q===0)ok(await p.locator('#ilaGradeExplorerView .izd-feedback').count()===1&&await p.locator('#ilaGradeExplorerView .izl-card-main').count()===1,tag+`Grade ${g}: a lesson plays in the Grade 5 lesson card and explains the answer`);
-    await p.locator('#ilaGradeExplorerView .izl-btn.primary').last().click();await p.waitForTimeout(80)}
-   {const d=await p.evaluate(G=>{const s=JSON.parse(localStorage.getItem('ila_grade_explorer_demo_v1')||'{}');const recs=Object.values(s.grades?.[G]||{});return{done:recs.filter(r=>r.completed).length,txt:document.querySelector('#ilaGradeExplorerView .izl-card-main')?.innerText||''}},g);
-    ok(d.done>=1&&/Lesson complete/.test(d.txt),tag+`Grade ${g}: finishing the lesson saves it as completed, as before (${d.done} completed)`)}
+   {const pts0=await p.evaluate(()=>state.points);await p.locator('#ilaGradeExplorerView .izl-lcard').first().click();await p.waitForTimeout(300);
+    const steps=await p.evaluate(()=>[...document.querySelectorAll('#ilaGradeExplorerView .izl-steps li')].map(li=>li.textContent.replace(/^[0-9✓]/,'')).join('|'));
+    ok(steps===STEPS.join('|'),tag+`Grade ${g}: a lesson opens in Grade 5's five steps (${steps})`);
+    const gxans=pr=>p.evaluate(([P,G])=>{const t=document.getElementById('ila-gx-script').textContent;const i0=t.indexOf('const DATA=')+11;let dep=0,inS=false,j=i0;for(;j<t.length;j++){const ch=t[j];if(inS){if(ch==='\\')j++;else if(ch==='"')inS=false}else if(ch==='"')inS=true;else if(ch==='{')dep++;else if(ch==='}'){dep--;if(!dep)break}}const D=JSON.parse(t.slice(i0,j+1));const title=document.getElementById('ilaGxLessonTitle')?.textContent;for(const l of D.lessons)if(String(l.grade)===G&&l.title===title)for(const q of l.questions)if(q.prompt===P)return q.answer;return null},[pr,g]);
+    const r=await playSteps(p,'#ilaGradeExplorerView',gxans,{wrongFirst:true});
+    const d=await p.evaluate(G=>{const s=JSON.parse(localStorage.getItem('ila_grade_explorer_demo_v1')||'{}');const recs=Object.values(s.grades?.[G]||{});const st=JSON.parse(localStorage.getItem('ila_lesson_steps_v1')||'{}');return{done:recs.filter(r=>r.completed&&r.stars===3).length,rec:Object.entries(st.records||{}).find(([k])=>k.startsWith('gx|G'+G)),txt:document.querySelector('#ilaGradeExplorerView .izl-card-main.results')?.innerText||'',pts:state.points}},g);
+    ok(r.seen.join('|')===STEPS.join('|')&&r.retry,tag+`Grade ${g}: Learn, Practice together (hint and a second try), On my own, Mastery check, Stars (${r.seen.join(' → ')})`);
+    ok(d.done>=1&&d.rec&&d.rec[1].passed&&/Lesson mastered/.test(d.txt)&&!/null/.test(d.txt)&&d.pts>pts0,tag+`Grade ${g}: the lesson is mastered with 3 stars, saved as completed as before, and pays Academy stars (${pts0} → ${d.pts})`)}
    await p.click('[data-academy-tab="math"]');await p.waitForTimeout(400);await p.click('.izd-chip[data-izd="practice"]');await p.waitForTimeout(400);
    ok(await p.evaluate(()=>window.ilaGamePacks.current()?.id==='dash'&&!!document.querySelector('#ilaGamePackHub .eg-stage:not([hidden])')),tag+`Grade ${g}: Math Practice opens the grade's math rocket`);
    await p.click('[data-academy-tab="ela"]');await p.waitForTimeout(400);ok(await p.evaluate(()=>[...document.querySelectorAll('#ilaGradeExplorerView .izd-chip')].map(c=>c.dataset.izd).join())==='lesson,course,practice,puzzles',tag+`Grade ${g}: ELA has only ELA chicklets`);
@@ -132,9 +160,12 @@ const SAVE={points:300,done:{}};
   if(vp.width===390){const px=await p.evaluate(async()=>{const out={};for(const f of ['crown-logo.png','tip-bulb.png','footer-crown.png']){const i=new Image();i.src='assets/dash/'+f;await i.decode();const c=document.createElement('canvas');c.width=i.naturalWidth;c.height=i.naturalHeight;const x=c.getContext('2d');x.drawImage(i,0,0);
     const d=x.getImageData(0,0,c.width,c.height).data;let vis=0,faint=0;for(let k=3;k<d.length;k+=4){if(d[k]>0){vis++;if(d[k]<80)faint++}}out[f]=+(faint/vis).toFixed(2)}return out}); // the old pictures were about half faint grey box (0.47-0.58)
    ok(Object.values(px).every(v=>v<0.35),tag+'crown, bulb and footer-crown pictures have no grey box or file name around them '+JSON.stringify(px))}
+  if(vp.width===820){const c2=await b.newContext({viewport:vp,javaScriptEnabled:false});const q=await c2.newPage();
+   for(const g of ['4','K']){await q.goto(U+'academy.html?grade='+g);const v=await q.evaluate(()=>[...document.querySelectorAll('img')].filter(i=>(i.getAttribute('src')||'').startsWith('data:image/webp')&&i.getClientRects().length>0&&i.getBoundingClientRect().height>0).length+[...document.querySelectorAll('#home>.grid')].filter(e=>e.getClientRects().length>0).length);
+    ok(v===0,tag+`Grade ${g}: while the page is still loading, the old home picture and tiles are hidden (they used to flash for 1-2 s)`)}await c2.close()}
   // Grade 5 still opens its own home and keeps the stars
   await p.goto(U+'academy.html');await p.waitForTimeout(1500);
-  ok(await p.evaluate(()=>document.getElementById('points')?.textContent==='300'&&!!document.querySelector('#academyDashboard .izd-banner')),tag+'Grade 5: its own dashboard, with the same 300 stars');
+  ok(await p.evaluate(()=>{const n=JSON.parse(localStorage.getItem('izzy-academy-v1')).points;return document.getElementById('points')?.textContent===String(n)&&n>=300&&!!document.querySelector('#academyDashboard .izd-banner')}),tag+'Grade 5: its own dashboard, showing the saved Academy stars (300 plus the stars the lessons paid)');
   {const V=(await (await fetch(U+'index.html')).text()).match(/Academy Version (\d+\.\d+\.\d+)/)[1];
    for(const g of ['','?grade=K','?grade=3','?grade=4','?grade=8']){await p.goto(U+'academy.html'+g);await p.waitForTimeout(1300);const h=await p.evaluate(()=>({hdr:[...document.querySelectorAll('header p')].map(x=>x.textContent).join(' '),title:document.title}));
     ok(h.hdr.includes('Academy Version '+V+' ')&&h.title.includes('V'+V+' ')&&!/Version \d/.test(h.hdr.replace('Academy Version '+V,'')),tag+`academy.html${g}: the header and tab title show the same version as the Welcome page (${V})`)}
@@ -142,7 +173,7 @@ const SAVE={points:300,done:{}};
   {const c=await chrome();ok(!c.change&&c.logo==='index.html'&&c.back,tag+'Grade 5: no Change grade link; Back to Academy and the logo go to the Welcome page')}
   {const v=await p.evaluate(async()=>{const i=document.querySelector('#izdLevel img');if(!i.complete)await new Promise(r=>i.onload=r);const r=i.getBoundingClientRect();return{src:i.getAttribute('src'),nw:i.naturalWidth,nh:i.naturalHeight,w:Math.round(r.width),round:getComputedStyle(i).borderRadius}});
    ok(v.src==='assets/dash/izzy-avatar-v2.jpg'&&v.nw===240&&v.nh===240&&v.w===40&&v.round==='50%',tag+`Level chip: the wider head-and-shoulders Izzy picture (${v.nw}x${v.nh}) shows in the 40px circle`)}
-  ok(JSON.parse(await p.evaluate(()=>localStorage.getItem('izzy-academy-v1'))).points===300,tag+'Academy stars unchanged after all the flows');
+  {const n=JSON.parse(await p.evaluate(()=>localStorage.getItem('izzy-academy-v1'))).points;ok(Number.isInteger(n)&&n>300,tag+`Academy stars kept after all the flows and only grew from the lessons played (300 → ${n})`)}
   ok(errs.length===0,tag+'no page errors '+errs.slice(0,3).join(' | '));ok(missing.length===0,tag+'no missing files '+missing.slice(0,5).join(' '));
   await ctx.close()}
 
