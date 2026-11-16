@@ -1,5 +1,7 @@
 // Izzy's Learning Academy: browser checks for the Welcome page, the K-3 dashboards and the Grade 4-8 dashboards.
 // V7.13.2: K-3 dashboards are the Grade 5 page (academy.html?grade=K|1|2|3); no grade switching from a dashboard.
+// V7.13.14: Language Lessons, the expanded Languages section: five spoken languages, three levels that grow with the grade,
+//   33 lessons each in the five steps, tap-to-hear words, flashcards; the older language activities stay one tap away, unchanged.
 // V7.13.13: the old home picture never flashes while a grade page loads; every grade's lessons run Grade 5's five steps
 //   (Learn, Practice together, On my own, Mastery check, Stars) and pay Academy stars like Grade 5; a K-3 unit opens a bubble of lessons.
 // V7.13.12: the touched-up K-3 banners (2400x703, own descriptions, fresh address).
@@ -275,5 +277,129 @@ async function playSteps(ctx,scope,answerOf,opts={}){const seen=new Set();let re
    await p.click('#ilaGamePackHub [data-id="sudoku"]');await solveSudoku();
    ok(await p.evaluate(()=>localStorage.getItem('ila_grade_game_center_v1'))==='{damaged'&&await p.evaluate(()=>JSON.parse(localStorage.getItem('izzy-academy-v1')).points)===before,tag+'the damaged save is not overwritten and no stars are paid');
    ok(errs.length===0,tag+'Game Centers: no page errors '+errs.slice(0,3).join(' | '));ok(missing.length===0,tag+'Game Centers: no missing files '+missing.slice(0,5).join(' '));
+   await ctx.close()}}
+ // ---------- V7.13.14: Language Lessons (the expanded Languages section) ----------
+ {const html=fs.readFileSync(path.join(SITE,'academy.html'),'utf8');const cut=id=>{const i=html.indexOf('<script id="'+id+'">');return i<0?'':html.slice(i,html.indexOf('</script>',i))};
+  const ctl=cut('izLanguageReviewEngine'),les=cut('ila-lang-lessons');
+  ok(ctl&&les&&cut('ila-lang-data')&&!/MutationObserver|setInterval/.test(ctl+les),'Languages: one controller and the new lessons, with no observer and no timer loop');
+  const k3p=fs.readFileSync(path.join(SITE,'courses/little-learners.html'),'utf8').split('<script id="ila-k3-steps-player">')[1].split('</script>')[0].trim();
+  ok(k3p.length>5000&&cut('ila-steps-player').split('>').slice(1).join('>').startsWith(k3p),'the shared lesson player is the same in the Academy page and the K-3 page');
+  const MOCK=()=>{window.__spoken=[];const V=[{name:'Paulina',lang:'es-MX',localService:true},{name:'Thomas',lang:'fr-FR'},{name:'Anna',lang:'de-DE'},{name:'Kyoko',lang:'ja-JP'},{name:'Samantha',lang:'en-US'}];
+   const synth={speaking:false,getVoices:()=>V,cancel(){},speak(u){window.__spoken.push({text:u.text,lang:u.lang,voice:u.voice&&u.voice.name})},addEventListener(){}};
+   Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});window.SpeechSynthesisUtterance=function(t){this.text=t;this.lang='';this.rate=1}};
+  for(const vp of [{width:390,height:844},{width:810,height:1080}]){const tag=`Languages ${vp.width}px: `;
+   const ctx=await b.newContext({viewport:vp,hasTouch:true,deviceScaleFactor:1});await ctx.addInitScript(MOCK);const p=await ctx.newPage();const errs=[],missing=[];
+   p.on('pageerror',e=>errs.push(e.message));p.on('console',m=>{if(m.type()==='error'&&!/attribute d: Expected number/.test(m.text()))errs.push(m.text())});p.on('response',r=>{if(r.status()>=400)missing.push(r.url().split('/').pop())});
+   const spoken=()=>p.evaluate(()=>{const x=window.__spoken.slice();window.__spoken=[];return x});
+   const keys=()=>p.evaluate(()=>({v2:localStorage.getItem('ila_languages_v2'),steps:localStorage.getItem('ila_lesson_steps_v1'),rw:localStorage.getItem('izzy_languages_realworld_v1'),old:localStorage.getItem('izzy-v63-language-progress'),pts:JSON.parse(localStorage.getItem('izzy-academy-v1')||'{}').points}));
+   const openLang=async g=>{await p.goto(U+'academy.html'+(g?'?grade='+g:''));await p.waitForTimeout(1300);await p.click('[data-academy-tab="languages"]');await p.waitForTimeout(500)};
+   const L='#ilaLangLessons';const shown=s=>p.evaluate(s=>{const e=document.querySelector(s);return !!e&&e.getClientRects().length>0},s);
+   const OLDLANG=JSON.stringify({es:{completed:{'0-0':true}}});
+   await p.goto(U+'academy.html');await p.evaluate(([s,o])=>{localStorage.clear();localStorage.setItem('izzy-academy-v1',JSON.stringify(s));localStorage.setItem('izzy-v63-language-progress',o)},[SAVE,OLDLANG]);
+   // content
+   await openLang('4');
+   const c=await p.evaluate(()=>{const D=window.ILA_LANG_DATA;let rows=0,bad=0,few=0;const ids=new Set();for(const lv of D.levels)for(const u of lv.units)for(const l of u.lessons){ids.add(l.id);if(l.items.length<Math.max(lv.mastery,lv.choices))few++;for(const it of l.items){rows++;if(it.length!==9||it.slice(1).some(x=>typeof x!=='string'||!x.trim()))bad++}}
+    const units=D.levels.flatMap(v=>v.units.map(u=>u.id));const zh=D.levels[0].units[0].lessons[0].items;
+    return{notes:D.langs.every(l=>units.every(u=>typeof D.notes[l.code][u]==='string'&&D.notes[l.code][u].length>20)),zhYes:zh[4][7]+'|'+zh[5][7]+'|'+D.en.zh.l1u1a[4]+'|'+D.en.zh.l1u1a[5],esOrange:D.levels[0].units[1].lessons[2].items.find(it=>it[1]==='orange')[2],counts:window.ILA_LANG.counts,rows,bad,few,ids:ids.size,langs:D.langs.map(l=>l.code).join(),asl:/asl|sign language/i.test(JSON.stringify(D))}});
+   ok(c.langs==='es,fr,de,ja,zh'&&!c.asl&&c.counts.levels===3&&c.counts.lessons===33&&c.ids===33&&c.rows>=190&&c.bad===0&&c.few===0,tag+`five spoken languages (no ASL), 3 levels, 33 lessons and ${c.rows} words and phrases in each language; every row is complete`);
+   ok(c.notes&&c.zhYes==='是|不是|yes (it is)|no (it is not)'&&c.esOrange==='anaranjado',tag+'a “Did you know?” note for every unit in every language; the handoff-note word fixes are in (Mandarin yes/no, Spanish orange the colour)');
+   // opening the tab
+   let k=await keys();ok(k.v2===null&&k.steps===null&&k.rw===null&&k.old===OLDLANG&&k.pts===300,tag+'opening Languages writes nothing and changes no save or star');
+   const open=await p.evaluate(()=>({tiles:[...document.querySelectorAll('#academyView-languages>.iz69-chooser>.iz69-choice')].map(b=>b.querySelector('strong').textContent+'|'+b.getAttribute('aria-pressed')),over:document.documentElement.scrollWidth-innerWidth,
+    langs:[...document.querySelectorAll('#ilaLangLessons .ilang-lang')].map(b=>{const r=b.getBoundingClientRect();return r.left>=0&&r.right<=innerWidth&&r.width>=44&&r.height>=44}),
+    level:document.querySelector('#ilaLangLessons .ilang-level[aria-pressed=true]')?.dataset.level,tag:document.querySelector('#ilaLangLessons .ilang-level[aria-pressed=true] .ilang-tag')?.textContent||'',units:document.querySelectorAll('#ilaLangLessons .ilang-unit').length,note:document.querySelector('#ilaLangLessons .ilang-note')?.textContent||''}));
+   ok(open.tiles.join(';')==='📘 Language Lessons|true;🌍 Real-World Missions|false;📚 Earlier Language Lessons|false'&&await shown(L)&&!(await shown('#iz67lab'))&&!(await shown('#izzyLanguages')),tag+'three activities; Language Lessons opens first');
+   ok(open.over<=0&&open.langs.length===5&&open.langs.every(Boolean),tag+'all five languages are on screen at once, each big enough to tap; nothing runs off the side');
+   ok(open.level==='2'&&/Your grade/.test(open.tag)&&open.units===3,tag+'Grade 4 opens on Level 2 (Grades 3-5), marked as the grade’s level, with its units');
+   ok(/native speaker or an educator has not\s+reviewed/.test(open.note),tag+'the page says plainly that the lessons are not yet reviewed');
+   const fits=await p.evaluate(()=>[...document.querySelectorAll('#academyView-languages>.iz69-chooser>.iz69-choice strong, #ilaLangLessons .ilang-lang b, #ilaLangLessons .ilang-level b, #ilaLangLessons .ilang-unit b')].filter(e=>e.scrollWidth>e.clientWidth+1).map(e=>e.textContent));
+   ok(fits.length===0,tag+'no chicklet, language, level or unit name is cut off '+fits.join(' | '));
+   // the level follows the grade
+   const lv={};for(const g of ['K','2','3','','6','8']){await openLang(g);lv[g||'5']=await p.evaluate(()=>window.ILA_LANG.state().level)}
+   ok(JSON.stringify(lv)===JSON.stringify({K:1,'2':1,'3':2,'5':2,'6':3,'8':3}),tag+'the level grows with the grade: K-2 Level 1, 3-5 Level 2, 6-8 Level 3 '+JSON.stringify(lv));
+   // pick a language: the greeting changes, is spoken, and the choice is remembered
+   await openLang('4');await spoken();await p.tap(L+' .ilang-lang[data-lang="fr"]');await p.waitForTimeout(150);let sp=await spoken();
+   ok(await p.textContent(L+' .ilang-hello h2')==='Bonjour !'&&sp.length===1&&sp[0].lang==='fr-FR'&&sp[0].voice==='Thomas',tag+'picking French shows “Bonjour !” and says it with a French voice');
+   k=await keys();ok(JSON.parse(k.v2).lang==='fr'&&k.steps===null,tag+'the choice is saved in the new key ila_languages_v2');
+   await p.tap(L+' .ilang-lang[data-lang="zh"]');await p.waitForTimeout(150);ok(/No Mandarin voice is installed/.test(await p.textContent(L+' .ilang-status'))&&await shown(L+' .ilang-status'),tag+'a language with no voice on the device says so plainly');
+   await openLang('4');ok(await p.evaluate(()=>window.ILA_LANG.state().lang)==='zh',tag+'after a reload the language is still the one picked');await p.tap(L+' .ilang-lang[data-lang="fr"]');
+   // a unit opens a bubble of lessons right under it
+   await p.tap(L+' .ilang-unit >> nth=1');await p.waitForTimeout(250);
+   const bub=await p.evaluate(()=>{const u=document.querySelectorAll('#ilaLangLessons .ilang-unit')[1],bb=document.getElementById('ilangBubble');const nav=document.getElementById('academyNav').getBoundingClientRect();const ur=u.getBoundingClientRect(),br=bb.getBoundingClientRect();
+    return{under:br.top>=ur.bottom-6&&br.top-ur.bottom<40,inView:ur.top>=nav.bottom-2&&br.top<innerHeight,know:bb.querySelector('.ilang-know p')?.textContent||'',cards:bb.querySelectorAll('.izl-lcard').length,start:bb.querySelector('[data-start]')?.textContent,flash:!!bb.querySelector('#ilangCardsOpen'),exp:u.getAttribute('aria-expanded')}});
+   ok(bub.under&&bub.inView&&bub.cards===4&&/Start lesson/.test(bub.start)&&bub.flash&&bub.exp==='true',tag+'tapping a unit opens its lessons in a bubble right under it, on screen '+JSON.stringify(bub));
+   await spoken();await p.tap('#ilangBubble .ilang-know .izl-say');await p.waitForTimeout(60);sp=await spoken();
+   ok(/^🌎 Did you know\? .{20,}/.test(bub.know)&&sp.length===1&&sp[0].lang==='en-US'&&bub.know.endsWith(sp[0].text),tag+'the bubble has a “Did you know?” note that can be read aloud');
+   // a lesson runs the five steps
+   const before=(await keys()).pts;await p.tap('#ilangBubble .izl-lcard >> nth=0');await p.waitForTimeout(300);
+   const lessonId=await p.evaluate(()=>window.ILA_LANG.state().lesson);
+   const top=await p.evaluate(()=>{const t=document.getElementById('ilangLessonTitle'),nav=document.getElementById('academyNav').getBoundingClientRect(),r=t.getBoundingClientRect();return r.top>=nav.bottom-2&&r.bottom<innerHeight*0.6});
+   ok(top&&await p.evaluate(()=>window.ILA_LANG.state().mode)==='lesson',tag+'tapping a lesson opens it straight away, with its title on screen');
+   await spoken();await p.tap(L+' .ilang-word >> nth=0');await p.waitForTimeout(80);sp=await spoken();
+   const w0=await p.evaluate(()=>{const b=document.querySelector('#ilaLangLessons .ilang-word');return{t:b.querySelector('b').textContent,heard:b.classList.contains('heard'),count:document.querySelector('#ilaLangLessons .ilang-heard').textContent}});
+   ok(sp.length===1&&sp[0].text===w0.t&&sp[0].lang==='fr-FR'&&w0.heard&&/1 of/.test(w0.count),tag+'Learn: tapping a word card says the word in French and marks it heard');
+   const answerOf=()=>p.evaluate(()=>{const rv=document.querySelector('#ilaLangLessons .ila-steps-reveal');if(rv)rv.click();const t=document.querySelector('#ilaLangLessons .ila-steps-card-txt b').textContent,D=window.ILA_LANG_DATA,st=window.ILA_LANG.state(),col=D.langs.find(l=>l.code===st.lang).col;
+    for(const lv of D.levels)for(const u of lv.units)for(const l of u.lessons)if(l.id===st.lesson){const i=l.items.findIndex(it=>it[col]===t||it[1]===t);return String(i)}return null});
+   const run=await playSteps(p,L,answerOf,{wrongFirst:true});
+   ok(!run.stuck&&STEPS.every(s=>run.seen.includes(s))&&run.steps.join('|')===STEPS.join('|'),tag+'a lesson runs the five steps: '+run.seen.join(' → '));
+   ok(run.retry,tag+'Practice together: a wrong answer gives a hint and a second try');
+   k=await keys();const rec=JSON.parse(k.steps).records['lang|fr|'+lessonId];
+   ok(rec&&rec.stars===3&&rec.passed===true&&k.pts>before&&k.rw===null&&k.old===OLDLANG,tag+`Stars: 3 lesson stars saved under lang|fr|${lessonId}; Academy stars went from ${before} to ${k.pts}; older language saves untouched`);
+   ok(/Lesson mastered/.test(await p.textContent(L+' .izl-card-main.results'))&&await p.locator(L+' .izl-card-main.results .izl-btn.primary').count()===1,tag+'the Stars step shows the result and offers the next lesson');
+   await p.click(L+' .izl-card-main.results .izl-btn.ghost >> text=All lessons');await p.waitForTimeout(300);
+   const after=await p.evaluate(()=>({tag:document.querySelector('#ilangBubble .izl-lcard .izl-tag')?.textContent,on:document.querySelector('#ilangBubble .izl-lcard').querySelectorAll('.izl-stars .on').length,head:document.querySelector('#ilaLangLessons .ilang-progress').textContent,unit:document.querySelectorAll('#ilaLangLessons .ilang-unit')[1].querySelector('small').textContent}));
+   ok(after.tag==='Mastered'&&after.on===3&&/1 of 33 French lessons mastered/.test(after.head)&&/1 of 4 mastered/.test(after.unit),tag+'back on the list the lesson shows Mastered with 3 stars, and the totals count it');
+   // sound in questions; leaving and coming back never resets a lesson
+   await p.tap('#ilangBubble .izl-lcard >> nth=1');await p.waitForTimeout(250);for(let i=0;i<3;i++)await p.click(L+' .izl-card-main.learn .izl-actions .izl-btn.primary');await p.waitForTimeout(150);sp=await spoken();
+   const q1=await p.evaluate(()=>({card:document.querySelector('#ilaLangLessons .ila-steps-card-txt b').textContent,pill:document.querySelector('#ilaLangLessons .izl-pill').textContent}));
+   ok(/^Practice together · 1/.test(q1.pill)&&sp.some(x=>x.text===q1.card&&x.lang==='fr-FR'),tag+'Practice: the word is said aloud when its question appears');
+   await p.tap(L+' .ila-steps-hear');await p.waitForTimeout(60);sp=await spoken();ok(sp.length===1&&sp[0].text===q1.card&&sp[0].lang==='fr-FR',tag+'“Hear it” says the word again');
+   await p.tap(L+' .izl-qhead .izl-say');await p.waitForTimeout(60);sp=await spoken();const shownOpts=await p.$$eval(L+' .izl-opt .izl-otext',es=>es.map(e=>[...e.childNodes].filter(n=>n.nodeType===3).map(n=>n.textContent).join('')));
+   ok(sp.length===3&&sp[0].lang==='en-US'&&sp[1].lang==='fr-FR'&&sp[2].lang==='en-US'&&sp[2].text===shownOpts.map(t=>t.replace(/[.?!…\s]+$/,'')).join('. '),tag+'Read aloud: the question in English, the word in French, the answers in the order shown');
+   await p.tap('[data-academy-tab="rewards"]');await p.waitForTimeout(400);await p.tap('[data-academy-tab="languages"]');await p.waitForTimeout(400);
+   const back=await p.evaluate(()=>({card:document.querySelector('#ilaLangLessons .ila-steps-card-txt b')?.textContent,pill:document.querySelector('#ilaLangLessons .izl-pill')?.textContent,pressed:document.querySelector('#academyView-languages>.iz69-chooser>.iz69-choice[aria-pressed=true] strong').textContent}));
+   ok(back.card===q1.card&&back.pill===q1.pill&&/Language Lessons/.test(back.pressed),tag+'leaving for another tab and coming back keeps the lesson on the same question');
+   await openLang('4');await p.tap(L+' .ilang-unit >> nth=1');await p.waitForTimeout(250);
+   const cont=await p.evaluate(()=>({tag:document.querySelectorAll('#ilangBubble .izl-lcard')[1].querySelector('.izl-tag').textContent,start:document.querySelector('#ilangBubble [data-start]').textContent}));
+   ok(cont.tag==='In progress'&&/Continue/.test(cont.start),tag+'after a reload the unfinished lesson shows In progress and offers Continue');
+   await p.tap('#ilangBubble [data-start]');await p.waitForTimeout(250);ok((await p.evaluate(()=>document.querySelector('#ilaLangLessons .ila-steps-card-txt b')?.textContent))===q1.card,tag+'Continue reopens it on the same question');
+   // On my own: tapping an answer says it; the sound switch turns the automatic sound off (buttons still speak)
+   for(let i=0;i<30&&!/^On my own/.test(await p.textContent(L+' .izl-pill'));i++){const a=await answerOf();await p.click(`${L} .izl-opt[data-id="${a}"]`);await p.click(L+' .izl-go .izl-btn.primary:not([hidden])');await p.click(L+' .izl-go .izl-btn.primary:not([hidden])')}
+   await spoken();const o1=await p.evaluate(()=>{const e=document.querySelector('#ilaLangLessons .izl-opt .izl-otext [lang]');return{t:e.textContent,lang:e.getAttribute('lang')}});await p.tap(L+' .izl-opt >> nth=0');await p.waitForTimeout(60);sp=await spoken();
+   ok(o1.lang==='fr-FR'&&sp.length===1&&sp[0].text===o1.t&&sp[0].lang==='fr-FR',tag+'On my own: tapping a French answer says it aloud');
+   await p.click(L+' .izl-top .izl-btn >> text=All lessons');await p.waitForTimeout(250);await p.tap(L+' .ilang-sound');await p.waitForTimeout(150);
+   ok(await p.getAttribute(L+' .ilang-sound','aria-pressed')==='false'&&JSON.parse((await keys()).v2).sound===false,tag+'the sound switch turns off and is remembered');
+   await p.tap('#ilangBubble [data-start]');await p.waitForTimeout(250);await spoken();await p.tap(L+' .izl-opt >> nth=1');await p.waitForTimeout(60);sp=await spoken();const quiet=sp.length===0;
+   await p.tap(L+' .izl-qhead .izl-say');await p.waitForTimeout(60);sp=await spoken();ok(quiet&&sp.length>=2,tag+'with sound off nothing plays by itself, and the 🔊 buttons still speak');
+   await p.click(L+' .izl-top .izl-btn >> text=All lessons');await p.waitForTimeout(250);await p.tap(L+' .ilang-sound');
+   // listening questions: the word is hidden and spoken; it can be shown on a device with no voice
+   await p.tap('#ilangBubble [data-start]');await p.waitForTimeout(250);{const a=await answerOf();await p.click(`${L} .izl-opt[data-id="${a}"]`);await p.click(L+' .izl-go .izl-btn.primary:not([hidden])');await p.click(L+' .izl-go .izl-btn.primary:not([hidden])')}await p.waitForTimeout(150);sp=await spoken();
+   const lq=await p.evaluate(()=>{const c=document.querySelector('#ilaLangLessons .ila-steps-card');return{listen:c.classList.contains('listen'),title:c.querySelector('b').textContent,prompt:document.querySelector('#ilaLangLessons .izl-prompt').textContent,reveal:!!c.querySelector('.ila-steps-reveal'),pill:document.querySelector('#ilaLangLessons .izl-pill').textContent}});
+   ok(/^On my own · 2/.test(lq.pill)&&lq.listen&&lq.title==='Listen'&&/^Listen/.test(lq.prompt)&&lq.reveal&&sp.length>0&&sp[sp.length-1].lang==='fr-FR',tag+'On my own: a listening question hides the word and says it aloud');
+   await p.tap(L+' .ila-steps-reveal');await p.waitForTimeout(60);ok(await p.textContent(L+' .ila-steps-card-txt b')===sp[sp.length-1].text&&!(await p.$(L+' .ila-steps-reveal')),tag+'“Show the word” shows the word that was spoken (for a device with no voice)');
+   await p.click(L+' .izl-top .izl-btn >> text=All lessons');await p.waitForTimeout(250);
+   // flashcards
+   await p.tap('#ilangCardsOpen');await p.waitForTimeout(250);const f0=await p.evaluate(()=>({t:document.querySelector('#ilangCard b').textContent,sub:document.querySelector('#ilaLangLessons .ilang-deck .izl-title small').textContent,top:document.querySelector('#ilangCard').getBoundingClientRect().top<innerHeight*0.7}));
+   await p.tap('#ilangCard');await p.waitForTimeout(100);const f1=await p.evaluate(()=>({t:document.querySelector('#ilangCard b').textContent,flipped:document.querySelector('#ilangCard').classList.contains('flipped')}));
+   await p.click(L+' .ilang-card-actions .izl-btn.primary');await p.waitForTimeout(100);const f2=await p.evaluate(()=>document.querySelector('#ilaLangLessons .ilang-deck .izl-title small').textContent);
+   ok(/Card 1 of \d+/.test(f0.sub)&&f0.top&&f1.flipped&&f1.t!==f0.t&&/Card 2 of/.test(f2),tag+`flashcards: a card flips from French (${f0.t}) to English (${f1.t}) and Next moves on`);
+   await p.click(L+' .ilang-deck .izl-top .izl-btn >> text=All lessons');await p.waitForTimeout(200);
+   // the older activities are one tap away and unchanged
+   await p.tap('#academyView-languages>.iz69-chooser>.iz69-choice >> nth=1');await p.waitForTimeout(300);
+   ok(await shown('#iz67lab')&&!(await shown(L))&&await p.locator('#iz67lab .izlr-langs button').count()===6&&await p.locator('#iz67lab .izlr-scenes button').count()===5,tag+'Real-World Missions opens as before (its six choices and five scenes)');
+   await p.tap('[data-academy-tab="rewards"]');await p.waitForTimeout(300);await p.tap('[data-academy-tab="languages"]');await p.waitForTimeout(300);ok(await shown('#iz67lab')&&!(await shown(L)),tag+'coming back to Languages keeps the activity that was open');
+   await p.tap('#academyView-languages>.iz69-chooser>.iz69-choice >> nth=2');await p.waitForTimeout(300);ok(await shown('#izzyLanguages')&&!(await shown('#iz67lab'))&&!(await shown(L)),tag+'Earlier Language Lessons opens as before');
+   await p.tap('#academyView-languages>.iz69-chooser>.iz69-choice >> nth=0');await p.waitForTimeout(300);ok(await shown(L)&&!(await shown('#izzyLanguages')),tag+'and Language Lessons comes back');
+   k=await keys();ok(k.rw===null&&k.old===OLDLANG,tag+'the lessons never touch the Missions save or the earlier language save');
+   // readable colours on the new pieces (text against the solid colour behind it)
+   const low=await p.evaluate(()=>{const lum=c=>{const [r,g,b]=c.match(/[\d.]+/g).slice(0,3).map(Number).map(v=>{v/=255;return v<=.03928?v/12.92:((v+.055)/1.055)**2.4});return .2126*r+.7152*g+.0722*b};
+    const bg=e=>{for(;e;e=e.parentElement){const c=getComputedStyle(e).backgroundColor;const m=c.match(/[\d.]+/g);if(m&&(m.length<4||Number(m[3])===1))return c}return null};const out=[];
+    for(const e of document.querySelectorAll('#ilaLangLessons .ilang-hello h2,#ilaLangLessons .ilang-hello p,#ilaLangLessons .ilang-sound,#ilaLangLessons .ilang-lang b,#ilaLangLessons .ilang-lang small,#ilaLangLessons .ilang-level b,#ilaLangLessons .ilang-level small,#ilaLangLessons .ilang-level-meta,#ilaLangLessons .ilang-tag,#ilaLangLessons .ilang-unit b,#ilaLangLessons .ilang-unit small,#ilaLangLessons .ilang-know p')){
+     const b=bg(e);if(!b){out.push('no solid colour behind '+e.className+' '+e.textContent.slice(0,20));continue}const a=lum(getComputedStyle(e).color),c=lum(b),r=(Math.max(a,c)+.05)/(Math.min(a,c)+.05);if(r<4.5)out.push(r.toFixed(2)+' '+e.textContent.slice(0,24))}return out});
+   ok(low.length===0,tag+'text on the new language, level and unit tiles is readable (4.5:1 or better) '+low.slice(0,4).join(' | '));
+   // a damaged choices save is left alone
+   await p.evaluate(()=>localStorage.setItem('ila_languages_v2','{damaged'));await openLang('4');await p.tap(L+' .ilang-lang[data-lang="de"]');await p.waitForTimeout(150);
+   ok((await keys()).v2==='{damaged'&&await p.textContent(L+' .ilang-hello h2')==='Hallo!',tag+'a damaged choices save is not overwritten; the page still works');
+   ok(errs.length===0,tag+'no page errors '+errs.slice(0,3).join(' | '));ok(missing.length===0,tag+'no missing files '+missing.slice(0,5).join(' '));
    await ctx.close()}}
  await b.close();server.close();console.log(`\n${pass} passed, ${fail} failed (browser checks only; real-device checks are manual)`);process.exit(fail?1:0)})().catch(e=>{console.error(e);process.exit(2)});
