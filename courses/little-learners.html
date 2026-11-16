@@ -1235,7 +1235,9 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
 
   /* spec: {key, title, icon, sub, build(seed) -> {learn:[{h,t,node?,try?}], guided:[q], ind:[q], mastery:[q]},
             speak(text), award(n), onExit(), next: {title, go()} | null, handsOn, onAnswer(phase, q, ok), onFinish(result), top()}
-     q: {prompt, passage:{title,text}|null, visual:{emoji,count}|null, kind:'choice'|'count', options:[{id,label}], answer, max, hint, why} */
+     q: {prompt, passage:{title,text}|null, visual:{emoji,count}|null, kind:'choice'|'count', options:[{id,label}], answer, max, hint, why}
+     V7.13.14, all optional (used by Languages): q.card {title,sub,emoji,lang,hear,reveal:{title,sub,lang,label}}, q.review (prompt shown in the review), option.emoji/.sub/.lang,
+     spec.speak(text, slideOrQuestion), spec.onHear(q), spec.onPick(q, option), spec.onShow(q, phase). */
   function mount(root, spec) {
     let st = null;
     const top = () => { try { (spec.top || (() => root.scrollIntoView({block: 'start'})))(); } catch (e) {} };
@@ -1267,12 +1269,12 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
       const c = steps.querySelector('.cur'); if (c) steps.scrollLeft = Math.max(0, c.offsetLeft - 16);
       ({learn: renderLearn, guided: renderQ, ind: renderQ, mastery: renderQ, results: renderResults})[st.phase](stage);
     }
-    function sayBtn(text, label) { return el('button', {type: 'button', class: 'izl-say', 'aria-label': label || 'Read aloud', onclick() { try { spec.speak(typeof text === 'function' ? text() : text); } catch (e) {} }}, '🔊'); }
+    function sayBtn(text, label, ctx) { return el('button', {type: 'button', class: 'izl-say', 'aria-label': label || 'Read aloud', onclick() { try { spec.speak(typeof text === 'function' ? text() : text, ctx); } catch (e) {} }}, '🔊'); }
     function passageBox(P) { return el('div', {class: 'izl-passage'}, [el('div', {class: 'izl-ph'}, [el('b', null, '📖 ' + (P.title || 'Read the passage')), sayBtn(P.text, 'Read the passage aloud')]), el('div', {class: 'izl-ptext'}, el('span', {class: 'izl-sent'}, P.text))]); }
     function visualBox(v) { if (!v || !v.emoji || !(v.count > 0)) return null; return el('div', {class: 'izl-vizwrap ila-steps-visual', role: 'img', 'aria-label': v.count + ' pictures'}, Array.from({length: v.count}, () => el('span', {'aria-hidden': 'true'}, v.emoji))); }
     function renderLearn(stage) {
       const L = st.qs.learn, sl = L[st.slide], last = st.slide === L.length - 1;
-      const card = el('div', {class: 'izl-card-main learn'}, [el('div', {class: 'izl-qhead'}, [el('span', {class: 'izl-pill'}, `Learn · ${st.slide + 1} of ${L.length}`), sayBtn(() => sl.h + '. ' + (sl.t || ''))]), el('h3', null, sl.h)]);
+      const card = el('div', {class: 'izl-card-main learn'}, [el('div', {class: 'izl-qhead'}, [el('span', {class: 'izl-pill'}, `Learn · ${st.slide + 1} of ${L.length}`), sayBtn(() => sl.h + '. ' + (sl.t || ''), null, sl)]), el('h3', null, sl.h)]);
       if (sl.t) card.append(el('p', {class: 'izl-lead'}, sl.t));
       if (sl.passage) card.append(passageBox(sl.passage));
       const v = visualBox(sl.visual); if (v) card.append(v);
@@ -1290,13 +1292,19 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
       let sel = null, tries = 0, hinted = false, done = false, count = 0;
       const card = el('div', {class: 'izl-card-main q'});
       const prog = el('div', {class: 'izl-qprog'}, list.map((_, i) => el('i', {class: i < st.qi ? (st.log[phase][i] && st.log[phase][i].ok ? 'ok' : 'no') : i === st.qi ? 'cur' : ''})));
-      const opts = q.kind === 'count' ? [] : shuffle(r, q.options);
-      card.append(el('div', {class: 'izl-qhead'}, [el('span', {class: 'izl-pill ' + phase}, `${NAME[phase]} · ${st.qi + 1} of ${n}`), prog, sayBtn(() => q.prompt + (opts.length ? '. ' + opts.map(o => o.label).join('. ') : ''), 'Read the question aloud')]));
+      const opts = q.kind === 'count' ? [] : shuffle(r, q.options); q.shown = opts;
+      card.append(el('div', {class: 'izl-qhead'}, [el('span', {class: 'izl-pill ' + phase}, `${NAME[phase]} · ${st.qi + 1} of ${n}`), prog, sayBtn(() => q.prompt + (opts.length ? '. ' + opts.map(o => o.label).join('. ') : ''), 'Read the question aloud', q)]));
       if (guided && st.qi === 0) card.append(el('p', {class: 'izl-coach'}, '🤝 We’ll do these together. If you miss one, you get a hint and another try.'));
       if (phase === 'ind' && st.qi === 0) card.append(el('p', {class: 'izl-coach'}, '🌟 Your turn! Hints are here if you need them.'));
       if (mastery && st.qi === 0) card.append(el('p', {class: 'izl-coach'}, `👑 Mastery check: show what you know. Get ${n - 1} of ${n} to master this lesson.`));
       card.append(el('h3', {class: 'izl-prompt'}, q.prompt));
       const v = visualBox(q.visual); if (v) card.append(v);
+      if (q.card) {
+        const c = q.card, title = el('b', c.lang ? {lang: c.lang} : null, c.title), sub = el('small', null, c.sub || ''); sub.hidden = !c.sub;
+        /* a listening question hides the word; "Show the word" is there for a device with no voice */
+        const show = c.reveal ? el('button', {type: 'button', class: 'izl-btn ghost sm ila-steps-reveal', onclick() { title.textContent = c.reveal.title; if (c.reveal.lang) title.setAttribute('lang', c.reveal.lang); sub.textContent = c.reveal.sub || ''; sub.hidden = !c.reveal.sub; show.remove(); }}, c.reveal.label || 'Show the word') : null;
+        card.append(el('div', {class: 'ila-steps-card' + (c.reveal ? ' listen' : '')}, [c.emoji ? el('span', {class: 'ila-steps-card-emoji', 'aria-hidden': 'true'}, c.emoji) : null, el('div', {class: 'ila-steps-card-txt'}, [title, sub]), c.hear && spec.onHear ? el('button', {type: 'button', class: 'izl-btn ghost sm ila-steps-hear', 'aria-label': 'Hear it', onclick() { try { spec.onHear(q); } catch (e) {} }}, '🔊 Hear it') : null, show]));
+      }
       const feedback = el('div', {class: 'izl-feedback', role: 'status', hidden: true}), hintBox = el('div', {class: 'izl-hint', hidden: true});
       const checkBtn = el('button', {type: 'button', class: 'izl-btn primary big', disabled: true, onclick: check}, '✔ Check my answer');
       const hintBtn = el('button', {type: 'button', class: 'izl-btn ghost', onclick: showHint}, '💡 Hint');
@@ -1311,7 +1319,7 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
         const plus = el('button', {type: 'button', class: 'izl-btn ghost', onclick() { if (done) return; count = Math.min(max, count + 1); paint(); }}, '+ Add one');
         answerArea = el('div', {class: 'ila-steps-counter'}, [frames, el('p', {class: 'izl-lead'}, ['Counters: ', out]), el('div', {class: 'izl-actions'}, [minus, plus])]); paint();
       } else {
-        answerArea = el('div', {class: 'izl-opts', role: 'group', 'aria-label': 'Answer choices'}, opts.map((o, i) => el('button', {type: 'button', class: 'izl-opt', 'aria-pressed': 'false', 'data-id': o.id, onclick(e) { if (done || e.currentTarget.classList.contains('wrong')) return; answerArea.querySelectorAll('.izl-opt').forEach(x => x.setAttribute('aria-pressed', 'false')); e.currentTarget.setAttribute('aria-pressed', 'true'); setSel(o.id); }}, [el('span', {class: 'izl-letter'}, 'ABCDEF'[i]), el('span', {class: 'izl-otext'}, o.label), el('span', {class: 'izl-mark', 'aria-hidden': 'true'})])));
+        answerArea = el('div', {class: 'izl-opts', role: 'group', 'aria-label': 'Answer choices'}, opts.map((o, i) => el('button', {type: 'button', class: 'izl-opt', 'aria-pressed': 'false', 'data-id': o.id, onclick(e) { if (done || e.currentTarget.classList.contains('wrong')) return; answerArea.querySelectorAll('.izl-opt').forEach(x => x.setAttribute('aria-pressed', 'false')); e.currentTarget.setAttribute('aria-pressed', 'true'); setSel(o.id); try { spec.onPick && spec.onPick(q, o); } catch (err) {} }}, [el('span', {class: 'izl-letter'}, 'ABCDEF'[i]), el('span', {class: 'izl-otext'}, [o.emoji ? el('span', {class: 'ila-opt-emoji', 'aria-hidden': 'true'}, o.emoji) : null, o.lang ? el('span', {lang: o.lang}, o.label) : o.label, o.sub ? el('small', {class: 'ila-opt-sub'}, o.sub) : null]), el('span', {class: 'izl-mark', 'aria-hidden': 'true'})])));
       }
       function showHint() { hinted = true; hintBox.hidden = false; hintBox.replaceChildren(el('b', null, '💡 Hint: '), el('span', null, q.hint || 'Read the question again slowly. What is it really asking?')); hintBtn.disabled = true; }
       const isRight = x => q.kind === 'count' ? Number(x) === Number(q.answer) : String(x) === String(q.answer);
@@ -1340,6 +1348,7 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
       function advance() { if (st.qi < n - 1) { st.qi++; saveLive(); render(); top(); } else nextPhase(); }
       card.append(answerArea, hintBox, feedback, el('div', {class: 'izl-actions'}, [el('div', {class: 'izl-tools'}, [mastery ? null : hintBtn]), el('div', {class: 'izl-go'}, [checkBtn, nextBtn])]));
       stage.append(q.passage ? el('div', {class: 'izl-split'}, [passageBox(q.passage), card]) : card);
+      try { spec.onShow && spec.onShow(q, phase); } catch (e) {}
     }
     function renderResults(stage) {
       const R = st.result || {score: 0, of: 0, stars: 0, passed: false, bonus: 0};
@@ -1352,7 +1361,7 @@ globalThis.ILA_K3_COACH=Object.freeze({forLesson});})();
         R.bonus ? el('p', {class: 'izl-bonus'}, `+${R.bonus} ⭐ bonus stars added to your Rewards!`) : null));
       const missed = []; for (const ph of ['guided', 'ind', 'mastery']) (st.qs[ph] || []).forEach((q, k) => { const r = st.log[ph][k]; if (r && !r.ok) missed.push({q, r}); });
       if (missed.length) { const wrap = el('div', {class: 'izl-review2'}, [el('h4', null, '📖 Review what we learned'), el('p', {class: 'izl-tip'}, missed.length === 1 ? 'One question to look at again, with the right answer.' : `${missed.length} questions to look at again, with the right answer.`)]);
-        missed.forEach(({q, r}) => wrap.append(el('div', {class: 'izl-rv'}, [el('b', null, q.prompt), el('p', null, 'Your answer: ' + (r.ans || '—')), el('p', null, 'Right answer: ' + (q.kind === 'count' ? String(q.answer) : (q.options.find(o => String(o.id) === String(q.answer)) || {}).label)), q.why ? el('p', null, q.why) : null]))); card.append(wrap); }
+        missed.forEach(({q, r}) => wrap.append(el('div', {class: 'izl-rv'}, [el('b', null, q.review || q.prompt), el('p', null, 'Your answer: ' + (r.ans || '—')), el('p', null, 'Right answer: ' + (q.kind === 'count' ? String(q.answer) : (q.options.find(o => String(o.id) === String(q.answer)) || {}).label)), q.why ? el('p', null, q.why) : null]))); card.append(wrap); }
       else card.append(el('p', {class: 'izl-rv-none'}, '✅ Every answer was right in the end. Nothing to review!'));
       if (spec.handsOn) card.append(el('p', {class: 'izl-try'}, '✋ Show what you learned, off the screen: ' + spec.handsOn));
       card.append(el('div', {class: 'izl-actions wrap'}, K(
